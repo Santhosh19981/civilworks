@@ -2,7 +2,7 @@
     {
         "id": "r1",
         "name": "Hydraulic Excavator",
-        "image": "https://images.pexels.com/photos/1108572/pexels-photo-1108572.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "image": "https://in.hd-hyundaice.com/uploads/image/file/3691/Hyundai_215_Mobilebanner_TextRemoved___1_.webp",
         "pricePerDay": 8500,
         "description": "Heavy-duty hydraulic excavator with 20-ton capacity. Perfect for digging, trenching, and material handling.",
         "category": "Heavy Machinery",
@@ -12,7 +12,7 @@
     {
         "id": "r2",
         "name": "Tower Crane (50 Ton)",
-        "image": "https://images.pexels.com/photos/159358/construction-site-build-construction-work-159358.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "image": "https://www.nbmcw.com/images/nbm-media/Reports/event-report/39641-Comansa21LC1050.jpg",
         "pricePerDay": 15000,
         "description": "High-capacity tower crane for high-rise construction. Includes operator and maintenance.",
         "category": "Heavy Machinery",
@@ -22,7 +22,7 @@
     {
         "id": "r3",
         "name": "Concrete Mixer (10/7)",
-        "image": "https://images.pexels.com/photos/1216589/pexels-photo-1216589.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "image": "https://5.imimg.com/data5/SELLER/Default/2021/3/AB/BV/CL/166102/10-7-cft-hydraulic-mixing-machine.jpg",
         "pricePerDay": 1200,
         "description": "Diesel-powered concrete mixer with 10/7 cubic feet capacity. Portable and easy to operate.",
         "category": "Mixing Equipment",
@@ -32,7 +32,7 @@
     {
         "id": "r4",
         "name": "Scaffolding Set (100ft)",
-        "image": "https://images.pexels.com/photos/159358/construction-site-build-construction-work-159358.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "image": "https://www.metaltech.co/wp-content/uploads/2021/01/M-MFS6060PS_set.jpg",
         "pricePerDay": 2500,
         "description": "Complete scaffolding system with platforms, guardrails, and accessories. Up to 100ft height.",
         "category": "Support Equipment",
@@ -42,7 +42,7 @@
     {
         "id": "r5",
         "name": "Diesel Generator (25 KVA)",
-        "image": "https://images.pexels.com/photos/1249611/pexels-photo-1249611.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "image": "https://5.imimg.com/data5/SELLER/Default/2024/8/441643595/CQ/QF/DP/10521154/25-kva-cummins-diesel-generator-3-phase.png",
         "pricePerDay": 3000,
         "description": "Silent diesel generator with 25 KVA output. Automatic voltage regulation and fuel-efficient.",
         "category": "Power Equipment",
@@ -52,7 +52,7 @@
     {
         "id": "r6",
         "name": "Plate Compactor",
-        "image": "https://images.pexels.com/photos/1108572/pexels-photo-1108572.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "image": "https://greavescotton.com/wp-content/uploads/2023/05/0N0A7856_Edited.jpg",
         "pricePerDay": 800,
         "description": "Vibratory plate compactor for soil and asphalt compaction. Lightweight and maneuverable.",
         "category": "Compaction Equipment",
@@ -62,7 +62,7 @@
     {
         "id": "r7",
         "name": "Boom Lift (40ft)",
-        "image": "https://images.pexels.com/photos/159358/construction-site-build-construction-work-159358.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "image": "https://5.imimg.com/data5/SELLER/Default/2025/12/567162281/EJ/KB/GG/256438745/40-ft-articulated-boom-lift-500x500.jpg",
         "pricePerDay": 5500,
         "description": "Articulating boom lift with 40ft working height. 360-degree rotation and self-leveling platform.",
         "category": "Access Equipment",
@@ -72,7 +72,7 @@
     {
         "id": "r8",
         "name": "Concrete Pump",
-        "image": "https://images.pexels.com/photos/1216589/pexels-photo-1216589.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "image": "https://images-cdn.ubuy.co.in/676377a1fdddec2d8c1d7468-concrete-pump-putzmeister-cifa-concrete.jpg",
         "pricePerDay": 12000,
         "description": "Truck-mounted concrete pump with 100m vertical reach. Ideal for high-rise construction.",
         "category": "Pumping Equipment",
@@ -82,7 +82,7 @@
     {
         "id": "r9",
         "name": "Dumper Truck (10 Ton)",
-        "image": "https://images.pexels.com/photos/1108572/pexels-photo-1108572.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "image": "https://5.imimg.com/data5/JJ/OI/MY-24389568/mcv-tipper-truck-500x500.jpg",
         "pricePerDay": 4500,
         "description": "Heavy-duty dumper truck for material transportation. 10-ton capacity with hydraulic tipping.",
         "category": "Transport Equipment",
@@ -92,7 +92,7 @@
     {
         "id": "r10",
         "name": "Welding Machine Set",
-        "image": "https://images.pexels.com/photos/1249611/pexels-photo-1249611.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "image": "https://m.media-amazon.com/images/I/7191cSC1w0L._AC_UF1000,1000_QL80_.jpg",
         "pricePerDay": 1500,
         "description": "Professional welding machine with electrodes and safety equipment. Suitable for all welding needs.",
         "category": "Welding Equipment",

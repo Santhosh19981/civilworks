@@ -16,9 +16,12 @@ export class HomePage implements OnInit {
     @ViewChild(IonContent) content!: IonContent;
 
     banners = [
-        { image: 'https://images.pexels.com/photos/1216589/pexels-photo-1216589.jpeg?auto=compress&cs=tinysrgb&w=1200&h=675&fit=crop', title: 'Quality Materials' },
-        { image: 'https://images.pexels.com/photos/159358/construction-site-build-construction-work-159358.jpeg?auto=compress&cs=tinysrgb&w=1200&h=675&fit=crop', title: 'Heavy Equipment' },
-        { image: 'https://images.pexels.com/photos/1108572/pexels-photo-1108572.jpeg?auto=compress&cs=tinysrgb&w=1200&h=675&fit=crop', title: 'Build Your Dreams' }
+        { image: 'https://img.freepik.com/premium-photo/set-construction-tools-black-wall-background_154092-12367.jpg', 
+            title: 'Heavy Equipment' },
+        { image: 'https://png.pngtree.com/thumb_back/fw800/background/20251021/pngtree-construction-materials-and-tools-on-a-gray-background-image_19942823.webp', 
+            title: 'Quality Materials' },
+        // { image: 'https://miro.medium.com/1*TfIqQpwfXov287CCqjhetg.jpeg', 
+        //     title: 'Build Your Dreams' }
     ];
 
     featuredProducts: Product[] = [];

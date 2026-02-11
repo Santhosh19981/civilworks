@@ -65,10 +65,15 @@ export class OrderService {
         return order;
     }
 
+    // private generateOrderId(): string {
+    //     const timestamp = Date.now();
+    //     const random = Math.floor(Math.random() * 10000);
+    //     return `CW${timestamp}${random}`;
+    // }
+
     private generateOrderId(): string {
-        const timestamp = Date.now();
-        const random = Math.floor(Math.random() * 10000);
-        return `CW${timestamp}${random}`;
+        const random = Math.floor(1000 + Math.random() * 9000);
+        return `CW${random}`;
     }
 
     private simulateOrderProgress(orderId: string): void {

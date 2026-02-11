@@ -1,18 +1,10 @@
+
 [
-    {
-        "id": "p1",
-        "name": "Portland Cement (50kg)",
-        "image": "https://images.pexels.com/photos/1216589/pexels-photo-1216589.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
-        "price": 350,
-        "description": "High-quality Portland cement, perfect for all construction needs. 50kg bag with superior strength and durability.",
-        "category": "Cement",
-        "unit": "bag",
-        "inStock": true
-    },
+
     {
         "id": "p2",
         "name": "TMT Steel Bars (12mm)",
-        "image": "https://images.pexels.com/photos/159358/construction-site-build-construction-work-159358.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "image": "https://tiimg.tistatic.com/fp/1/008/276/fe-500d-40-foot-long-12-mm-thickness-round-hot-rolled-mild-steel-tmt-bars-018.jpg",
         "price": 55,
         "description": "Thermo-Mechanically Treated steel bars with excellent tensile strength. Corrosion resistant and earthquake resistant.",
         "category": "Steel",
@@ -22,7 +14,7 @@
     {
         "id": "p3",
         "name": "Red Clay Bricks",
-        "image": "https://images.pexels.com/photos/1216589/pexels-photo-1216589.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "image": "https://media.istockphoto.com/id/1447942826/photo/red-brick-stack-isolated-on-a-white-background-3d-illustration.jpg?s=612x612&w=0&k=20&c=7TktWFMW74kM5Eq2gJ5yFUrnZf7zqY1oygjqTu8K6ck=",
         "price": 8,
         "description": "Premium quality red clay bricks. Standard size with uniform dimensions and high compressive strength.",
         "category": "Bricks",
@@ -32,7 +24,7 @@
     {
         "id": "p4",
         "name": "River Sand (1 Ton)",
-        "image": "https://images.pexels.com/photos/1108572/pexels-photo-1108572.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "image": "https://m.media-amazon.com/images/I/717-HHr+jkL._AC_UF894,1000_QL80_.jpg",
         "price": 1200,
         "description": "Clean and graded river sand, ideal for plastering and concrete work. Free from impurities.",
         "category": "Sand",
@@ -42,7 +34,7 @@
     {
         "id": "p5",
         "name": "20mm Aggregates",
-        "image": "https://images.pexels.com/photos/1108572/pexels-photo-1108572.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "image": "https://5.imimg.com/data5/LH/CB/MY-56196220/20-mm-aggregate.jpg",
         "price": 1500,
         "description": "High-grade 20mm crushed stone aggregates for concrete mixing. Uniform size and shape.",
         "category": "Aggregates",
@@ -52,17 +44,17 @@
     {
         "id": "p6",
         "name": "Safety Helmet",
-        "image": "https://images.pexels.com/photos/1216589/pexels-photo-1216589.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "image": "https://5.imimg.com/data5/TP/UU/GJ/SELLER-2250842/safety-helmets-500x500.jpg",
         "price": 250,
         "description": "Industrial safety helmet with adjustable strap. Meets all safety standards. Available in yellow and white.",
-        "category": "Safety Equipment",
+        "category": "Safety",
         "unit": "piece",
         "inStock": true
     },
     {
         "id": "p7",
         "name": "Power Drill Machine",
-        "image": "https://images.pexels.com/photos/1249611/pexels-photo-1249611.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "image": "https://perfecttools.in/image/cache/catalog/Bosch-GSB-501-500-Watt-Professional-Impact-Drill-Machine-BlueCorded-Elec/Bosch-GSB-501-500-Watt-Professional-Impact-Drill-Machine-BlueCorded-Electric-GSB-1152x900.jpg",
         "price": 3500,
         "description": "Professional grade power drill with variable speed control. Includes drill bits and carrying case.",
         "category": "Tools",
@@ -72,7 +64,7 @@
     {
         "id": "p8",
         "name": "Concrete Blocks",
-        "image": "https://images.pexels.com/photos/1216589/pexels-photo-1216589.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "image": "https://www.ultratechcement.com/content/ultratechcement/in/en/home/for-homebuilders/home-building-explained-single/descriptive-articles/what-is-a-cinder-block/_jcr_content/root/container/container_2072089177/teaser_copy_copy_cop_995572124.coreimg.jpeg/1745576412891/cinder-blocks-2.jpeg",
         "price": 35,
         "description": "Lightweight concrete blocks for wall construction. Excellent thermal insulation properties.",
         "category": "Bricks",
@@ -82,7 +74,7 @@
     {
         "id": "p9",
         "name": "Steel Angle (40x40mm)",
-        "image": "https://images.pexels.com/photos/159358/construction-site-build-construction-work-159358.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "image": "https://cpimg.tistatic.com/10195242/b/4/40x40-MM-Angle-Brackets..jpg",
         "price": 65,
         "description": "Structural steel angle for framework and support. Hot-rolled with uniform thickness.",
         "category": "Steel",
@@ -92,17 +84,17 @@
     {
         "id": "p10",
         "name": "Safety Gloves",
-        "image": "https://images.pexels.com/photos/1249611/pexels-photo-1249611.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "image": "https://www.nitras-safety.com/out/pictures/generated/product/1/740_740_90/1104_1643_001.jpg",
         "price": 120,
         "description": "Heavy-duty work gloves with reinforced palms. Comfortable fit and excellent grip.",
-        "category": "Safety Equipment",
+        "category": "Safety",
         "unit": "pair",
         "inStock": true
     },
     {
         "id": "p11",
         "name": "White Cement (5kg)",
-        "image": "https://images.pexels.com/photos/1216589/pexels-photo-1216589.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "image": "https://m.media-amazon.com/images/I/71oSs0gKXWL.jpg_BO30,255,255,255_UF750,750_SR1910,1000,0,C_QL100_.jpg",
         "price": 180,
         "description": "Premium white cement for finishing work. Ideal for tile fixing and decorative applications.",
         "category": "Cement",
@@ -112,7 +104,7 @@
     {
         "id": "p12",
         "name": "Measuring Tape (10m)",
-        "image": "https://images.pexels.com/photos/1249611/pexels-photo-1249611.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "image": "https://robu.in/wp-content/uploads/2025/05/101.jpg",
         "price": 150,
         "description": "Professional measuring tape with auto-lock feature. Clear markings in metric and imperial.",
         "category": "Tools",

@@ -92,7 +92,7 @@ ion-item::part(native) {
     overflow: hidden;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
-    margin-bottom: 16px;
+    margin-bottom: 0px;
 }
 
 .product-card:active {
@@ -240,7 +240,7 @@ ion-item::part(native) {
             font-size: 19px;
             font-weight: 800;
             color: #F7931E;
-            margin-top: auto;
+            margin-top: 8px;
         }
 
         .product-category {
