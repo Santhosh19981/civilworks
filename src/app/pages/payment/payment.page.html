@@ -1,0 +1,52 @@
+<ion-header [translucent]="true">
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button (click)="goBack()">
+                <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title>Payment</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+    <div class="payment-container">
+        <div class="payment-header">
+            <div class="amount-card">
+                <div class="amount-label">Total Amount</div>
+                <div class="amount-value">₹{{ total }}</div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Select Payment Method</h2>
+
+        <div class="payment-methods">
+            <div class="payment-option" (click)="payNow()">
+                <div class="option-icon">
+                    <ion-icon name="card"></ion-icon>
+                </div>
+                <div class="option-content">
+                    <h3>Pay Now</h3>
+                    <p>Credit/Debit Card, UPI, Net Banking</p>
+                </div>
+                <ion-icon name="chevron-forward" class="arrow-icon"></ion-icon>
+            </div>
+
+            <div class="payment-option" (click)="cashOnDelivery()">
+                <div class="option-icon cod">
+                    <ion-icon name="cash"></ion-icon>
+                </div>
+                <div class="option-content">
+                    <h3>Cash on Delivery</h3>
+                    <p>Pay when you receive your order</p>
+                </div>
+                <ion-icon name="chevron-forward" class="arrow-icon"></ion-icon>
+            </div>
+        </div>
+
+        <div class="payment-note">
+            <ion-icon name="shield-checkmark"></ion-icon>
+            <span>100% Secure Payment</span>
+        </div>
+    </div>
+</ion-content>

@@ -1,0 +1,173 @@
+// Ionic Variables and Theming. For more info, please see:
+// http://ionicframework.com/docs/theming/
+
+/** CivilWorks Brand Colors **/
+:root {
+  /** primary - Orange **/
+  --ion-color-primary: #F7931E;
+  --ion-color-primary-rgb: 247, 147, 30;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #d9811a;
+  --ion-color-primary-tint: #f89e35;
+
+  /** secondary - Navy Blue **/
+  --ion-color-secondary: #0B2C4D;
+  --ion-color-secondary-rgb: 11, 44, 77;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-contrast-rgb: 255, 255, 255;
+  --ion-color-secondary-shade: #0a2744;
+  --ion-color-secondary-tint: #23415f;
+
+  /** tertiary - Helmet Yellow **/
+  --ion-color-tertiary: #FFC107;
+  --ion-color-tertiary-rgb: 255, 193, 7;
+  --ion-color-tertiary-contrast: #000000;
+  --ion-color-tertiary-contrast-rgb: 0, 0, 0;
+  --ion-color-tertiary-shade: #e0aa06;
+  --ion-color-tertiary-tint: #ffc720;
+
+  /** success **/
+  --ion-color-success: #2dd36f;
+  --ion-color-success-rgb: 45, 211, 111;
+  --ion-color-success-contrast: #ffffff;
+  --ion-color-success-contrast-rgb: 255, 255, 255;
+  --ion-color-success-shade: #28ba62;
+  --ion-color-success-tint: #42d77d;
+
+  /** warning **/
+  --ion-color-warning: #ffc409;
+  --ion-color-warning-rgb: 255, 196, 9;
+  --ion-color-warning-contrast: #000000;
+  --ion-color-warning-contrast-rgb: 0, 0, 0;
+  --ion-color-warning-shade: #e0ac08;
+  --ion-color-warning-tint: #ffca22;
+
+  /** danger **/
+  --ion-color-danger: #eb445a;
+  --ion-color-danger-rgb: 235, 68, 90;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255, 255, 255;
+  --ion-color-danger-shade: #cf3c4f;
+  --ion-color-danger-tint: #ed576b;
+
+  /** light **/
+  --ion-color-light: #F5F6F8;
+  --ion-color-light-rgb: 245, 246, 248;
+  --ion-color-light-contrast: #000000;
+  --ion-color-light-contrast-rgb: 0, 0, 0;
+  --ion-color-light-shade: #d8d9da;
+  --ion-color-light-tint: #f6f7f9;
+
+  /** medium **/
+  --ion-color-medium: #92949c;
+  --ion-color-medium-rgb: 146, 148, 156;
+  --ion-color-medium-contrast: #ffffff;
+  --ion-color-medium-contrast-rgb: 255, 255, 255;
+  --ion-color-medium-shade: #808289;
+  --ion-color-medium-tint: #9d9fa6;
+
+  /** dark **/
+  --ion-color-dark: #222428;
+  --ion-color-dark-rgb: 34, 36, 40;
+  --ion-color-dark-contrast: #ffffff;
+  --ion-color-dark-contrast-rgb: 255, 255, 255;
+  --ion-color-dark-shade: #1e2023;
+  --ion-color-dark-tint: #383a3e;
+
+  /** Custom Background **/
+  --ion-background-color: #F5F6F8;
+  --ion-text-color: #0B2C4D;
+}
+
+/** Ionic CSS Variables **/
+:root {
+  --ion-font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+/** Toolbar Styling **/
+ion-toolbar {
+  --background: var(--ion-color-secondary);
+  --color: #ffffff;
+}
+
+/** Tab Bar Styling **/
+ion-tab-bar {
+  --background: var(--ion-color-secondary);
+  --color: rgba(255, 255, 255, 0.6);
+  border-top: 1px solid rgba(247, 147, 30, 0.2);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+ion-tab-button {
+  --color: rgba(255, 255, 255, 0.6);
+  --color-selected: var(--ion-color-primary);
+}
+
+ion-tab-button.tab-selected {
+  --color: var(--ion-color-primary);
+}
+
+/** Card Styling **/
+ion-card {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin: 12px 16px;
+}
+
+/** Button Styling **/
+ion-button {
+  --border-radius: 8px;
+  text-transform: none;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+/** Searchbar Styling **/
+ion-searchbar {
+  --background: #ffffff;
+  --border-radius: 8px;
+  --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+}
+
+/** Chip Styling **/
+ion-chip {
+  --background: #ffffff;
+  border: 1px solid var(--ion-color-primary);
+  color: var(--ion-color-primary);
+  font-weight: 500;
+}
+
+ion-chip.chip-selected {
+  --background: var(--ion-color-primary);
+  color: #ffffff;
+}
+
+/** Skeleton Text **/
+ion-skeleton-text {
+  --background: rgba(0, 0, 0, 0.06);
+  --background-rgb: 0, 0, 0;
+  border-radius: 4px;
+}
+
+/** Refresher **/
+ion-refresher {
+  z-index: 1;
+}
+
+/** FAB Button **/
+ion-fab-button {
+  --background: var(--ion-color-tertiary);
+  --color: #000000;
+  --box-shadow: 0 4px 12px rgba(255, 193, 7, 0.4);
+}
+
+/** Modal **/
+ion-modal {
+  --border-radius: 16px 16px 0 0;
+}
+
+/** Toast **/
+ion-toast {
+  --border-radius: 8px;
+}

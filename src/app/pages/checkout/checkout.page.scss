@@ -1,0 +1,234 @@
+.checkout-container {
+    padding: 20px;
+    background: linear-gradient(to bottom, #f8f9fa 0%, #ffffff 100%);
+    min-height: 100%;
+}
+
+.section-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: #0B2C4D;
+    margin-bottom: 20px;
+    padding-left: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    &:before {
+        content: "📍";
+        font-size: 22px;
+    }
+}
+
+.input-item {
+    --background: #ffffff !important;
+    --border-radius: 12px;
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --min-height: 56px;
+    margin-bottom: 16px;
+    border-radius: 12px;
+    border: 2px solid #e0e0e0 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    background: #ffffff !important;
+
+    &.item-has-focus {
+        border-color: #F7931E !important;
+        box-shadow: 0 4px 12px rgba(247, 147, 30, 0.2);
+        background: #ffffff !important;
+    }
+
+    // Override Angular validation styles and filled state background
+    &.ion-valid,
+    &.ion-invalid,
+    &.ion-touched,
+    &.item-has-value,
+    &.item-interactive,
+    &.item-input {
+        border-color: #e0e0e0 !important;
+        background: #ffffff !important;
+    }
+
+    &.item-has-focus.ion-valid,
+    &.item-has-focus.ion-invalid {
+        border-color: #F7931E !important;
+    }
+
+    ion-label {
+        color: #666 !important;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    ion-input {
+        --color: #0B2C4D !important;
+        --placeholder-color: #999 !important;
+        --placeholder-opacity: 0.7 !important;
+        --background: transparent !important;
+        --padding-start: 0 !important;
+        --padding-end: 0 !important;
+        font-size: 16px;
+        font-weight: 600;
+
+        // Override native input background and caret
+        input,
+        .native-input {
+            background: transparent !important;
+            background-color: transparent !important;
+            caret-color: #F7931E !important;
+
+            &:focus,
+            &:active,
+            &:valid,
+            &:invalid {
+                background: transparent !important;
+                background-color: transparent !important;
+            }
+        }
+
+        // Remove autofill background
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus,
+        input:-webkit-autofill:active {
+            -webkit-box-shadow: 0 0 0 1000px white inset !important;
+            -webkit-text-fill-color: #0B2C4D !important;
+            background-color: transparent !important;
+            transition: background-color 5000s ease-in-out 0s;
+        }
+    }
+}
+
+// Additional overrides for Ionic's internal classes
+.input-item {
+
+    .item-inner,
+    .item-highlight {
+        background: transparent !important;
+        background-color: transparent !important;
+    }
+
+    // Override the native wrapper
+    .native-wrapper {
+        background: transparent !important;
+    }
+}
+
+.form-row {
+    display: flex;
+    gap: 12px;
+
+    .input-item {
+        flex: 1;
+    }
+}
+
+.form-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.error-message {
+    color: #eb445a;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 16px 8px 16px;
+    margin-top: -12px;
+}
+
+.input-item.ion-invalid {
+    border-color: #eb445a !important;
+}
+
+.summary-card {
+    margin-top: 32px;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+    border: 2px solid rgba(247, 147, 30, 0.1);
+}
+
+.summary-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: #0B2C4D;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.summary-content {
+    background: white;
+    padding: 16px;
+    border-radius: 12px;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    font-size: 15px;
+    color: #666;
+
+    span:last-child {
+        font-weight: 700;
+        color: #0B2C4D;
+    }
+}
+
+.free-text {
+    color: #2dd36f !important;
+    font-weight: 800 !important;
+    font-size: 14px !important;
+}
+
+.summary-divider {
+    height: 2px;
+    background: linear-gradient(to right, transparent, #e0e0e0, transparent);
+    margin: 18px 0;
+}
+
+.total-row {
+    margin-bottom: 0;
+    font-size: 18px;
+    font-weight: 800;
+    color: #0B2C4D;
+    padding-top: 8px;
+
+    span:last-child {
+        font-size: 26px;
+        color: #F7931E;
+        font-weight: 900;
+    }
+}
+
+ion-footer {
+    ion-toolbar {
+        --background: #ffffff;
+        padding: 16px 20px;
+        box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .cta-button {
+        --background: linear-gradient(135deg, #F7931E 0%, #ff8c00 100%);
+        --box-shadow: 0 4px 16px rgba(247, 147, 30, 0.4);
+        font-size: 17px;
+        font-weight: 800;
+        height: 56px;
+        margin: 0;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+
+        &:active {
+            transform: scale(0.98);
+        }
+    }
+}

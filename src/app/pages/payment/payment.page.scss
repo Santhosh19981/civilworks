@@ -1,0 +1,110 @@
+.payment-container {
+    padding: 16px;
+}
+
+.payment-header {
+    margin-bottom: 32px;
+}
+
+.amount-card {
+    background: linear-gradient(135deg, #0B2C4D 0%, #1a4d7a 100%);
+    padding: 24px;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(11, 44, 77, 0.3);
+}
+
+.amount-label {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.amount-value {
+    font-size: 40px;
+    font-weight: 800;
+    color: #FFC107;
+}
+
+.payment-methods {
+    margin-bottom: 24px;
+}
+
+.payment-option {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:active {
+        transform: scale(0.98);
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+    }
+}
+
+.option-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #F7931E 0%, #FFC107 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    ion-icon {
+        font-size: 28px;
+        color: #ffffff;
+    }
+
+    &.cod {
+        background: linear-gradient(135deg, #2dd36f 0%, #42d77d 100%);
+    }
+}
+
+.option-content {
+    flex: 1;
+
+    h3 {
+        font-size: 16px;
+        font-weight: 700;
+        color: #0B2C4D;
+        margin: 0 0 4px 0;
+    }
+
+    p {
+        font-size: 13px;
+        color: #666;
+        margin: 0;
+    }
+}
+
+.arrow-icon {
+    font-size: 20px;
+    color: #999;
+}
+
+.payment-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 16px;
+    background: #f5f5f5;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #2dd36f;
+
+    ion-icon {
+        font-size: 20px;
+    }
+}

@@ -1,0 +1,122 @@
+[
+    {
+        "id": "p1",
+        "name": "Portland Cement (50kg)",
+        "image": "https://images.pexels.com/photos/1216589/pexels-photo-1216589.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "price": 350,
+        "description": "High-quality Portland cement, perfect for all construction needs. 50kg bag with superior strength and durability.",
+        "category": "Cement",
+        "unit": "bag",
+        "inStock": true
+    },
+    {
+        "id": "p2",
+        "name": "TMT Steel Bars (12mm)",
+        "image": "https://images.pexels.com/photos/159358/construction-site-build-construction-work-159358.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "price": 55,
+        "description": "Thermo-Mechanically Treated steel bars with excellent tensile strength. Corrosion resistant and earthquake resistant.",
+        "category": "Steel",
+        "unit": "kg",
+        "inStock": true
+    },
+    {
+        "id": "p3",
+        "name": "Red Clay Bricks",
+        "image": "https://images.pexels.com/photos/1216589/pexels-photo-1216589.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "price": 8,
+        "description": "Premium quality red clay bricks. Standard size with uniform dimensions and high compressive strength.",
+        "category": "Bricks",
+        "unit": "piece",
+        "inStock": true
+    },
+    {
+        "id": "p4",
+        "name": "River Sand (1 Ton)",
+        "image": "https://images.pexels.com/photos/1108572/pexels-photo-1108572.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "price": 1200,
+        "description": "Clean and graded river sand, ideal for plastering and concrete work. Free from impurities.",
+        "category": "Sand",
+        "unit": "ton",
+        "inStock": true
+    },
+    {
+        "id": "p5",
+        "name": "20mm Aggregates",
+        "image": "https://images.pexels.com/photos/1108572/pexels-photo-1108572.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "price": 1500,
+        "description": "High-grade 20mm crushed stone aggregates for concrete mixing. Uniform size and shape.",
+        "category": "Aggregates",
+        "unit": "ton",
+        "inStock": true
+    },
+    {
+        "id": "p6",
+        "name": "Safety Helmet",
+        "image": "https://images.pexels.com/photos/1216589/pexels-photo-1216589.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "price": 250,
+        "description": "Industrial safety helmet with adjustable strap. Meets all safety standards. Available in yellow and white.",
+        "category": "Safety Equipment",
+        "unit": "piece",
+        "inStock": true
+    },
+    {
+        "id": "p7",
+        "name": "Power Drill Machine",
+        "image": "https://images.pexels.com/photos/1249611/pexels-photo-1249611.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "price": 3500,
+        "description": "Professional grade power drill with variable speed control. Includes drill bits and carrying case.",
+        "category": "Tools",
+        "unit": "piece",
+        "inStock": true
+    },
+    {
+        "id": "p8",
+        "name": "Concrete Blocks",
+        "image": "https://images.pexels.com/photos/1216589/pexels-photo-1216589.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "price": 35,
+        "description": "Lightweight concrete blocks for wall construction. Excellent thermal insulation properties.",
+        "category": "Bricks",
+        "unit": "piece",
+        "inStock": true
+    },
+    {
+        "id": "p9",
+        "name": "Steel Angle (40x40mm)",
+        "image": "https://images.pexels.com/photos/159358/construction-site-build-construction-work-159358.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "price": 65,
+        "description": "Structural steel angle for framework and support. Hot-rolled with uniform thickness.",
+        "category": "Steel",
+        "unit": "kg",
+        "inStock": true
+    },
+    {
+        "id": "p10",
+        "name": "Safety Gloves",
+        "image": "https://images.pexels.com/photos/1249611/pexels-photo-1249611.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "price": 120,
+        "description": "Heavy-duty work gloves with reinforced palms. Comfortable fit and excellent grip.",
+        "category": "Safety Equipment",
+        "unit": "pair",
+        "inStock": true
+    },
+    {
+        "id": "p11",
+        "name": "White Cement (5kg)",
+        "image": "https://images.pexels.com/photos/1216589/pexels-photo-1216589.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "price": 180,
+        "description": "Premium white cement for finishing work. Ideal for tile fixing and decorative applications.",
+        "category": "Cement",
+        "unit": "bag",
+        "inStock": true
+    },
+    {
+        "id": "p12",
+        "name": "Measuring Tape (10m)",
+        "image": "https://images.pexels.com/photos/1249611/pexels-photo-1249611.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "price": 150,
+        "description": "Professional measuring tape with auto-lock feature. Clear markings in metric and imperial.",
+        "category": "Tools",
+        "unit": "piece",
+        "inStock": true
+    }
+]

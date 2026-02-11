@@ -1,0 +1,75 @@
+<ion-header [translucent]="true">
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/tabs/products"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Shopping Cart</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+    <!-- Cart Items -->
+    <div *ngIf="cartItems.length > 0">
+        <ion-list>
+            <ion-item *ngFor="let item of cartItems" class="cart-item">
+                <ion-thumbnail slot="start">
+                    <img [src]="item.product.image" [alt]="item.product.name">
+                </ion-thumbnail>
+                <ion-label>
+                    <h2>{{ item.product.name }}</h2>
+                    <p class="item-price">₹{{ item.product.price }} × {{ item.quantity }}</p>
+                    <div class="quantity-controls">
+                        <button class="qty-btn" (click)="decreaseQuantity(item.product.id)">−</button>
+                        <span class="qty-value">{{ item.quantity }}</span>
+                        <button class="qty-btn" (click)="increaseQuantity(item.product.id)">+</button>
+                    </div>
+                </ion-label>
+                <div slot="end" class="item-total">
+                    <div class="total-price">₹{{ item.product.price * item.quantity }}</div>
+                    <ion-button fill="clear" color="danger" (click)="removeItem(item.product.id)">
+                        <ion-icon slot="icon-only" name="trash"></ion-icon>
+                    </ion-button>
+                </div>
+            </ion-item>
+        </ion-list>
+
+        <!-- Total Card -->
+        <ion-card class="total-card">
+            <ion-card-content>
+                <div class="total-row">
+                    <span class="total-label">Subtotal</span>
+                    <span class="total-value">₹{{ total }}</span>
+                </div>
+                <div class="total-row">
+                    <span class="total-label">Delivery</span>
+                    <span class="total-value">FREE</span>
+                </div>
+                <ion-item lines="none" class="total-divider"></ion-item>
+                <div class="total-row grand-total">
+                    <span class="total-label">Total</span>
+                    <span class="total-value">₹{{ total }}</span>
+                </div>
+            </ion-card-content>
+        </ion-card>
+    </div>
+
+    <!-- Empty Cart State -->
+    <div class="empty-state" *ngIf="cartItems.length === 0">
+        <div class="empty-state-icon">🛒</div>
+        <div class="empty-state-title">Your Cart is Empty</div>
+        <div class="empty-state-text">Add some products to get started</div>
+        <ion-button expand="block" class="cta-button" (click)="continueShopping()">
+            Start Shopping
+        </ion-button>
+    </div>
+</ion-content>
+
+<!-- Checkout Button -->
+<ion-footer *ngIf="cartItems.length > 0">
+    <ion-toolbar>
+        <ion-button expand="block" class="cta-button" (click)="proceedToCheckout()">
+            <ion-icon slot="start" name="card"></ion-icon>
+            Proceed to Checkout (₹{{ total }})
+        </ion-button>
+    </ion-toolbar>
+</ion-footer>

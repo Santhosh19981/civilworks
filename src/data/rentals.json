@@ -1,0 +1,102 @@
+[
+    {
+        "id": "r1",
+        "name": "Hydraulic Excavator",
+        "image": "https://images.pexels.com/photos/1108572/pexels-photo-1108572.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "pricePerDay": 8500,
+        "description": "Heavy-duty hydraulic excavator with 20-ton capacity. Perfect for digging, trenching, and material handling.",
+        "category": "Heavy Machinery",
+        "mobile": "+91 9876543210",
+        "available": true
+    },
+    {
+        "id": "r2",
+        "name": "Tower Crane (50 Ton)",
+        "image": "https://images.pexels.com/photos/159358/construction-site-build-construction-work-159358.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "pricePerDay": 15000,
+        "description": "High-capacity tower crane for high-rise construction. Includes operator and maintenance.",
+        "category": "Heavy Machinery",
+        "mobile": "+91 9876543211",
+        "available": true
+    },
+    {
+        "id": "r3",
+        "name": "Concrete Mixer (10/7)",
+        "image": "https://images.pexels.com/photos/1216589/pexels-photo-1216589.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "pricePerDay": 1200,
+        "description": "Diesel-powered concrete mixer with 10/7 cubic feet capacity. Portable and easy to operate.",
+        "category": "Mixing Equipment",
+        "mobile": "+91 9876543212",
+        "available": true
+    },
+    {
+        "id": "r4",
+        "name": "Scaffolding Set (100ft)",
+        "image": "https://images.pexels.com/photos/159358/construction-site-build-construction-work-159358.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "pricePerDay": 2500,
+        "description": "Complete scaffolding system with platforms, guardrails, and accessories. Up to 100ft height.",
+        "category": "Support Equipment",
+        "mobile": "+91 9876543213",
+        "available": true
+    },
+    {
+        "id": "r5",
+        "name": "Diesel Generator (25 KVA)",
+        "image": "https://images.pexels.com/photos/1249611/pexels-photo-1249611.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "pricePerDay": 3000,
+        "description": "Silent diesel generator with 25 KVA output. Automatic voltage regulation and fuel-efficient.",
+        "category": "Power Equipment",
+        "mobile": "+91 9876543214",
+        "available": true
+    },
+    {
+        "id": "r6",
+        "name": "Plate Compactor",
+        "image": "https://images.pexels.com/photos/1108572/pexels-photo-1108572.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "pricePerDay": 800,
+        "description": "Vibratory plate compactor for soil and asphalt compaction. Lightweight and maneuverable.",
+        "category": "Compaction Equipment",
+        "mobile": "+91 9876543215",
+        "available": true
+    },
+    {
+        "id": "r7",
+        "name": "Boom Lift (40ft)",
+        "image": "https://images.pexels.com/photos/159358/construction-site-build-construction-work-159358.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "pricePerDay": 5500,
+        "description": "Articulating boom lift with 40ft working height. 360-degree rotation and self-leveling platform.",
+        "category": "Access Equipment",
+        "mobile": "+91 9876543216",
+        "available": true
+    },
+    {
+        "id": "r8",
+        "name": "Concrete Pump",
+        "image": "https://images.pexels.com/photos/1216589/pexels-photo-1216589.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "pricePerDay": 12000,
+        "description": "Truck-mounted concrete pump with 100m vertical reach. Ideal for high-rise construction.",
+        "category": "Pumping Equipment",
+        "mobile": "+91 9876543217",
+        "available": true
+    },
+    {
+        "id": "r9",
+        "name": "Dumper Truck (10 Ton)",
+        "image": "https://images.pexels.com/photos/1108572/pexels-photo-1108572.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "pricePerDay": 4500,
+        "description": "Heavy-duty dumper truck for material transportation. 10-ton capacity with hydraulic tipping.",
+        "category": "Transport Equipment",
+        "mobile": "+91 9876543218",
+        "available": true
+    },
+    {
+        "id": "r10",
+        "name": "Welding Machine Set",
+        "image": "https://images.pexels.com/photos/1249611/pexels-photo-1249611.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop",
+        "pricePerDay": 1500,
+        "description": "Professional welding machine with electrodes and safety equipment. Suitable for all welding needs.",
+        "category": "Welding Equipment",
+        "mobile": "+91 9876543219",
+        "available": true
+    }
+]

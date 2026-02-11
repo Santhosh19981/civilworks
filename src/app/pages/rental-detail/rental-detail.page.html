@@ -1,0 +1,71 @@
+<ion-header [translucent]="true">
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button (click)="goBack()">
+                <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title>Equipment Details</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+    <div *ngIf="!loading && rental">
+        <!-- Rental Image -->
+        <div class="product-image-container">
+            <img [src]="rental.image" [alt]="rental.name" class="detail-image">
+        </div>
+
+        <!-- Rental Info -->
+        <div class="product-details">
+            <div class="product-header">
+                <h1 class="product-title">{{ rental.name }}</h1>
+                <span class="badge badge-success" *ngIf="rental.available">Available</span>
+            </div>
+
+            <div class="price-section">
+                <div class="price-tag">
+                    <span class="currency">₹</span>{{ rental.pricePerDay }}
+                    <span class="unit">/ day</span>
+                </div>
+            </div>
+
+            <div class="category-tag">
+                <ion-icon name="pricetag"></ion-icon>
+                {{ rental.category }}
+            </div>
+
+            <div class="description-section">
+                <h3>Description</h3>
+                <p>{{ rental.description }}</p>
+            </div>
+
+            <div class="contact-section">
+                <h3>Contact Information</h3>
+                <div class="contact-card">
+                    <ion-icon name="call" color="primary"></ion-icon>
+                    <span>{{ rental.mobile }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Skeleton Loader -->
+    <div *ngIf="loading">
+        <ion-skeleton-text [animated]="true" style="width: 100%; height: 300px;"></ion-skeleton-text>
+        <div style="padding: 16px;">
+            <ion-skeleton-text [animated]="true"
+                style="width: 80%; height: 32px; margin-bottom: 12px;"></ion-skeleton-text>
+            <ion-skeleton-text [animated]="true"
+                style="width: 40%; height: 24px; margin-bottom: 16px;"></ion-skeleton-text>
+            <ion-skeleton-text [animated]="true" style="width: 100%; height: 100px;"></ion-skeleton-text>
+        </div>
+    </div>
+</ion-content>
+
+<!-- Call Button -->
+<ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="!loading && rental">
+    <ion-fab-button (click)="callNow()">
+        <ion-icon name="call"></ion-icon>
+    </ion-fab-button>
+</ion-fab>

@@ -1,0 +1,60 @@
+<ion-header [translucent]="true">
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button (click)="goBack()">
+                <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title>{{ step === 'phone' ? 'Login' : 'Verify OTP' }}</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+    <div class="login-container">
+        <div class="login-header">
+            <div class="logo-circle">
+                <ion-icon name="lock-closed"></ion-icon>
+            </div>
+            <h1>Welcome to CivilWorks</h1>
+            <p>{{ step === 'phone' ? 'Enter your mobile number or email' : 'Enter the OTP sent to your device' }}</p>
+        </div>
+
+        <!-- Phone/Email Step -->
+        <div *ngIf="step === 'phone'" class="login-form fade-in">
+            <ion-item lines="none" class="input-item">
+                <ion-icon name="call" slot="start" color="primary"></ion-icon>
+                <ion-input [(ngModel)]="phoneOrEmail" type="text" placeholder="Mobile number" inputmode="text"
+                    maxlength="10" inputmode="numeric" pattern="[0-9]*">
+                </ion-input>
+            </ion-item>
+
+            <ion-button expand="block" class="cta-button" (click)="sendOTP()" [disabled]="!phoneOrEmail.trim()">
+                Send OTP
+            </ion-button>
+
+            <div class="helper-text">
+                <ion-icon name="information-circle"></ion-icon>
+                <span>We'll send you a verification code</span>
+            </div>
+        </div>
+
+        <!-- OTP Step -->
+        <div *ngIf="step === 'otp'" class="login-form fade-in">
+            <ion-item lines="none" class="input-item">
+                <ion-icon name="key" slot="start" color="primary"></ion-icon>
+                <ion-input [(ngModel)]="otp" type="text" placeholder="Enter OTP" maxlength="4" inputmode="numeric"
+                    pattern="[0-9]*">
+                </ion-input>
+            </ion-item>
+
+            <ion-button expand="block" class="cta-button" (click)="verifyOTP()" [disabled]="otp.length !== 4">
+                Verify & Login
+            </ion-button>
+
+            <div class="helper-text">
+                <ion-icon name="information-circle"></ion-icon>
+                <span>For demo, use OTP: <strong>1234</strong></span>
+            </div>
+        </div>
+    </div>
+</ion-content>

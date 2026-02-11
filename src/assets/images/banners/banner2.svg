@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+  <defs>
+    <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFC107;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#FF9800;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#F7931E;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="675" fill="url(#grad2)"/>
+  <circle cx="150" cy="550" r="100" fill="#0B2C4D" opacity="0.2"/>
+  <circle cx="1050" cy="120" r="90" fill="#0B2C4D" opacity="0.15"/>
+  <text x="600" y="300" font-family="Arial, sans-serif" font-size="70" font-weight="bold" fill="#0B2C4D" text-anchor="middle">Heavy Equipment</text>
+  <text x="600" y="380" font-family="Arial, sans-serif" font-size="70" font-weight="bold" fill="#FFFFFF" text-anchor="middle">Rental Services</text>
+  <text x="600" y="450" font-family="Arial, sans-serif" font-size="32" fill="#0B2C4D" text-anchor="middle" opacity="0.9">🚜 Powerful Machinery at Your Service</text>
+</svg>

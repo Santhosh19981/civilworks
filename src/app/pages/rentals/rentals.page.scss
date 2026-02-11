@@ -1,0 +1,16 @@
+// Rentals page uses global styles
+
+// Search bar styling
+ion-searchbar {
+    --background: rgba(255, 255, 255, 0.95);
+    --border-radius: 12px;
+    --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    --color: #0B2C4D;
+    --placeholder-color: #999;
+    --icon-color: #F7931E;
+    padding: 8px 16px;
+
+    .searchbar-input-container {
+        height: 48px;
+    }
+}

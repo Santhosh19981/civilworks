@@ -1,0 +1,136 @@
+.splash-content {
+    --background: linear-gradient(135deg, #0B2C4D 0%, #1a4d7a 100%);
+}
+
+.splash-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.logo-container {
+    text-align: center;
+    margin-bottom: 48px;
+}
+
+.app-logo {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    margin-bottom: 32px;
+    border-radius: 50%;
+    border: 6px solid #F7931E;
+    padding: 12px;
+    background: white;
+    box-shadow:
+        0 0 0 8px rgba(247, 147, 30, 0.2),
+        0 0 0 16px rgba(247, 147, 30, 0.1),
+        0 12px 40px rgba(0, 0, 0, 0.3);
+    animation: logoFloat 3s ease-in-out infinite, logoPulse 2s ease-in-out infinite;
+}
+
+.app-title {
+    font-size: 42px;
+    font-weight: 900;
+    color: #ffffff;
+    margin: 0 0 12px 0;
+    letter-spacing: 2px;
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    animation: slideUp 0.8s ease-out 0.3s both;
+}
+
+.app-tagline {
+    font-size: 16px;
+    font-weight: 600;
+    color: #F7931E;
+    margin: 0;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    animation: slideUp 0.8s ease-out 0.5s both;
+}
+
+.loading-indicator {
+    position: absolute;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: fadeIn 0.8s ease-out 0.7s both;
+}
+
+ion-spinner {
+    --color: #F7931E;
+    width: 52px;
+    height: 52px;
+}
+
+// Animations
+.fade-in {
+    animation: fadeInScale 0.8s ease-out;
+}
+
+@keyframes fadeInScale {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes logoFloat {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-15px);
+    }
+}
+
+@keyframes logoPulse {
+
+    0%,
+    100% {
+        box-shadow:
+            0 0 0 8px rgba(247, 147, 30, 0.2),
+            0 0 0 16px rgba(247, 147, 30, 0.1),
+            0 12px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    50% {
+        box-shadow:
+            0 0 0 12px rgba(247, 147, 30, 0.3),
+            0 0 0 24px rgba(247, 147, 30, 0.15),
+            0 16px 48px rgba(0, 0, 0, 0.4);
+    }
+}
+
+@keyframes slideUp {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}

@@ -1,0 +1,7 @@
+{
+    "name": "civilworks",
+    "integrations": {
+        "capacitor": {}
+    },
+    "type": "angular"
+}

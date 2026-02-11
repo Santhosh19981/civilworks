@@ -1,0 +1,99 @@
+.success-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px;
+    text-align: center;
+    min-height: 100%;
+}
+
+.success-animation {
+    margin-bottom: 32px;
+    animation: scaleIn 0.5s ease-out;
+}
+
+.checkmark-circle {
+    ion-icon {
+        font-size: 120px;
+        filter: drop-shadow(0 4px 16px rgba(45, 211, 111, 0.3));
+    }
+}
+
+.success-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: #0B2C4D;
+    margin: 0 0 12px 0;
+}
+
+.success-message {
+    font-size: 15px;
+    color: #666;
+    line-height: 1.6;
+    margin: 0 0 32px 0;
+    max-width: 400px;
+}
+
+.order-id-card {
+    background: #f5f5f5;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 32px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.order-id-label {
+    font-size: 12px;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+}
+
+.order-id-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: #0B2C4D;
+    font-family: 'Courier New', monospace;
+}
+
+.success-actions {
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 24px;
+
+    ion-button {
+        margin-bottom: 12px;
+    }
+}
+
+.success-note {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #666;
+
+    ion-icon {
+        font-size: 18px;
+        color: #F7931E;
+    }
+}
+
+@keyframes scaleIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
