@@ -1,4 +1,4 @@
-.rental-hero {
+.helper-hero {
     position: relative;
     height: 300px;
     width: 100%;
@@ -62,25 +62,13 @@
             font-size: 18px;
             font-weight: 700;
             color: #0B2C4D;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-
-            ion-icon {
-                color: #F7931E;
-                font-size: 20px;
-            }
+            margin-bottom: 12px;
         }
 
         .description-text {
             color: #666;
             line-height: 1.6;
             font-size: 15px;
-            background: #fdfdfd;
-            padding: 12px;
-            border-radius: 12px;
-            border-left: 3px solid #F7931E;
         }
     }
 }
@@ -90,7 +78,6 @@
     padding: 20px;
     border-radius: 16px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-    border: 1px solid #f0f0f0;
 
     .input-group {
         display: flex;
@@ -98,23 +85,12 @@
         align-items: center;
         margin-bottom: 24px;
 
-        .label-info {
-            display: flex;
-            flex-direction: column;
-
-            .main-label {
-                font-weight: 700;
-                color: #0B2C4D;
-                font-size: 16px;
-            }
-
-            .sub-label {
-                font-size: 12px;
-                color: #888;
-            }
+        label {
+            font-weight: 600;
+            color: #0B2C4D;
         }
 
-        .selector {
+        .members-selector {
             display: flex;
             align-items: center;
             gap: 16px;
@@ -131,7 +107,7 @@
 
             .count {
                 font-size: 18px;
-                font-weight: 800;
+                font-weight: 700;
                 color: #0B2C4D;
                 min-width: 24px;
                 text-align: center;
@@ -156,7 +132,7 @@
 
             span:last-child {
                 color: #F7931E;
-                font-size: 24px;
+                font-size: 22px;
             }
         }
     }
@@ -168,18 +144,11 @@
     }
 }
 
-.footer-navy {
-    --background: #0B2C4D;
-    padding-top: 15px;
-}
-
-.book-btn-orange {
+.book-btn {
     --background: #F7931E;
-    --color: #ffffff;
     --border-radius: 14px;
     --box-shadow: 0 4px 12px rgba(247, 147, 30, 0.3);
     height: 56px;
     font-weight: 700;
     font-size: 17px;
-    margin: 0;
 }

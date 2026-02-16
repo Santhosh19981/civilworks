@@ -9,8 +9,10 @@ import { Order } from '../../models/order.model';
     styleUrls: ['./orders.page.scss'],
 })
 export class OrdersPage implements OnInit {
-    orders: Order[] = [];
+    orders: any[] = [];
+    filteredOrders: any[] = [];
     loading = true;
+    selectedFilter = 'All';
 
     constructor(
         private orderService: OrderService,
@@ -28,9 +30,48 @@ export class OrdersPage implements OnInit {
     loadOrders() {
         this.loading = true;
         setTimeout(() => {
-            this.orders = this.orderService.getOrders();
+            const productOrders = this.orderService.getOrders().map(o => ({ ...o, type: 'product' }));
+
+            const helperBookings = JSON.parse(localStorage.getItem('civilworks_helper_bookings') || '[]').map((b: any) => ({
+                id: b.bookingId,
+                items: [{ product: { name: b.serviceName } }],
+                serviceName: b.serviceName,
+                total: b.totalAmount,
+                status: b.status,
+                date: new Date(b.date),
+                type: 'helper',
+                members: b.members,
+                mobile: b.mobile
+            }));
+
+            const rentalBookings = JSON.parse(localStorage.getItem('civilworks_rental_bookings') || '[]').map((b: any) => ({
+                id: b.bookingId,
+                items: [{ product: { name: b.rentalName } }],
+                serviceName: b.rentalName,
+                total: b.totalAmount,
+                status: b.status,
+                date: new Date(b.date),
+                type: 'rental',
+                days: b.days,
+                mobile: b.mobile
+            }));
+
+            this.orders = [...productOrders, ...helperBookings, ...rentalBookings].sort((a, b) => b.date.getTime() - a.date.getTime());
+            this.applyFilter();
             this.loading = false;
         }, 500);
+    }
+
+    applyFilter() {
+        if (this.selectedFilter === 'All') {
+            this.filteredOrders = this.orders;
+        } else if (this.selectedFilter === 'Products') {
+            this.filteredOrders = this.orders.filter(o => o.type === 'product');
+        } else if (this.selectedFilter === 'Rentals') {
+            this.filteredOrders = this.orders.filter(o => o.type === 'rental'); // Note: if rental is distinct from product
+        } else if (this.selectedFilter === 'Helpers') {
+            this.filteredOrders = this.orders.filter(o => o.type === 'helper');
+        }
     }
 
     handleRefresh(event: any) {

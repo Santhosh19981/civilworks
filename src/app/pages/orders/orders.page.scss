@@ -43,6 +43,57 @@
     color: #2dd36f;
 }
 
+.status-helper {
+    background: #FFF9C4; // Light Helmet Yellow
+    color: #F7931E; // Orange
+}
+
+.status-rental {
+    background: rgba(11, 44, 77, 0.1); // Light Navy
+    color: #0B2C4D; // Navy
+}
+
+.filters-container {
+    padding: 8px 16px;
+    display: flex;
+    overflow-x: auto;
+    gap: 8px;
+    background: #ffffff;
+    border-bottom: 1px solid #f0f0f0;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    ion-chip {
+        margin: 0;
+        --background: #F5F6F8;
+        --color: #666;
+
+        &[outline="false"] {
+            --background: rgba(247, 147, 30, 0.15);
+            --color: #F7931E;
+            font-weight: 700;
+        }
+    }
+}
+
+.helper-border {
+    border-top: 4px solid #FFD700; // Helmet Yellow
+}
+
+.rental-border {
+    border-top: 4px solid #0B2C4D; // Navy
+}
+
+.helper-total {
+    border-top-color: #FFD700 !important;
+}
+
+.rental-total {
+    border-top-color: #0B2C4D !important;
+}
+
 .order-info {
     margin: 16px 0;
 }

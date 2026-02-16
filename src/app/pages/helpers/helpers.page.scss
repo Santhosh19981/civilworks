@@ -3,47 +3,32 @@ ion-title {
     color: #ffffff;
 }
 
-// Search bar styling
-ion-searchbar {
-    --background: rgba(255, 255, 255, 0.95);
-    --border-radius: 12px;
-    --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    --color: #0B2C4D;
-    --placeholder-color: #999;
-    --icon-color: #F7931E;
-    padding: 8px 16px;
-
-    .searchbar-input-container {
-        height: 48px;
-    }
-}
-
-.rentals-grid {
+.helpers-grid {
     display: grid;
     grid-template-columns: repeat(1, 1fr);
     gap: 20px;
-    padding: 20px 16px;
+    padding: 10px 0;
 }
 
 @media (min-width: 768px) {
-    .rentals-grid {
+    .helpers-grid {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
-.rental-card {
+.helper-card {
     background: #ffffff;
     border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border: 1px solid rgba(0, 0, 0, 0.03);
 
     &:active {
         transform: scale(0.98);
     }
 
-    .rental-image-container {
+    .helper-image-container {
         position: relative;
         height: 180px;
 
@@ -67,17 +52,8 @@ ion-searchbar {
         }
     }
 
-    .rental-info {
+    .helper-info {
         padding: 16px;
-
-        .category-tag {
-            font-size: 11px;
-            font-weight: 800;
-            color: #F7931E;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 6px;
-        }
 
         h3 {
             font-size: 18px;
@@ -93,6 +69,7 @@ ion-searchbar {
             margin-bottom: 20px;
             display: -webkit-box;
             -webkit-line-clamp: 2;
+            line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
@@ -123,19 +100,20 @@ ion-searchbar {
     padding: 60px 40px;
     text-align: center;
 
-    .empty-state-icon {
+    .empty-icon {
         font-size: 80px;
+        color: #d0d0d0;
         margin-bottom: 20px;
     }
 
-    .empty-state-title {
+    h3 {
         font-size: 22px;
         font-weight: 700;
         color: #0B2C4D;
         margin-bottom: 10px;
     }
 
-    .empty-state-text {
+    p {
         font-size: 15px;
         color: #666;
     }

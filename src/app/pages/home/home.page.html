@@ -36,16 +36,40 @@
         </div>
     </div>
 
-    <!-- CTA Buttons -->
-    <div class="cta-section">
-        <ion-button expand="block" class="cta-button" (click)="navigateToBuy()">
-            <ion-icon slot="start" name="cube"></ion-icon>
-            Buy Construction Materials
-        </ion-button>
-        <ion-button expand="block" class="cta-button-secondary" (click)="navigateToRental()">
-            <ion-icon slot="start" name="construct"></ion-icon>
-            Rent Heavy Equipment
-        </ion-button>
+    <!-- Premier Features Section -->
+    <div class="features-grid">
+        <div class="feature-card buy-card" (click)="navigateToBuy()">
+            <div class="card-icon">
+                <ion-icon name="cube"></ion-icon>
+            </div>
+            <div class="card-content">
+                <h3>Buy Materials</h3>
+                <p>Quality construction supply</p>
+            </div>
+            <ion-icon name="chevron-forward" class="arrow-icon"></ion-icon>
+        </div>
+
+        <div class="feature-card rent-card" (click)="navigateToRental()">
+            <div class="card-icon">
+                <ion-icon name="construct"></ion-icon>
+            </div>
+            <div class="card-content">
+                <h3>Rent Equipment</h3>
+                <p>Heavy machinery for hire</p>
+            </div>
+            <ion-icon name="chevron-forward" class="arrow-icon"></ion-icon>
+        </div>
+
+        <div class="feature-card hire-card" (click)="navigateToHelpers()">
+            <div class="card-icon">
+                <ion-icon name="people"></ion-icon>
+            </div>
+            <div class="card-content">
+                <h3>Hire Helpers</h3>
+                <p>Skilled labor & workers</p>
+            </div>
+            <ion-icon name="chevron-forward" class="arrow-icon"></ion-icon>
+        </div>
     </div>
 
     <!-- Featured Products -->

@@ -1,0 +1,43 @@
+<ion-content class="ion-padding ion-text-center">
+  <div class="success-container fade-in" *ngIf="booking">
+    <div class="success-anim">
+      <ion-icon name="checkmark-circle" class="success-icon scale-in"></ion-icon>
+    </div>
+
+    <h1 class="success-title">Helper Service Booked Successfully!</h1>
+    <p class="success-msg">Our partner will contact you shortly to finalize the details.</p>
+
+    <div class="booking-details-card">
+      <div class="detail-row">
+        <span>Service</span>
+        <span class="val">{{booking.serviceName}}</span>
+      </div>
+      <div class="detail-row">
+        <span>Members</span>
+        <span class="val">{{booking.members}}</span>
+      </div>
+      <div class="detail-row">
+        <span>Total Amount</span>
+        <span class="val highlight">₹{{booking.totalAmount}}</span>
+      </div>
+      <div class="detail-row">
+        <span>Booking ID</span>
+        <span class="val">#{{booking.bookingId}}</span>
+      </div>
+      <div class="detail-row">
+        <span>Contact Number</span>
+        <span class="val">{{booking.mobile}}</span>
+      </div>
+    </div>
+
+    <ion-button expand="block" fill="clear" class="home-btn" (click)="goToHome()">
+      Back to Home
+    </ion-button>
+  </div>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" class="fab-call">
+    <ion-fab-button class="call-btn" (click)="callHelper()" *ngIf="booking">
+      <ion-icon name="call"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

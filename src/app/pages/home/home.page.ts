@@ -16,10 +16,14 @@ export class HomePage implements OnInit {
     @ViewChild(IonContent) content!: IonContent;
 
     banners = [
-        { image: 'https://img.freepik.com/premium-photo/set-construction-tools-black-wall-background_154092-12367.jpg', 
-            title: 'Heavy Equipment' },
-        { image: 'https://png.pngtree.com/thumb_back/fw800/background/20251021/pngtree-construction-materials-and-tools-on-a-gray-background-image_19942823.webp', 
-            title: 'Quality Materials' },
+        {
+            image: 'https://img.freepik.com/premium-photo/set-construction-tools-black-wall-background_154092-12367.jpg',
+            title: 'Heavy Equipment'
+        },
+        {
+            image: 'https://png.pngtree.com/thumb_back/fw800/background/20251021/pngtree-construction-materials-and-tools-on-a-gray-background-image_19942823.webp',
+            title: 'Quality Materials'
+        },
         // { image: 'https://miro.medium.com/1*TfIqQpwfXov287CCqjhetg.jpeg', 
         //     title: 'Build Your Dreams' }
     ];
@@ -75,6 +79,10 @@ export class HomePage implements OnInit {
 
     navigateToRental() {
         this.router.navigate(['/tabs/rentals']);
+    }
+
+    navigateToHelpers() {
+        this.router.navigate(['/helpers']);
     }
 
     viewProduct(productId: string) {

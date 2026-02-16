@@ -1,0 +1,82 @@
+.success-container {
+    padding-top: 60px;
+}
+
+.success-icon {
+    font-size: 100px;
+    color: #2dd36f;
+    margin-bottom: 24px;
+}
+
+.success-title {
+    font-size: 24px;
+    font-weight: 800;
+    color: #0B2C4D;
+    margin-bottom: 12px;
+}
+
+.success-msg {
+    color: #666;
+    font-size: 16px;
+    margin-bottom: 40px;
+}
+
+.booking-details-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+    margin-bottom: 30px;
+    text-align: left;
+
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 0;
+        border-bottom: 1px solid #f0f0f0;
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        span:first-child {
+            color: #888;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .val {
+            color: #0B2C4D;
+            font-weight: 700;
+            font-size: 15px;
+
+            &.highlight {
+                color: #F7931E;
+                font-size: 18px;
+            }
+        }
+    }
+}
+
+.home-btn {
+    --color: #0B2C4D;
+    font-weight: 700;
+    margin-top: 10px;
+}
+
+.fab-call {
+    margin-bottom: 20px;
+    margin-right: 10px;
+}
+
+.call-btn {
+    --background: #F7931E;
+    --border-radius: 50%;
+    --box-shadow: 0 4px 16px rgba(247, 147, 30, 0.4);
+    width: 60px;
+    height: 60px;
+
+    ion-icon {
+        font-size: 28px;
+    }
+}

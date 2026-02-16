@@ -1,0 +1,58 @@
+[
+    {
+        "id": "1",
+        "name": "Carpenter",
+        "image": "assets/images/helpers/carpenter.avif",
+        "description": "Expert in woodwork, furniture fitting, doors and cabinets.",
+        "mobile": "9876543210",
+        "pricePerDay": 1200
+    },
+    {
+        "id": "2",
+        "name": "Painter",
+        "image": "assets/images/helpers/painter.jpg",
+        "description": "Professional wall painting and texture finishing services.",
+        "mobile": "9876543211",
+        "pricePerDay": 1000
+    },
+    {
+        "id": "3",
+        "name": "Electrician",
+        "image": "assets/images/helpers/electrician.jpg",
+        "description": "Certified electrician for wiring, repairs, and installations.",
+        "mobile": "9876543212",
+        "pricePerDay": 1100
+    },
+    {
+        "id": "4",
+        "name": "Plumber",
+        "image": "assets/images/helpers/plumber.webp",
+        "description": "Reliable plumbing for leaks, taps, and pipe installations.",
+        "mobile": "9876543213",
+        "pricePerDay": 1050
+    },
+    {
+        "id": "5",
+        "name": "Mason",
+        "image": "assets/images/helpers/mason.webp",
+        "description": "Skilled mason for brickwork, plastering, and concrete work.",
+        "mobile": "9876543214",
+        "pricePerDay": 1300
+    },
+    {
+        "id": "6",
+        "name": "Tile Worker",
+        "image": "assets/images/helpers/tileworker.jpg",
+        "description": "Expert in floor and wall tile installation with precision.",
+        "mobile": "9876543215",
+        "pricePerDay": 1150
+    },
+    {
+        "id": "7",
+        "name": "Steel Fixer",
+        "image": "assets/images/helpers/steelfixer.webp",
+        "description": "Professional steelfixing for slab, column, and beam reinforcement.",
+        "mobile": "9876543216",
+        "pricePerDay": 1250
+    }
+]

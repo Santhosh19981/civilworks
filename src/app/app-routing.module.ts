@@ -42,6 +42,22 @@ const routes: Routes = [
     {
         path: 'order-success',
         loadChildren: () => import('./pages/order-success/order-success.module').then(m => m.OrderSuccessPageModule)
+    },
+    {
+        path: 'helpers',
+        loadChildren: () => import('./pages/helpers/helpers.module').then(m => m.HelpersPageModule)
+    },
+    {
+        path: 'helper-details/:id',
+        loadChildren: () => import('./pages/helper-details/helper-details.module').then(m => m.HelperDetailsPageModule)
+    },
+    {
+        path: 'helper-booking-success',
+        loadChildren: () => import('./pages/helper-booking-success/helper-booking-success.module').then(m => m.HelperBookingSuccessPageModule)
+    },
+    {
+        path: 'rental-booking-success',
+        loadChildren: () => import('./pages/rental-booking-success/rental-booking-success.module').then(m => m.RentalBookingSuccessPageModule)
     }
 ];
 
