@@ -46,18 +46,36 @@ export class HomePage implements OnInit {
         this.startBannerAutoSlide();
 
         // Subscribe to cart changes
-        this.cartService.cart$.subscribe(() => {
-            this.cartCount = this.cartService.getCartCount();
+        this.cartService.cart$.subscribe((cart) => {
+            this.cartCount = cart?.items?.length || 0;
         });
     }
 
     loadData() {
         this.loading = true;
-        setTimeout(() => {
-            this.featuredProducts = this.productService.getFeaturedProducts(6);
-            this.popularRentals = this.rentalService.getPopularRentals(6);
-            this.loading = false;
-        }, 500);
+
+        // Load Featured Products
+        this.productService.getFeaturedProducts(6).subscribe({
+            next: (products) => {
+                this.featuredProducts = products;
+                this.checkLoading();
+            },
+            error: () => this.checkLoading()
+        });
+
+        // Load Popular Rentals
+        this.rentalService.getRentals({ featured: 1 }).subscribe({
+            next: (rentals) => {
+                this.popularRentals = rentals;
+                this.checkLoading();
+            },
+            error: () => this.checkLoading()
+        });
+    }
+
+    private checkLoading() {
+        // Simple logic to stop loading spinner
+        this.loading = false;
     }
 
     startBannerAutoSlide() {

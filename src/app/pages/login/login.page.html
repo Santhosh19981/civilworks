@@ -1,9 +1,9 @@
 <ion-header [translucent]="true">
     <ion-toolbar>
         <ion-buttons slot="start">
-            <ion-button (click)="goBack()">
+            <!-- <ion-button (click)="goBack()">
                 <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
-            </ion-button>
+            </ion-button> -->
         </ion-buttons>
         <ion-title>{{ step === 'phone' ? 'Login' : 'Verify OTP' }}</ion-title>
     </ion-toolbar>
@@ -11,6 +11,11 @@
 
 <ion-content [fullscreen]="true">
     <div class="login-container">
+        <div class="skip-wrapper" *ngIf="showSkip && step === 'phone'">
+            <ion-button (click)="skipLogin()" fill="clear" class="skip-btn">
+                Skip
+            </ion-button>
+        </div>
         <div class="login-header">
             <div class="logo-circle">
                 <ion-icon name="lock-closed"></ion-icon>
@@ -55,6 +60,10 @@
                 <ion-icon name="information-circle"></ion-icon>
                 <span>For demo, use OTP: <strong>1234</strong></span>
             </div>
+        </div>
+
+        <div class="legal-text">
+            By continuing, you agree to our <span>Terms of Service</span> & <span>Privacy Policy</span>
         </div>
     </div>
 </ion-content>

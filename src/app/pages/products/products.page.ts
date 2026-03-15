@@ -35,12 +35,25 @@ export class ProductsPage implements OnInit {
 
     loadProducts() {
         this.loading = true;
-        setTimeout(() => {
-            this.products = this.productService.getProducts();
-            this.filteredProducts = [...this.products];
-            this.categories = this.productService.getCategories();
-            this.loading = false;
-        }, 500);
+        this.productService.getProducts().subscribe({
+            next: (products: Product[]) => {
+                this.products = products;
+                this.filteredProducts = [...this.products];
+                this.filterProducts();
+                this.loading = false;
+            },
+            error: (err: any) => {
+                console.error('Error loading products', err);
+                this.loading = false;
+            }
+        });
+
+        this.productService.getCategories().subscribe({
+            next: (cats: any[]) => {
+                this.categories = cats.map((c: any) => c.name || c);
+            },
+            error: (err: any) => console.error('Error loading categories', err)
+        });
     }
 
     handleRefresh(event: any) {

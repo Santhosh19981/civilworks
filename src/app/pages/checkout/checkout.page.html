@@ -11,7 +11,7 @@
 
 <ion-content [fullscreen]="true">
     <div class="checkout-container">
-        <h2 class="section-title"> Delivery Address</h2>
+        <h2 class="section-title"> Site / Delivery Address</h2>
 
         <form [formGroup]="checkoutForm">
             <ion-item lines="none" class="input-item" [class.ion-invalid]="name?.invalid && name?.touched">
@@ -101,8 +101,8 @@
 <ion-footer>
     <ion-toolbar>
         <ion-button expand="block" class="cta-button" (click)="proceedToPayment()" [disabled]="!checkoutForm.valid">
-            <ion-icon slot="start" name="card"></ion-icon>
-            Continue to Payment
+            <ion-icon slot="start" [name]="isBookingFlow ? 'checkmark-circle' : 'card'"></ion-icon>
+            {{ checkoutButtonText }}
         </ion-button>
     </ion-toolbar>
 </ion-footer>

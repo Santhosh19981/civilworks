@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
     selector: 'app-splash',
@@ -8,12 +9,19 @@ import { Router } from '@angular/router';
 })
 export class SplashPage implements OnInit {
 
-    constructor(private router: Router) { }
+    constructor(
+        private router: Router,
+        private authService: AuthService
+    ) { }
 
     ngOnInit() {
-        // Navigate to tabs after 3 seconds
+        // Navigate after 3 seconds based on auth status
         setTimeout(() => {
-            this.router.navigateByUrl('/tabs/home', { replaceUrl: true });
+            if (this.authService.isAuthenticated()) {
+                this.router.navigateByUrl('/tabs/home', { replaceUrl: true });
+            } else {
+                this.router.navigateByUrl('/login', { replaceUrl: true });
+            }
         }, 3000);
     }
 }

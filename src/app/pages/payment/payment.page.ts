@@ -39,19 +39,21 @@ export class PaymentPage implements OnInit {
     private async placeOrder(paymentMethod: 'online' | 'cod') {
         if (this.address) {
             const cartItems = this.cartService.getCart();
-            const order = this.orderService.createOrder(
+            this.orderService.createOrder(
                 cartItems,
                 this.total,
                 this.address,
                 paymentMethod
-            );
-
-            // Clear cart
-            this.cartService.clearCart();
-
-            // Navigate to success page
-            this.router.navigate(['/order-success'], {
-                state: { orderId: order.id }
+            ).subscribe({
+                next: (order: any) => {
+                    this.cartService.clearCart();
+                    this.router.navigate(['/order-success'], {
+                        state: { orderId: order?.id || order?.data?.id }
+                    });
+                },
+                error: (err: any) => {
+                    console.error('Order placement failed', err);
+                }
             });
         }
     }
@@ -60,3 +62,4 @@ export class PaymentPage implements OnInit {
         this.router.navigate(['/checkout']);
     }
 }
+

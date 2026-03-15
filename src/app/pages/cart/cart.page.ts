@@ -22,27 +22,29 @@ export class CartPage implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.cartService.cart$.subscribe(items => {
-            this.cartItems = items;
-            this.total = this.cartService.getCartTotal();
+        this.cartService.cart$.subscribe(cart => {
+            if (cart) {
+                this.cartItems = cart.items;
+                this.total = cart.subtotal;
+            }
         });
     }
 
-    increaseQuantity(productId: string) {
-        const item = this.cartItems.find(i => i.product.id === productId);
+    increaseQuantity(itemId: number) {
+        const item = this.cartItems.find(i => i.id === itemId);
         if (item) {
-            this.cartService.updateQuantity(productId, item.quantity + 1);
+            this.cartService.updateQuantity(itemId, item.quantity + 1).subscribe();
         }
     }
 
-    decreaseQuantity(productId: string) {
-        const item = this.cartItems.find(i => i.product.id === productId);
+    decreaseQuantity(itemId: number) {
+        const item = this.cartItems.find(i => i.id === itemId);
         if (item && item.quantity > 1) {
-            this.cartService.updateQuantity(productId, item.quantity - 1);
+            this.cartService.updateQuantity(itemId, item.quantity - 1).subscribe();
         }
     }
 
-    async removeItem(productId: string) {
+    async removeItem(itemId: number) {
         const alert = await this.alertController.create({
             header: 'Remove Item',
             message: 'Are you sure you want to remove this item from cart?',
@@ -55,7 +57,7 @@ export class CartPage implements OnInit {
                     text: 'Remove',
                     role: 'destructive',
                     handler: () => {
-                        this.cartService.removeFromCart(productId);
+                        this.cartService.removeItem(itemId).subscribe();
                     }
                 }
             ]

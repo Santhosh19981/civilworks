@@ -25,11 +25,17 @@ export class RentalsPage implements OnInit {
 
     loadRentals() {
         this.loading = true;
-        setTimeout(() => {
-            this.rentals = this.rentalService.getRentals();
-            this.filteredRentals = [...this.rentals];
-            this.loading = false;
-        }, 500);
+        this.rentalService.getRentals().subscribe({
+            next: (rentals: any[]) => {
+                this.rentals = rentals;
+                this.filteredRentals = [...this.rentals];
+                this.loading = false;
+            },
+            error: (err: any) => {
+                console.error('Error loading rentals', err);
+                this.loading = false;
+            }
+        });
     }
 
     handleRefresh(event: any) {

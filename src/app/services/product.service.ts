@@ -1,53 +1,33 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Product } from '../models/product.model';
-import productsData from '../../data/products.json';
+import { environment } from '../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ProductService {
-    private productsSubject = new BehaviorSubject<Product[]>([]);
-    public products$: Observable<Product[]> = this.productsSubject.asObservable();
+    constructor(private http: HttpClient) { }
 
-    constructor() {
-        this.loadProducts();
+    getProducts(params: any = {}): Observable<Product[]> {
+        return this.http.get<any>(`${environment.apiUrl}/products`, { params })
+            .pipe(map(res => res.data));
     }
 
-    private loadProducts(): void {
-        this.productsSubject.next(productsData as Product[]);
+    getProductById(id: string): Observable<Product> {
+        return this.http.get<any>(`${environment.apiUrl}/products/${id}`)
+            .pipe(map(res => res.data));
     }
 
-    getProducts(): Product[] {
-        return this.productsSubject.value;
+    getCategories(): Observable<any[]> {
+        return this.http.get<any>(`${environment.apiUrl}/categories`)
+            .pipe(map(res => res.data));
     }
 
-    getProductById(id: string): Product | undefined {
-        return this.productsSubject.value.find(p => p.id === id);
-    }
-
-    searchProducts(query: string): Product[] {
-        const lowerQuery = query.toLowerCase();
-        return this.productsSubject.value.filter(p =>
-            p.name.toLowerCase().includes(lowerQuery) ||
-            p.description.toLowerCase().includes(lowerQuery) ||
-            p.category.toLowerCase().includes(lowerQuery)
-        );
-    }
-
-    getProductsByCategory(category: string): Product[] {
-        if (category === 'All') {
-            return this.productsSubject.value;
-        }
-        return this.productsSubject.value.filter(p => p.category === category);
-    }
-
-    getCategories(): string[] {
-        const categories = this.productsSubject.value.map(p => p.category);
-        return ['All', ...Array.from(new Set(categories))];
-    }
-
-    getFeaturedProducts(limit: number = 6): Product[] {
-        return this.productsSubject.value.slice(0, limit);
+    getFeaturedProducts(limit: number = 6): Observable<Product[]> {
+        return this.http.get<any>(`${environment.apiUrl}/products?featured=1`)
+            .pipe(map(res => res.data.slice(0, limit)));
     }
 }

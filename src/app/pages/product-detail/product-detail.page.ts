@@ -38,10 +38,16 @@ export class ProductDetailPage implements OnInit {
 
     loadProduct(id: string) {
         this.loading = true;
-        setTimeout(() => {
-            this.product = this.productService.getProductById(id);
-            this.loading = false;
-        }, 300);
+        this.productService.getProductById(id).subscribe({
+            next: (product: Product) => {
+                this.product = product;
+                this.loading = false;
+            },
+            error: (err: any) => {
+                console.error('Error loading product', err);
+                this.loading = false;
+            }
+        });
     }
 
     decreaseQuantity() {
@@ -56,18 +62,29 @@ export class ProductDetailPage implements OnInit {
 
     async addToCart() {
         if (this.product) {
-            this.cartService.addToCart(this.product, this.quantity);
-
-            const toast = await this.toastController.create({
-                message: `${this.product.name} added to cart!`,
-                duration: 2000,
-                position: 'bottom',
-                color: 'success',
-                icon: 'checkmark-circle'
+            this.cartService.addToCart(+this.product.id, this.quantity).subscribe({
+                next: async () => {
+                    const toast = await this.toastController.create({
+                        message: `${this.product!.name} added to cart!`,
+                        duration: 2000,
+                        position: 'bottom',
+                        color: 'success',
+                        icon: 'checkmark-circle'
+                    });
+                    await toast.present();
+                    this.quantity = 1;
+                },
+                error: async (err: any) => {
+                    console.error('Add to cart failed', err);
+                    const toast = await this.toastController.create({
+                        message: 'Failed to add item to cart. Please login.',
+                        duration: 2000,
+                        position: 'bottom',
+                        color: 'danger'
+                    });
+                    await toast.present();
+                }
             });
-            await toast.present();
-
-            this.quantity = 1;
         }
     }
 
@@ -75,3 +92,4 @@ export class ProductDetailPage implements OnInit {
         this.router.navigate(['/tabs/products']);
     }
 }
+

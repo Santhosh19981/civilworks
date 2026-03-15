@@ -13,6 +13,9 @@ export class CheckoutPage implements OnInit {
     checkoutForm!: FormGroup;
     total = 0;
     itemCount = 0;
+    bookingData: any = null;
+    isBookingFlow = false;
+    checkoutButtonText = 'Continue to Payment';
 
     constructor(
         private formBuilder: FormBuilder,
@@ -21,8 +24,17 @@ export class CheckoutPage implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.total = this.cartService.getCartTotal();
-        this.itemCount = this.cartService.getCartCount();
+        const state = window.history.state;
+        if (state && state['bookingData']) {
+            this.bookingData = state['bookingData'];
+            this.isBookingFlow = true;
+            this.checkoutButtonText = 'PLACE ORDER';
+            this.total = this.bookingData.totalAmount || this.bookingData.total;
+            this.itemCount = 1;
+        } else {
+            this.total = this.cartService.getCartTotal();
+            this.itemCount = this.cartService.getCartCount();
+        }
 
         this.checkoutForm = this.formBuilder.group({
             name: ['', [
@@ -120,11 +132,42 @@ export class CheckoutPage implements OnInit {
 
         if (this.checkoutForm.valid) {
             const address: Address = this.checkoutForm.value;
-            this.router.navigate(['/payment'], { state: { address } });
+
+            if (this.isBookingFlow) {
+                this.handleBookingFinalization(address);
+            } else {
+                this.router.navigate(['/payment'], { state: { address } });
+            }
         } else {
             // Show error message for invalid form
             const firstError = this.getFirstErrorMessage();
             alert(`Please fix the following error: ${firstError}`);
+        }
+    }
+
+    private handleBookingFinalization(address: Address) {
+        // Combine booking data with address
+        const finalBookingData = {
+            ...this.bookingData,
+            customerAddress: address
+        };
+
+        if (this.bookingData.type === 'rental') {
+            const existingBookings = JSON.parse(localStorage.getItem('civilworks_rental_bookings') || '[]');
+            existingBookings.push(finalBookingData);
+            localStorage.setItem('civilworks_rental_bookings', JSON.stringify(existingBookings));
+
+            this.router.navigate(['/rental-booking-success'], {
+                state: { booking: finalBookingData }
+            });
+        } else if (this.bookingData.type === 'helper') {
+            const existingBookings = JSON.parse(localStorage.getItem('civilworks_helper_bookings') || '[]');
+            existingBookings.push(finalBookingData);
+            localStorage.setItem('civilworks_helper_bookings', JSON.stringify(existingBookings));
+
+            this.router.navigate(['/helper-booking-success'], {
+                state: { booking: finalBookingData }
+            });
         }
     }
 
@@ -138,6 +181,14 @@ export class CheckoutPage implements OnInit {
     }
 
     goBack() {
-        this.router.navigate(['/cart']);
+        if (this.isBookingFlow) {
+            if (this.bookingData.type === 'rental') {
+                this.router.navigate(['/rental-detail', this.bookingData.id || this.bookingData.bookingId]);
+            } else if (this.bookingData.type === 'helper') {
+                this.router.navigate(['/helper-details', this.bookingData.id || this.bookingData.bookingId]);
+            }
+        } else {
+            this.router.navigate(['/cart']);
+        }
     }
 }

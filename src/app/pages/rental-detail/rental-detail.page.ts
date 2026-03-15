@@ -32,11 +32,17 @@ export class RentalDetailPage implements OnInit {
 
     loadRental(id: string) {
         this.loading = true;
-        setTimeout(() => {
-            this.rental = this.rentalService.getRentalById(id);
-            this.calculateTotal();
-            this.loading = false;
-        }, 500);
+        this.rentalService.getRentalById(id).subscribe({
+            next: (rental: any) => {
+                this.rental = rental;
+                this.calculateTotal();
+                this.loading = false;
+            },
+            error: (err: any) => {
+                console.error('Error loading rental', err);
+                this.loading = false;
+            }
+        });
     }
 
     incrementDays() {
@@ -76,21 +82,8 @@ export class RentalDetailPage implements OnInit {
             type: 'rental'
         };
 
-        // Save to LocalStorage
-        const existingBookings = JSON.parse(localStorage.getItem('civilworks_rental_bookings') || '[]');
-        existingBookings.push(bookingData);
-        localStorage.setItem('civilworks_rental_bookings', JSON.stringify(existingBookings));
-
-        const toast = await this.toastController.create({
-            message: 'Rental booking placed successfully!',
-            duration: 2000,
-            color: 'success',
-            position: 'bottom'
-        });
-        toast.present();
-
-        this.router.navigate(['/rental-booking-success'], {
-            state: { booking: bookingData }
+        this.router.navigate(['/checkout'], {
+            state: { bookingData: bookingData }
         });
     }
 

@@ -1,41 +1,31 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { Rental } from '../models/rental.model';
-import rentalsData from '../../data/rentals.json';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class RentalService {
-    private rentalsSubject = new BehaviorSubject<Rental[]>([]);
-    public rentals$: Observable<Rental[]> = this.rentalsSubject.asObservable();
-
-    constructor() {
-        this.loadRentals();
+    constructor(private http: HttpClient) { }
+    getRentals(params: any = {}): Observable<any[]> {
+        return this.http.get<any>(`${environment.apiUrl}/rentals`, { params }).pipe(map(res => res.data));
     }
-
-    private loadRentals(): void {
-        this.rentalsSubject.next(rentalsData as Rental[]);
+    getRentalById(id: string): Observable<any> {
+        return this.http.get<any>(`${environment.apiUrl}/rentals/${id}`).pipe(map(res => res.data));
     }
+}
 
-    getRentals(): Rental[] {
-        return this.rentalsSubject.value;
+@Injectable({
+    providedIn: 'root'
+})
+export class HelperService {
+    constructor(private http: HttpClient) { }
+    getHelpers(params: any = {}): Observable<any[]> {
+        return this.http.get<any>(`${environment.apiUrl}/helpers`, { params }).pipe(map(res => res.data));
     }
-
-    getRentalById(id: string): Rental | undefined {
-        return this.rentalsSubject.value.find(r => r.id === id);
-    }
-
-    searchRentals(query: string): Rental[] {
-        const lowerQuery = query.toLowerCase();
-        return this.rentalsSubject.value.filter(r =>
-            r.name.toLowerCase().includes(lowerQuery) ||
-            r.description.toLowerCase().includes(lowerQuery) ||
-            r.category.toLowerCase().includes(lowerQuery)
-        );
-    }
-
-    getPopularRentals(limit: number = 6): Rental[] {
-        return this.rentalsSubject.value.slice(0, limit);
+    getHelperById(id: string): Observable<any> {
+        return this.http.get<any>(`${environment.apiUrl}/helpers/${id}`).pipe(map(res => res.data));
     }
 }

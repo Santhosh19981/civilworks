@@ -19,14 +19,14 @@
                     <h2>{{ item.product.name }}</h2>
                     <p class="item-price">₹{{ item.product.price }} × {{ item.quantity }}</p>
                     <div class="quantity-controls">
-                        <button class="qty-btn" (click)="decreaseQuantity(item.product.id)">−</button>
+                        <button class="qty-btn" (click)="decreaseQuantity(+item.product.id)">−</button>
                         <span class="qty-value">{{ item.quantity }}</span>
-                        <button class="qty-btn" (click)="increaseQuantity(item.product.id)">+</button>
+                        <button class="qty-btn" (click)="increaseQuantity(+item.product.id)">+</button>
                     </div>
                 </ion-label>
                 <div slot="end" class="item-total">
                     <div class="total-price">₹{{ item.product.price * item.quantity }}</div>
-                    <ion-button fill="clear" color="danger" (click)="removeItem(item.product.id)">
+                    <ion-button fill="clear" color="danger" (click)="removeItem(+item.product.id)">
                         <ion-icon slot="icon-only" name="trash"></ion-icon>
                     </ion-button>
                 </div>

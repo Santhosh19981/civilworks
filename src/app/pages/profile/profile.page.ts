@@ -24,6 +24,14 @@ export class ProfilePage implements OnInit {
         });
     }
 
+    ionViewWillEnter() {
+        if (!this.authService.isAuthenticated()) {
+            this.router.navigate(['/login'], {
+                queryParams: { returnUrl: '/tabs/profile' }
+            });
+        }
+    }
+
     async logout() {
         const alert = await this.alertController.create({
             header: 'Logout',

@@ -13,6 +13,7 @@ export class LoginPage {
     phoneOrEmail = '';
     otp = '';
     returnUrl = '/tabs/home';
+    showSkip = true;
 
     constructor(
         private authService: AuthService,
@@ -21,6 +22,10 @@ export class LoginPage {
         private toastController: ToastController
     ) {
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/tabs/home';
+        // Hide skip if coming from checkout flow
+        if (this.returnUrl.includes('/checkout')) {
+            this.showSkip = false;
+        }
     }
 
     async sendOTP() {
@@ -69,5 +74,9 @@ export class LoginPage {
         } else {
             this.router.navigate(['/tabs/home']);
         }
+    }
+
+    skipLogin() {
+        this.router.navigate(['/tabs/home']);
     }
 }

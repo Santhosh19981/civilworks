@@ -74,21 +74,8 @@ export class HelperDetailsPage implements OnInit {
       type: 'helper'
     };
 
-    // Save to LocalStorage (simulating app logic)
-    const existingBookings = JSON.parse(localStorage.getItem('civilworks_helper_bookings') || '[]');
-    existingBookings.push(bookingData);
-    localStorage.setItem('civilworks_helper_bookings', JSON.stringify(existingBookings));
-
-    const toast = await this.toastController.create({
-      message: 'Booking placed successfully!',
-      duration: 2000,
-      color: 'success',
-      position: 'bottom'
-    });
-    toast.present();
-
-    this.router.navigate(['/helper-booking-success'], {
-      state: { booking: bookingData }
+    this.router.navigate(['/checkout'], {
+      state: { bookingData: bookingData }
     });
   }
 }

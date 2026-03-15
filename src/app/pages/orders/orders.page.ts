@@ -29,37 +29,55 @@ export class OrdersPage implements OnInit {
 
     loadOrders() {
         this.loading = true;
-        setTimeout(() => {
-            const productOrders = this.orderService.getOrders().map(o => ({ ...o, type: 'product' }));
+        this.orderService.getOrders().subscribe({
+            next: (data: any[]) => {
+                const productOrders = data.map((o: any) => ({ ...o, type: 'product' }));
 
-            const helperBookings = JSON.parse(localStorage.getItem('civilworks_helper_bookings') || '[]').map((b: any) => ({
-                id: b.bookingId,
-                items: [{ product: { name: b.serviceName } }],
-                serviceName: b.serviceName,
-                total: b.totalAmount,
-                status: b.status,
-                date: new Date(b.date),
-                type: 'helper',
-                members: b.members,
-                mobile: b.mobile
-            }));
+                const helperBookings = JSON.parse(localStorage.getItem('civilworks_helper_bookings') || '[]').map((b: any) => ({
+                    id: b.bookingId,
+                    items: [{ product: { name: b.serviceName } }],
+                    serviceName: b.serviceName,
+                    total: b.totalAmount,
+                    status: b.status,
+                    date: new Date(b.date),
+                    type: 'helper',
+                    members: b.members,
+                    mobile: b.mobile
+                }));
 
-            const rentalBookings = JSON.parse(localStorage.getItem('civilworks_rental_bookings') || '[]').map((b: any) => ({
-                id: b.bookingId,
-                items: [{ product: { name: b.rentalName } }],
-                serviceName: b.rentalName,
-                total: b.totalAmount,
-                status: b.status,
-                date: new Date(b.date),
-                type: 'rental',
-                days: b.days,
-                mobile: b.mobile
-            }));
+                const rentalBookings = JSON.parse(localStorage.getItem('civilworks_rental_bookings') || '[]').map((b: any) => ({
+                    id: b.bookingId,
+                    items: [{ product: { name: b.rentalName } }],
+                    serviceName: b.rentalName,
+                    total: b.totalAmount,
+                    status: b.status,
+                    date: new Date(b.date),
+                    type: 'rental',
+                    days: b.days,
+                    mobile: b.mobile
+                }));
 
-            this.orders = [...productOrders, ...helperBookings, ...rentalBookings].sort((a, b) => b.date.getTime() - a.date.getTime());
-            this.applyFilter();
-            this.loading = false;
-        }, 500);
+                this.orders = [...productOrders, ...helperBookings, ...rentalBookings].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+                this.applyFilter();
+                this.loading = false;
+            },
+            error: () => {
+                // Fallback to local bookings only if API fails
+                const helperBookings = JSON.parse(localStorage.getItem('civilworks_helper_bookings') || '[]').map((b: any) => ({
+                    id: b.bookingId, items: [{ product: { name: b.serviceName } }],
+                    serviceName: b.serviceName, total: b.totalAmount, status: b.status,
+                    date: new Date(b.date), type: 'helper', members: b.members, mobile: b.mobile
+                }));
+                const rentalBookings = JSON.parse(localStorage.getItem('civilworks_rental_bookings') || '[]').map((b: any) => ({
+                    id: b.bookingId, items: [{ product: { name: b.rentalName } }],
+                    serviceName: b.rentalName, total: b.totalAmount, status: b.status,
+                    date: new Date(b.date), type: 'rental', days: b.days, mobile: b.mobile
+                }));
+                this.orders = [...helperBookings, ...rentalBookings].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+                this.applyFilter();
+                this.loading = false;
+            }
+        });
     }
 
     applyFilter() {
