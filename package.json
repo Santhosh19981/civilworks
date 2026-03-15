@@ -6,12 +6,16 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start:qa": "ng serve --configuration qa",
     "build": "ng build",
+    "build:qa": "ng build --configuration qa",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
     "ionic:build": "ng build",
-    "ionic:serve": "ng serve"
+    "ionic:build:qa": "ng build --configuration qa",
+    "ionic:serve": "ng serve",
+    "ionic:serve:qa": "ng serve --configuration qa"
   },
   "private": true,
   "dependencies": {
