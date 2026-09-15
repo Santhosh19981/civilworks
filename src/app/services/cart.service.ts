@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
+import { AuthService } from './auth.service';
 
 @Injectable({
     providedIn: 'root'
@@ -11,14 +12,33 @@ export class CartService {
     private cartSubject = new BehaviorSubject<any>(null);
     public cart$ = this.cartSubject.asObservable();
 
-    constructor(private http: HttpClient) {
+    constructor(
+        private http: HttpClient,
+        private authService: AuthService
+    ) {
         this.loadCart();
+        this.authService.user$.subscribe(user => {
+            if (user) {
+                this.loadCart();
+            } else {
+                this.clearCart();
+            }
+        });
     }
 
+
     loadCart() {
+        const token = localStorage.getItem('civilworks_token');
+        if (!token) {
+            this.cartSubject.next({ items: [], subtotal: 0 });
+            return;
+        }
         this.http.get<any>(`${environment.apiUrl}/cart`).subscribe({
             next: (res) => this.cartSubject.next(res.data),
-            error: (err) => console.error('Error loading cart', err)
+            error: (err) => {
+                console.error('Error loading cart', err);
+                this.cartSubject.next({ items: [], subtotal: 0 });
+            }
         });
     }
 

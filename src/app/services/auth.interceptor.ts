@@ -21,11 +21,20 @@ export class AuthInterceptor implements HttpInterceptor {
 
         return next.handle(request).pipe(
             catchError((error: HttpErrorResponse) => {
-                if (error.status === 401 || error.status === 403) {
-                    this.router.navigate(['/login']);
+                const isAuthEndpoint = request.url.includes('/auth/login') ||
+                    request.url.includes('/auth/verify-otp') ||
+                    request.url.includes('/auth/send-otp');
+
+                if (!isAuthEndpoint && (error.status === 401 || error.status === 403) && token) {
+                    localStorage.removeItem('civilworks_token');
+                    localStorage.removeItem('civilworks_user');
+                    if (!this.router.url.includes('/login') && !this.router.url.includes('/splash')) {
+                        this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url } });
+                    }
                 }
                 return throwError(() => error);
             })
         );
     }
 }
+

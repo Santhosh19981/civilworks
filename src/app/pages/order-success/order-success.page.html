@@ -1,34 +1,286 @@
-<ion-content [fullscreen]="true">
-    <div class="success-container">
-        <div class="success-animation">
-            <div class="checkmark-circle">
-                <ion-icon name="checkmark-circle" color="success"></ion-icon>
-            </div>
-        </div>
-
-        <h1 class="success-title">Order Placed Successfully!</h1>
-        <p class="success-message">Thank you for your order. Your order has been placed and will be delivered soon.</p>
-
-        <div class="order-id-card">
-            <div class="order-id-label">Order ID</div>
-            <div class="order-id-value">{{ orderId }}</div>
-        </div>
-
-        <div class="success-actions">
-            <ion-button expand="block" class="cta-button" (click)="viewOrders()">
-                <ion-icon slot="start" name="receipt"></ion-icon>
-                View Orders
-            </ion-button>
-
-            <ion-button expand="block" fill="outline" color="secondary" (click)="goToHome()">
-                <ion-icon slot="start" name="home"></ion-icon>
-                Go to Home
-            </ion-button>
-        </div>
-
-        <div class="success-note">
-            <ion-icon name="information-circle"></ion-icon>
-            <span>You can track your order status in the Orders tab</span>
-        </div>
+<ion-content [fullscreen]="true" class="success-page-content">
+  <div class="success-wrapper">
+    <!-- Confetti & Celebration Sparkles -->
+    <div class="confetti-sparkles" aria-hidden="true">
+      <span class="sparkle s1">✨</span>
+      <span class="sparkle s2">⭐</span>
+      <span class="sparkle s3">⚡</span>
+      <span class="sparkle s4">✨</span>
+      <span class="sparkle s5">🎉</span>
     </div>
+
+    <!-- Celebration Badge Section -->
+    <div class="hero-celebration-section fade-in-up">
+      <div class="success-rings-container">
+        <div class="pulse-ring pulse-ring-outer"></div>
+        <div class="pulse-ring pulse-ring-inner"></div>
+        <div class="checkmark-badge">
+          <ion-icon name="checkmark-circle" class="checkmark-icon"></ion-icon>
+        </div>
+      </div>
+
+      <div class="verified-pill">
+        <span class="live-dot"></span>
+        <span>ORDER VERIFIED & REGISTERED</span>
+      </div>
+
+      <h1 class="main-title">Procurement Order Confirmed!</h1>
+      <p class="main-subtitle">
+        Your construction material order has been received and routed to our nearest fulfillment warehouse for immediate picking and batch allocation.
+      </p>
+
+      <!-- Booking ID & Quick Action Pill -->
+      <div class="reference-strip">
+        <div class="ref-item">
+          <span class="ref-label">Order Number</span>
+          <div class="ref-copy-box" (click)="copyOrderId()">
+            <span class="ref-val">#{{ orderId }}</span>
+            <ion-icon [name]="copied ? 'checkmark-done-outline' : 'copy-outline'" [class.copied-icon]="copied"></ion-icon>
+            <span class="copied-tooltip" *ngIf="copied">Copied!</span>
+          </div>
+        </div>
+        <div class="ref-divider"></div>
+        <div class="ref-item">
+          <span class="ref-label">Order Date</span>
+          <span class="ref-date">{{ formattedDate }}</span>
+        </div>
+        <div class="ref-divider"></div>
+        <div class="ref-item">
+          <span class="ref-label">Estimated Delivery</span>
+          <span class="ref-eta">{{ deliveryEta }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live 4-Stage Material Dispatch Tracker -->
+    <div class="card-surface timeline-card fade-in-up delay-1">
+      <div class="card-header-flex">
+        <div class="header-tag-group">
+          <span class="card-badge-emerald">
+            <span class="ping-dot"></span>
+            LIVE LOGISTICS TRACKER
+          </span>
+          <span class="unit-code">Manifest: #HYD-WH-{{ orderId }}</span>
+        </div>
+        <button class="text-link-btn" (click)="viewOrders()">
+          <span>View Orders</span>
+          <ion-icon name="arrow-forward"></ion-icon>
+        </button>
+      </div>
+
+      <div class="timeline-stepper">
+        <!-- Step 1 -->
+        <div class="timeline-step completed">
+          <div class="step-marker">
+            <ion-icon name="checkmark-sharp"></ion-icon>
+          </div>
+          <div class="step-info">
+            <h4 class="step-name">Order Placed</h4>
+            <p class="step-desc">Invoice generated</p>
+            <span class="step-time">Confirmed</span>
+          </div>
+        </div>
+
+        <div class="timeline-line completed-line"></div>
+
+        <!-- Step 2 -->
+        <div class="timeline-step active">
+          <div class="step-marker active-marker">
+            <ion-icon name="cube-outline"></ion-icon>
+          </div>
+          <div class="step-info">
+            <h4 class="step-name">Palletizing & Loading</h4>
+            <p class="step-desc">Quality inspection at hub</p>
+            <span class="step-time active-badge">In Progress</span>
+          </div>
+        </div>
+
+        <div class="timeline-line"></div>
+
+        <!-- Step 3 -->
+        <div class="timeline-step upcoming">
+          <div class="step-marker">
+            <ion-icon name="boat-outline"></ion-icon>
+          </div>
+          <div class="step-info">
+            <h4 class="step-name">Heavy Truck In Transit</h4>
+            <p class="step-desc">GPS tracked freight</p>
+            <span class="step-time">Tomorrow</span>
+          </div>
+        </div>
+
+        <div class="timeline-line"></div>
+
+        <!-- Step 4 -->
+        <div class="timeline-step upcoming">
+          <div class="step-marker">
+            <ion-icon name="business-outline"></ion-icon>
+          </div>
+          <div class="step-info">
+            <h4 class="step-name">Site Unloading</h4>
+            <p class="step-desc">Safe drop at project site</p>
+            <span class="step-time">By 11:00 AM</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Logistics Manager Strip -->
+      <div class="dispatcher-strip">
+        <div class="dispatcher-avatar">
+          <ion-icon name="person-circle-outline"></ion-icon>
+        </div>
+        <div class="dispatcher-details">
+          <span class="dispatcher-role">Fulfillment Dispatch Manager</span>
+          <span class="dispatcher-name">Mahesh Goud • Hyderabad Central Distribution</span>
+        </div>
+        <button class="dispatcher-call-btn" (click)="callLogistics()">
+          <ion-icon name="call-outline"></ion-icon>
+          <span>Call Dispatch</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Official Digital Material Gate Pass Voucher -->
+    <div class="card-surface voucher-ticket fade-in-up delay-2">
+      <div class="voucher-top-bar">
+        <div class="pass-branding">
+          <ion-icon name="cube" class="brand-icon"></ion-icon>
+          <div>
+            <span class="brand-label">CIVILWORKS MATERIAL SUPPLY CHAIN</span>
+            <h3 class="pass-heading">Commercial Gate Pass & Voucher</h3>
+          </div>
+        </div>
+        <span class="pass-tag">OFFICIAL TAX SLIP</span>
+      </div>
+
+      <!-- Consignment Banner -->
+      <div class="equipment-showcase">
+        <div class="equipment-img-box order-icon-box">
+          <ion-icon name="layers-outline" class="material-lead-icon"></ion-icon>
+        </div>
+        <div class="equipment-meta">
+          <span class="category-badge">CONSTRUCTION MATERIALS CONSIGNMENT</span>
+          <h2 class="machine-title">Batch Delivery Package ({{ order?.itemsCount || 3 }} Lines)</h2>
+          <div class="spec-pills">
+            <span class="spec-pill"><ion-icon name="shield-checkmark-outline"></ion-icon> Quality Batch Tested</span>
+            <span class="spec-pill"><ion-icon name="checkmark-done-circle-outline"></ion-icon> Weighbridge Verified</span>
+            <span class="spec-pill"><ion-icon name="flash-outline"></ion-icon> Priority Truck Dispatch</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Perforated Ticket Divider with Notches -->
+      <div class="ticket-perforation">
+        <span class="notch notch-left"></span>
+        <div class="dashed-line"></div>
+        <span class="notch notch-right"></span>
+      </div>
+
+      <!-- Logistics Specs Grid -->
+      <div class="specs-grid">
+        <div class="spec-cell">
+          <span class="cell-label"><ion-icon name="navigate-outline"></ion-icon> Unloading Site</span>
+          <span class="cell-value">{{ order?.siteName || 'Phoenix Tech Zone, Tower B' }}</span>
+          <span class="cell-sub">{{ order?.address || 'Financial District, Hyderabad' }}</span>
+        </div>
+
+        <div class="spec-cell">
+          <span class="cell-label"><ion-icon name="person-outline"></ion-icon> Site Engineer</span>
+          <span class="cell-value">{{ order?.customerName || 'Vikramaditya Reddy' }}</span>
+          <span class="cell-sub">{{ order?.phone || '+91 9876543212' }}</span>
+        </div>
+
+        <div class="spec-cell">
+          <span class="cell-label"><ion-icon name="car-outline"></ion-icon> Freight Vehicle</span>
+          <span class="cell-value">Tata LPT 1918 Heavy Tipper</span>
+          <span class="cell-sub">Includes hydraulic tipping unloading</span>
+        </div>
+
+        <div class="spec-cell">
+          <span class="cell-label"><ion-icon name="card-outline"></ion-icon> Settlement Method</span>
+          <span class="cell-value">{{ order?.paymentMethod || 'Cash / Pay on Delivery' }}</span>
+          <span class="cell-sub text-success">Verified CivilWorks Account</span>
+        </div>
+      </div>
+
+      <!-- Financial Breakdown -->
+      <div class="pricing-breakdown">
+        <div class="price-row">
+          <span class="price-desc">Material Items Net Value</span>
+          <span class="price-num">₹{{ (order?.totalAmount || 18450) * 0.85 | number:'1.0-0' }}</span>
+        </div>
+        <div class="price-row">
+          <span class="price-desc">Site Freight, Rigging & Crane Handling</span>
+          <span class="price-num">₹{{ (order?.totalAmount || 18450) * 0.10 | number:'1.0-0' }}</span>
+        </div>
+        <div class="price-row">
+          <span class="price-desc">GST (18% Input Tax Credit Eligible)</span>
+          <span class="price-num">₹{{ (order?.totalAmount || 18450) * 0.05 | number:'1.0-0' }}</span>
+        </div>
+        <div class="price-row security-deposit">
+          <span class="price-desc">
+            Delivery Transit Insurance
+            <span class="waived-pill">PRO BENEFIT</span>
+          </span>
+          <span class="price-num waived-text">INCLUDED (₹0)</span>
+        </div>
+        <div class="price-total-row">
+          <div>
+            <span class="total-label">Total Payable Upon Site Delivery</span>
+            <span class="total-note">Collect printed physical invoice and weighbridge slip at handover</span>
+          </div>
+          <span class="total-figure">₹{{ order?.totalAmount || 18450 | number }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Primary Action Controls -->
+    <div class="action-buttons-group fade-in-up delay-3">
+      <button class="btn-primary-orange" (click)="downloadInvoice()">
+        <ion-icon name="print-outline"></ion-icon>
+        <span>Download Tax Invoice / Gate Pass (PDF)</span>
+      </button>
+
+      <button class="btn-secondary-navy" (click)="viewOrders()">
+        <ion-icon name="navigate-circle-outline"></ion-icon>
+        <span>Track Consignment in Orders</span>
+      </button>
+
+      <button class="btn-outline-slate" (click)="continueShopping()">
+        <ion-icon name="cart-outline"></ion-icon>
+        <span>Continue Material Procurement</span>
+      </button>
+    </div>
+
+    <!-- Direct WhatsApp & Help Card -->
+    <div class="card-surface help-card fade-in-up delay-4">
+      <div class="help-content">
+        <div class="help-icon-box">
+          <ion-icon name="logo-whatsapp"></ion-icon>
+        </div>
+        <div class="help-text">
+          <h4 class="help-title">Need Delivery Assistance or Offloading Help?</h4>
+          <p class="help-desc">Connect with our dedicated logistics operations center for live GPS truck location and driver coordination.</p>
+        </div>
+      </div>
+      <div class="help-actions">
+        <button class="btn-whatsapp" (click)="openWhatsApp()">
+          <ion-icon name="logo-whatsapp"></ion-icon>
+          <span>WhatsApp Logistics</span>
+        </button>
+        <button class="btn-call" (click)="callLogistics()">
+          <ion-icon name="call"></ion-icon>
+          <span>1800-425-WORKS</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Return to Home Link -->
+    <div class="home-link-section fade-in-up delay-4">
+      <button class="back-home-btn" (click)="goToHome()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+        <span>Return to CivilWorks Homepage</span>
+      </button>
+    </div>
+  </div>
 </ion-content>

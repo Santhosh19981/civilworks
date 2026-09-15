@@ -1,53 +1,159 @@
-<ion-header [translucent]="true">
-    <ion-toolbar>
-        <ion-title>Equipment Rental</ion-title>
-    </ion-toolbar>
-    <ion-toolbar>
-        <ion-searchbar [(ngModel)]="searchQuery" (ionInput)="onSearchChange($event)" placeholder="Search equipment..."
-            animated="true">
-        </ion-searchbar>
-    </ion-toolbar>
+<ion-header [translucent]="true" class="rentals-header-bar">
+    <div class="header-inner">
+        <div class="header-top">
+            <div class="brand-section">
+                <span class="hub-pill">CIVILWORKS FLEET HUB</span>
+                <h1>Equipment & Machinery Rental</h1>
+                <p class="tagline">50-Point Certified Construction Machinery • Rapid Site Dispatch Across Region</p>
+            </div>
+            <div class="fleet-stats">
+                <div class="stat-box">
+                    <span class="stat-num">100%</span>
+                    <span class="stat-label">Site Inspected</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-num">4 Hrs</span>
+                    <span class="stat-label">Avg. Dispatch</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="search-and-sort-row">
+            <div class="search-box">
+                <ion-icon name="search-outline" class="search-icon"></ion-icon>
+                <input type="text" [(ngModel)]="searchQuery" (input)="filterRentals()"
+                    placeholder="Search JCB, Excavators, Jackhammers, Mixers, Scaffolding..." />
+                <button *ngIf="searchQuery" class="clear-btn" (click)="searchQuery = ''; filterRentals()">✕</button>
+            </div>
+
+            <div class="sort-selector">
+                <label>Sort by:</label>
+                <select [ngModel]="sortBy" (ngModelChange)="onSortChange({detail: {value: $event}})">
+                    <option value="popular">Most Popular</option>
+                    <option value="price-low">Rate: Low to High</option>
+                    <option value="price-high">Rate: High to Low</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Category Filter Tabs -->
+        <div class="category-scroll-bar">
+            <button *ngFor="let cat of categories" class="category-chip"
+                [class.active]="selectedCategory === cat" (click)="setCategory(cat)">
+                <span class="chip-dot" *ngIf="selectedCategory === cat"></span>
+                {{ cat }}
+            </button>
+        </div>
+    </div>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="rentals-content">
     <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
         <ion-refresher-content></ion-refresher-content>
     </ion-refresher>
 
-    <!-- Rentals Grid -->
-    <div class="rentals-grid" *ngIf="!loading">
-        <div class="rental-card fade-in" *ngFor="let rental of filteredRentals" (click)="viewRental(rental.id)">
-            <div class="rental-image-container">
-                <img [src]="rental.image" [alt]="rental.name">
-                <div class="price-badge">₹{{ rental.pricePerDay }}/day</div>
-            </div>
-            <div class="rental-info">
-                <div class="category-tag">{{ rental.category }}</div>
-                <h3>{{ rental.name }}</h3>
-                <p>{{ rental.description }}</p>
-                <ion-button expand="block" fill="outline" class="view-btn">
-                    View Details
-                </ion-button>
+    <div class="page-container">
+        <!-- Results Bar -->
+        <div class="results-meta-bar" *ngIf="!loading">
+            <span class="results-count">Showing <strong>{{ filteredRentals.length }}</strong> heavy machinery units</span>
+            <div class="assurance-pill">
+                <ion-icon name="shield-checkmark"></ion-icon>
+                Free Operator & Transit Insurance Included
             </div>
         </div>
-    </div>
 
-    <!-- Skeleton Loaders -->
-    <div class="rentals-grid" *ngIf="loading">
-        <div class="skeleton-card" *ngFor="let i of [1,2,3,4]">
-            <ion-skeleton-text [animated]="true"
-                style="width: 100%; height: 180px; border-radius: 12px;"></ion-skeleton-text>
-            <ion-skeleton-text [animated]="true" style="width: 70%; margin-top: 12px;"></ion-skeleton-text>
-            <ion-skeleton-text [animated]="true" style="width: 90%; margin-top: 8px;"></ion-skeleton-text>
-            <ion-skeleton-text [animated]="true"
-                style="width: 100%; height: 44px; margin-top: 16px; border-radius: 10px;"></ion-skeleton-text>
+        <!-- Rentals Grid -->
+        <div class="rentals-grid" *ngIf="!loading && filteredRentals.length > 0">
+            <div class="rental-card" *ngFor="let rental of filteredRentals" (click)="viewRental(rental.id)">
+                <!-- Card Media Header -->
+                <div class="rental-media-box">
+                    <img [src]="rental.image" (error)="onImageError($event)" [alt]="rental.name" loading="lazy">
+                    <div class="media-badges">
+                        <span class="dispatch-badge">
+                            <span class="pulse-dot"></span>
+                            Ready for Site Dispatch
+                        </span>
+                        <span class="category-pill">{{ rental.category }}</span>
+                    </div>
+                    <div class="rate-overlay-badge">
+                        <span class="currency">₹</span>
+                        <span class="amount">{{ rental.pricePerDay | number }}</span>
+                        <span class="unit">/ day</span>
+                    </div>
+                </div>
+
+                <!-- Card Content -->
+                <div class="rental-card-body">
+                    <div class="title-rating-row">
+                        <h3 class="machine-title">{{ rental.name }}</h3>
+                        <div class="rating-badge">
+                            <span class="star">★</span>
+                            <span class="score">{{ rental.rating }}</span>
+                            <span class="count">({{ rental.reviewCount }})</span>
+                        </div>
+                    </div>
+
+                    <p class="machine-desc">{{ rental.description }}</p>
+
+                    <!-- Technical Specifications Chips -->
+                    <div class="specs-grid" *ngIf="rental.specs && rental.specs.length">
+                        <div class="spec-item" *ngFor="let spec of rental.specs">
+                            <ion-icon name="checkmark-circle" class="spec-check"></ion-icon>
+                            <span>{{ spec }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Operator & Fuel Badges -->
+                    <div class="features-row">
+                        <span class="feature-tag fuel-tag">
+                            <ion-icon name="flash-outline"></ion-icon>
+                            {{ rental.fuelType }}
+                        </span>
+                        <span class="feature-tag operator-tag">
+                            <ion-icon name="person-outline"></ion-icon>
+                            {{ rental.badge }}
+                        </span>
+                        <span class="feature-tag inspect-tag">
+                            <ion-icon name="ribbon-outline"></ion-icon>
+                            50-Pt Inspected
+                        </span>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="card-actions">
+                        <button class="btn-specs" (click)="viewRental(rental.id); $event.stopPropagation()">
+                            Inspect Specs
+                        </button>
+                        <button class="btn-rent" (click)="viewRental(rental.id); $event.stopPropagation()">
+                            <span>Rent Machine</span>
+                            <ion-icon name="arrow-forward"></ion-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
 
-    <!-- Empty State -->
-    <div class="empty-state" *ngIf="!loading && filteredRentals.length === 0">
-        <div class="empty-state-icon">🚜</div>
-        <div class="empty-state-title">No Equipment Found</div>
-        <div class="empty-state-text">Try adjusting your search</div>
+        <!-- Skeleton Loaders -->
+        <div class="rentals-grid" *ngIf="loading">
+            <div class="skeleton-card" *ngFor="let i of [1,2,3,4]">
+                <ion-skeleton-text [animated]="true" style="width: 100%; height: 220px; border-radius: 16px 16px 0 0;"></ion-skeleton-text>
+                <div style="padding: 20px;">
+                    <ion-skeleton-text [animated]="true" style="width: 70%; height: 24px; margin-bottom: 12px;"></ion-skeleton-text>
+                    <ion-skeleton-text [animated]="true" style="width: 90%; height: 16px; margin-bottom: 8px;"></ion-skeleton-text>
+                    <ion-skeleton-text [animated]="true" style="width: 50%; height: 16px; margin-bottom: 20px;"></ion-skeleton-text>
+                    <ion-skeleton-text [animated]="true" style="width: 100%; height: 48px; border-radius: 12px;"></ion-skeleton-text>
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" *ngIf="!loading && filteredRentals.length === 0">
+            <div class="empty-icon-box">🚜</div>
+            <h3>No Heavy Machinery Matches Found</h3>
+            <p>Try clearing your search terms or selecting 'All' equipment category.</p>
+            <button class="reset-filter-btn" (click)="searchQuery = ''; selectedCategory = 'All'; filterRentals()">
+                Reset All Filters
+            </button>
+        </div>
     </div>
 </ion-content>

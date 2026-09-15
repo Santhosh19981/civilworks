@@ -1,59 +1,167 @@
-<ion-header [translucent]="true">
-    <ion-toolbar>
-        <ion-title>Buy Products</ion-title>
-        <ion-buttons slot="end">
-            <ion-button routerLink="/cart" class="cart-button">
-                <ion-icon slot="icon-only" name="cart-outline"></ion-icon>
-                <ion-badge *ngIf="cartCount > 0" class="cart-badge">{{ cartCount }}</ion-badge>
+<ion-header class="ion-no-border modern-products-header" [translucent]="true">
+    <div class="header-main-row">
+        <div class="header-title-col">
+            <div class="brand-icon-box">
+                <ion-icon name="cube" class="brand-icon"></ion-icon>
+            </div>
+            <div class="brand-text">
+                <h1 class="page-main-title">Building Materials</h1>
+                <span class="page-subtitle">Direct site dispatch at wholesale rates</span>
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <ion-button routerLink="/cart" fill="clear" class="cart-btn" aria-label="Shopping Cart">
+                <div class="cart-icon-wrapper">
+                    <ion-icon name="cart-outline"></ion-icon>
+                    <span *ngIf="cartCount > 0" class="cart-badge">{{ cartCount }}</span>
+                </div>
             </ion-button>
-        </ion-buttons>
-    </ion-toolbar>
-    <ion-toolbar>
-        <ion-searchbar [(ngModel)]="searchQuery" (ionInput)="onSearchChange($event)" placeholder="Search products..."
-            animated="true">
-        </ion-searchbar>
-    </ion-toolbar>
+        </div>
+    </div>
+
+    <!-- Search & Quick Filter Bar -->
+    <div class="search-filter-bar">
+        <div class="search-box">
+            <ion-icon name="search-outline" class="search-icon"></ion-icon>
+            <input type="text" [(ngModel)]="searchQuery" (input)="filterProducts()"
+                placeholder="Search cement, TMT rods, trowels, safety gear..." class="search-input" />
+            <button *ngIf="searchQuery" (click)="clearSearch()" class="clear-search-btn" type="button" aria-label="Clear search">
+                <ion-icon name="close-circle"></ion-icon>
+            </button>
+        </div>
+
+        <!-- Sort Control -->
+        <div class="sort-selector-wrap">
+            <ion-icon name="swap-vertical-outline" class="sort-icon"></ion-icon>
+            <select [ngModel]="sortBy" (ngModelChange)="setSortBy($event)" class="custom-sort-select" aria-label="Sort products">
+                <option value="featured">Featured</option>
+                <option value="price-asc">Price: Low to High</option>
+                <option value="price-desc">Price: High to Low</option>
+                <option value="name">Name: A to Z</option>
+            </select>
+        </div>
+    </div>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="products-content">
     <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
         <ion-refresher-content></ion-refresher-content>
     </ion-refresher>
 
-    <!-- Category Chips -->
-    <div class="category-chips">
-        <ion-chip *ngFor="let category of categories" [class.chip-selected]="selectedCategory === category"
-            (click)="selectCategory(category)">
-            <ion-label>{{ category }}</ion-label>
-        </ion-chip>
-    </div>
+    <div class="products-page-container">
+        <!-- Category Chips Ribbon -->
+        <div class="category-scroll-ribbon">
+            <button *ngFor="let category of categories"
+                type="button"
+                class="category-pill-btn"
+                [class.active]="selectedCategory === category"
+                (click)="selectCategory(category)">
+                <span>{{ category }}</span>
+                <span *ngIf="category === 'All' && products.length > 0" class="count-pill">
+                    {{ products.length }}
+                </span>
+            </button>
+        </div>
 
-    <!-- Products Grid -->
-    <div class="products-grid" *ngIf="!loading">
-        <div class="product-card" *ngFor="let product of filteredProducts" (click)="viewProduct(product.id)">
-            <img [src]="product.image" [alt]="product.name" class="product-image">
-            <div class="product-info">
-                <div class="product-name">{{ product.name }}</div>
-                <div class="product-price">₹{{ product.price }}</div>
-                <div class="product-category">{{ product.category }}</div>
+        <!-- Active Filter Indicator & Count -->
+        <div class="filter-results-bar" *ngIf="!loading">
+            <span class="results-text">
+                Showing <strong>{{ filteredProducts.length }}</strong> materials
+                <span *ngIf="selectedCategory !== 'All'">in <em>{{ selectedCategory }}</em></span>
+                <span *ngIf="searchQuery">for "<em>{{ searchQuery }}</em>"</span>
+            </span>
+            <button *ngIf="selectedCategory !== 'All' || searchQuery" (click)="resetFilters()" class="clear-filters-link" type="button">
+                Clear Filters
+            </button>
+        </div>
+
+        <!-- Modern Products Grid -->
+        <div class="catalog-grid" *ngIf="!loading && filteredProducts.length > 0">
+            <div class="catalog-card fade-in" *ngFor="let product of filteredProducts" (click)="viewProduct(product.id)">
+                <!-- Media Container with Guaranteed Fallback Image -->
+                <div class="card-media">
+                    <img [src]="getProductImage(product)"
+                        [alt]="product.name"
+                        (error)="onImageError($event, product)"
+                        class="product-img"
+                        loading="lazy" />
+
+                    <!-- Badges -->
+                    <span class="stock-pill">
+                        <span class="pulse-dot"></span>
+                        In Stock
+                    </span>
+                    <span class="discount-pill">20% OFF</span>
+
+                    <!-- Quick Direct Add to Cart Button -->
+                    <button class="quick-add-cart-btn"
+                        (click)="addToCart(product, $event)"
+                        [class.loading]="addingToCartId === product.id"
+                        type="button"
+                        aria-label="Add to cart">
+                        <ion-icon name="cart"></ion-icon>
+                        <span>Add</span>
+                    </button>
+                </div>
+
+                <!-- Product Info Area -->
+                <div class="card-body">
+                    <span class="category-badge">{{ product.category || 'Construction Supply' }}</span>
+                    <h3 class="product-title" [title]="product.name">{{ product.name }}</h3>
+
+                    <!-- Ratings Strip -->
+                    <div class="rating-row">
+                        <div class="stars-wrap">
+                            <ion-icon name="star"></ion-icon>
+                            <ion-icon name="star"></ion-icon>
+                            <ion-icon name="star"></ion-icon>
+                            <ion-icon name="star"></ion-icon>
+                            <ion-icon name="star-half"></ion-icon>
+                        </div>
+                        <span class="rating-num">4.8</span>
+                        <span class="orders-hint">(120+ orders)</span>
+                    </div>
+
+                    <!-- Price & CTA Row -->
+                    <div class="price-action-row">
+                        <div class="price-group">
+                            <div class="active-price">
+                                <span class="currency">₹</span>
+                                <span class="price-val">{{ product.price | number:'1.0-0' }}</span>
+                            </div>
+                            <span class="strikethrough-mrp">₹{{ (product.price * 1.25) | number:'1.0-0' }}</span>
+                        </div>
+                        <span class="delivery-hint">⚡ Same-Day Dispatch</span>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Skeleton Loaders -->
-    <div class="products-grid" *ngIf="loading">
-        <div class="skeleton-card" *ngFor="let i of [1,2,3,4,5,6,7,8]">
-            <ion-skeleton-text [animated]="true"
-                style="width: 100%; height: 180px; border-radius: 8px;"></ion-skeleton-text>
-            <ion-skeleton-text [animated]="true" style="width: 80%; margin-top: 8px;"></ion-skeleton-text>
-            <ion-skeleton-text [animated]="true" style="width: 40%; margin-top: 4px;"></ion-skeleton-text>
+        <!-- Skeleton Loaders -->
+        <div class="catalog-grid" *ngIf="loading">
+            <div class="skeleton-card" *ngFor="let i of [1,2,3,4,5,6,7,8]">
+                <ion-skeleton-text [animated]="true" style="width: 100%; height: 180px; border-radius: 14px;"></ion-skeleton-text>
+                <ion-skeleton-text [animated]="true" style="width: 45%; margin-top: 14px; height: 14px;"></ion-skeleton-text>
+                <ion-skeleton-text [animated]="true" style="width: 90%; margin-top: 8px; height: 20px;"></ion-skeleton-text>
+                <ion-skeleton-text [animated]="true" style="width: 60%; margin-top: 8px; height: 14px;"></ion-skeleton-text>
+                <ion-skeleton-text [animated]="true" style="width: 50%; margin-top: 12px; height: 24px;"></ion-skeleton-text>
+            </div>
         </div>
-    </div>
 
-    <!-- Empty State -->
-    <div class="empty-state" *ngIf="!loading && filteredProducts.length === 0">
-        <div class="empty-state-icon">📦</div>
-        <div class="empty-state-title">No Products Found</div>
-        <div class="empty-state-text">Try adjusting your search or filters</div>
+        <!-- Empty State -->
+        <div class="empty-state-card fade-in" *ngIf="!loading && filteredProducts.length === 0">
+            <div class="empty-icon-box">
+                <ion-icon name="cube-outline"></ion-icon>
+            </div>
+            <h3 class="empty-title">No Materials Found</h3>
+            <p class="empty-desc">
+                No construction supplies match your current search query or category filter.
+            </p>
+            <button (click)="resetFilters()" class="reset-filter-btn" type="button">
+                <ion-icon name="refresh-outline"></ion-icon>
+                <span>Reset All Filters</span>
+            </button>
+        </div>
     </div>
 </ion-content>

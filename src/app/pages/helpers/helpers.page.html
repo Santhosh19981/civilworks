@@ -1,49 +1,167 @@
-<ion-header [translucent]="true">
-    <ion-toolbar>
-        <ion-buttons slot="start">
-            <ion-back-button defaultHref="/tabs/home" color="navy"></ion-back-button>
-        </ion-buttons>
-        <ion-title>Hire Skilled Helpers</ion-title>
-    </ion-toolbar>
+<ion-header [translucent]="true" class="helpers-header-bar">
+    <div class="header-inner">
+        <div class="header-top">
+            <div class="brand-section">
+                <div class="nav-back-row">
+                    <ion-button routerLink="/tabs/home" class="nav-back-btn" fill="clear">
+                        <ion-icon name="arrow-back"></ion-icon>
+                    </ion-button>
+                    <span class="hub-pill">CIVILWORKS VERIFIED WORKFORCE</span>
+                </div>
+                <h1>Hire Skilled Trade Helpers</h1>
+                <p class="tagline">Certified, Background-Checked Craftsmen Ready for Immediate Construction & Renovation Work</p>
+            </div>
+            <div class="trust-stats">
+                <div class="trust-stat-box">
+                    <span class="stat-icon">🛡️</span>
+                    <div class="stat-info">
+                        <span class="stat-bold">100% Verified</span>
+                        <span class="stat-sub">Police & Aadhaar Cleared</span>
+                    </div>
+                </div>
+                <div class="trust-stat-box">
+                    <span class="stat-icon">⚡</span>
+                    <div class="stat-info">
+                        <span class="stat-bold">Instant Dispatch</span>
+                        <span class="stat-sub">Site Arrival in 2-4 Hours</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="search-and-sort-row">
+            <div class="search-box">
+                <ion-icon name="search-outline" class="search-icon"></ion-icon>
+                <input type="text" [(ngModel)]="searchQuery" (input)="filterHelpers()"
+                    placeholder="Search trades: Carpenter, Electrician, Plumber, Mason, Welder..." />
+                <button *ngIf="searchQuery" class="clear-btn" (click)="searchQuery = ''; filterHelpers()">✕</button>
+            </div>
+
+            <div class="sort-selector">
+                <label>Sort by:</label>
+                <select [ngModel]="sortBy" (ngModelChange)="onSortChange({detail: {value: $event}})">
+                    <option value="rating">Top Rated Craftsmen</option>
+                    <option value="price-low">Daily Wage: Low to High</option>
+                    <option value="price-high">Daily Wage: High to Low</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Trade Category Scrollbar -->
+        <div class="category-scroll-bar">
+            <button *ngFor="let cat of categories" class="category-chip"
+                [class.active]="selectedCategory === cat" (click)="setCategory(cat)">
+                <span class="chip-dot" *ngIf="selectedCategory === cat"></span>
+                {{ cat }}
+            </button>
+        </div>
+    </div>
 </ion-header>
 
-<ion-content class="ion-padding">
+<ion-content [fullscreen]="true" class="helpers-content">
     <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
         <ion-refresher-content></ion-refresher-content>
     </ion-refresher>
 
-    <div class="helpers-grid" *ngIf="!loading">
-        <div class="helper-card scale-in" *ngFor="let helper of helpers" (click)="viewHelper(helper.id)">
-            <div class="helper-image-container">
-                <img [src]="helper.image" [alt]="helper.name">
-                <div class="price-badge">₹{{helper.pricePerDay}}/day</div>
-            </div>
-            <div class="helper-info">
-                <h3>{{helper.name}}</h3>
-                <p>{{helper.description}}</p>
-                <ion-button expand="block" fill="outline" class="view-btn">
-                    View Details
-                </ion-button>
+    <div class="page-container">
+        <!-- Results Bar -->
+        <div class="results-meta-bar" *ngIf="!loading">
+            <span class="results-count">Showing <strong>{{ filteredHelpers.length }}</strong> certified trade specialists</span>
+            <div class="assurance-pill">
+                <ion-icon name="checkmark-done-circle"></ion-icon>
+                All Workers Equipped with Essential Hand Tools & Safety Gear
             </div>
         </div>
-    </div>
 
-    <!-- Skeleton Loader -->
-    <div class="helpers-grid" *ngIf="loading">
-        <div class="skeleton-card" *ngFor="let i of [1,2,3,4]">
-            <ion-skeleton-text [animated]="true"
-                style="width: 100%; height: 150px; border-radius: 12px;"></ion-skeleton-text>
-            <ion-skeleton-text [animated]="true" style="width: 70%; margin-top: 12px;"></ion-skeleton-text>
-            <ion-skeleton-text [animated]="true" style="width: 90%; margin-top: 8px;"></ion-skeleton-text>
-            <ion-skeleton-text [animated]="true"
-                style="width: 100%; height: 36px; margin-top: 16px; border-radius: 8px;"></ion-skeleton-text>
+        <!-- Helpers Grid -->
+        <div class="helpers-grid" *ngIf="!loading && filteredHelpers.length > 0">
+            <div class="helper-card" *ngFor="let helper of filteredHelpers" (click)="viewHelper(helper.id)">
+                <!-- Media Section -->
+                <div class="helper-media-box">
+                    <img [src]="helper.image" (error)="onImageError($event)" [alt]="helper.name" loading="lazy">
+                    <div class="media-badges">
+                        <span class="verified-badge">
+                            <ion-icon name="shield-checkmark"></ion-icon>
+                            {{ helper.badge || 'Verified Pro' }}
+                        </span>
+                        <span class="exp-badge" *ngIf="helper.experience">{{ helper.experience }}</span>
+                    </div>
+                    <div class="rate-overlay-badge">
+                        <span class="currency">₹</span>
+                        <span class="amount">{{ helper.pricePerDay | number }}</span>
+                        <span class="unit">/ 8-hr shift</span>
+                    </div>
+                </div>
+
+                <!-- Helper Details -->
+                <div class="helper-card-body">
+                    <div class="title-rating-row">
+                        <div>
+                            <span class="category-subtitle">{{ helper.category || 'Construction' }}</span>
+                            <h3 class="helper-title">{{ helper.name }}</h3>
+                        </div>
+                        <div class="rating-badge">
+                            <span class="star">★</span>
+                            <span class="score">{{ helper.rating || 4.9 }}</span>
+                            <span class="count">({{ helper.reviewCount || 100 }})</span>
+                        </div>
+                    </div>
+
+                    <p class="helper-desc">{{ helper.description }}</p>
+
+                    <!-- Skills Chips -->
+                    <div class="skills-row" *ngIf="helper.skills && helper.skills.length">
+                        <span class="skill-tag" *ngFor="let skill of helper.skills">
+                            {{ skill }}
+                        </span>
+                    </div>
+
+                    <!-- Trust Tags -->
+                    <div class="trust-tags-row">
+                        <span class="tag-item">
+                            <ion-icon name="finger-print-outline"></ion-icon>
+                            Aadhaar Verified
+                        </span>
+                        <span class="tag-item">
+                            <ion-icon name="hammer-outline"></ion-icon>
+                            Tools Equipped
+                        </span>
+                    </div>
+
+                    <!-- Action Bar -->
+                    <div class="card-actions">
+                        <button class="btn-view" (click)="viewHelper(helper.id); $event.stopPropagation()">
+                            View Profile
+                        </button>
+                        <button class="btn-hire" (click)="viewHelper(helper.id); $event.stopPropagation()">
+                            <span>Hire Worker</span>
+                            <ion-icon name="arrow-forward"></ion-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
 
-    <!-- Empty State -->
-    <div class="empty-state" *ngIf="!loading && helpers.length === 0">
-        <ion-icon name="people-outline" class="empty-icon"></ion-icon>
-        <h3>No Helpers Found</h3>
-        <p>We couldn't find any helper services at the moment.</p>
+        <!-- Skeleton Loaders -->
+        <div class="helpers-grid" *ngIf="loading">
+            <div class="skeleton-card" *ngFor="let i of [1,2,3,4]">
+                <ion-skeleton-text [animated]="true" style="width: 100%; height: 200px; border-radius: 16px 16px 0 0;"></ion-skeleton-text>
+                <div style="padding: 20px;">
+                    <ion-skeleton-text [animated]="true" style="width: 60%; height: 24px; margin-bottom: 12px;"></ion-skeleton-text>
+                    <ion-skeleton-text [animated]="true" style="width: 90%; height: 16px; margin-bottom: 8px;"></ion-skeleton-text>
+                    <ion-skeleton-text [animated]="true" style="width: 100%; height: 44px; border-radius: 10px; margin-top: 16px;"></ion-skeleton-text>
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" *ngIf="!loading && filteredHelpers.length === 0">
+            <div class="empty-icon-box">👷</div>
+            <h3>No Trade Workers Found</h3>
+            <p>Try resetting your search query or choosing another trade category.</p>
+            <button class="reset-filter-btn" (click)="searchQuery = ''; selectedCategory = 'All'; filterHelpers()">
+                Reset All Filters
+            </button>
+        </div>
     </div>
 </ion-content>

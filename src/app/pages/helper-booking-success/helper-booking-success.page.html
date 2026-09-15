@@ -1,43 +1,282 @@
-<ion-content class="ion-padding ion-text-center">
-  <div class="success-container fade-in" *ngIf="booking">
-    <div class="success-anim">
-      <ion-icon name="checkmark-circle" class="success-icon scale-in"></ion-icon>
+<ion-content [fullscreen]="true" class="success-page-content">
+  <div class="success-wrapper">
+    <!-- Confetti & Celebration Sparkles -->
+    <div class="confetti-sparkles" aria-hidden="true">
+      <span class="sparkle s1">✨</span>
+      <span class="sparkle s2">⭐</span>
+      <span class="sparkle s3">⚡</span>
+      <span class="sparkle s4">✨</span>
+      <span class="sparkle s5">🎉</span>
     </div>
 
-    <h1 class="success-title">Helper Service Booked Successfully!</h1>
-    <p class="success-msg">Our partner will contact you shortly to finalize the details.</p>
+    <!-- Celebration Badge Section -->
+    <div class="hero-celebration-section fade-in-up">
+      <div class="success-rings-container">
+        <div class="pulse-ring pulse-ring-outer"></div>
+        <div class="pulse-ring pulse-ring-inner"></div>
+        <div class="checkmark-badge">
+          <ion-icon name="checkmark-circle" class="checkmark-icon"></ion-icon>
+        </div>
+      </div>
 
-    <div class="booking-details-card">
-      <div class="detail-row">
-        <span>Service</span>
-        <span class="val">{{booking.serviceName}}</span>
+      <div class="verified-pill">
+        <span class="live-dot"></span>
+        <span>CREW RESERVATION CONFIRMED</span>
       </div>
-      <div class="detail-row">
-        <span>Members</span>
-        <span class="val">{{booking.members}}</span>
-      </div>
-      <div class="detail-row">
-        <span>Total Amount</span>
-        <span class="val highlight">₹{{booking.totalAmount}}</span>
-      </div>
-      <div class="detail-row">
-        <span>Booking ID</span>
-        <span class="val">#{{booking.bookingId}}</span>
-      </div>
-      <div class="detail-row">
-        <span>Contact Number</span>
-        <span class="val">{{booking.mobile}}</span>
+
+      <h1 class="main-title">Workforce Scheduled Successfully!</h1>
+      <p class="main-subtitle">
+        Your skilled crew booking has been verified. The team supervisor has been assigned and will report to the job site as scheduled.
+      </p>
+
+      <!-- Booking ID & Quick Action Pill -->
+      <div class="reference-strip">
+        <div class="ref-item">
+          <span class="ref-label">Deployment Ref</span>
+          <div class="ref-copy-box" (click)="copyBookingId()">
+            <span class="ref-val">#{{ booking.bookingId }}</span>
+            <ion-icon [name]="copied ? 'checkmark-done-outline' : 'copy-outline'" [class.copied-icon]="copied"></ion-icon>
+            <span class="copied-tooltip" *ngIf="copied">Copied!</span>
+          </div>
+        </div>
+        <div class="ref-divider"></div>
+        <div class="ref-item">
+          <span class="ref-label">Booking Date</span>
+          <span class="ref-date">{{ formattedDate }}</span>
+        </div>
+        <div class="ref-divider"></div>
+        <div class="ref-item">
+          <span class="ref-label">Shift Reporting</span>
+          <span class="ref-eta">{{ reportingTime }}</span>
+        </div>
       </div>
     </div>
 
-    <ion-button expand="block" fill="clear" class="home-btn" (click)="goToHome()">
-      Back to Home
-    </ion-button>
+    <!-- Live 4-Stage Mobilization Timeline -->
+    <div class="card-surface timeline-card fade-in-up delay-1">
+      <div class="card-header-flex">
+        <div class="header-tag-group">
+          <span class="card-badge-emerald">
+            <span class="ping-dot"></span>
+            WORKFORCE DEPLOYMENT TRACKER
+          </span>
+          <span class="unit-code">Crew Team: #CREW-HYD-04</span>
+        </div>
+        <button class="text-link-btn" (click)="trackDeployment()">
+          <span>View Orders</span>
+          <ion-icon name="arrow-forward"></ion-icon>
+        </button>
+      </div>
+
+      <div class="timeline-stepper">
+        <!-- Step 1 -->
+        <div class="timeline-step completed">
+          <div class="step-marker">
+            <ion-icon name="checkmark-sharp"></ion-icon>
+          </div>
+          <div class="step-info">
+            <h4 class="step-name">Crew Reserved</h4>
+            <p class="step-desc">Skilled members assigned</p>
+            <span class="step-time">Confirmed</span>
+          </div>
+        </div>
+
+        <div class="timeline-line completed-line"></div>
+
+        <!-- Step 2 -->
+        <div class="timeline-step active">
+          <div class="step-marker active-marker">
+            <ion-icon name="id-card-outline"></ion-icon>
+          </div>
+          <div class="step-info">
+            <h4 class="step-name">ID & Skill Verification</h4>
+            <p class="step-desc">Aadhaar & safety compliance</p>
+            <span class="step-time active-badge">In Progress</span>
+          </div>
+        </div>
+
+        <div class="timeline-line"></div>
+
+        <!-- Step 3 -->
+        <div class="timeline-step upcoming">
+          <div class="step-marker">
+            <ion-icon name="navigate-outline"></ion-icon>
+          </div>
+          <div class="step-info">
+            <h4 class="step-name">Site Dispatch</h4>
+            <p class="step-desc">Transit to destination</p>
+            <span class="step-time">Scheduled</span>
+          </div>
+        </div>
+
+        <div class="timeline-line"></div>
+
+        <!-- Step 4 -->
+        <div class="timeline-step upcoming">
+          <div class="step-marker">
+            <ion-icon name="hammer-outline"></ion-icon>
+          </div>
+          <div class="step-info">
+            <h4 class="step-name">Shift Check-In</h4>
+            <p class="step-desc">Biometric site check-in</p>
+            <span class="step-time">08:30 AM</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Supervisor Strip -->
+      <div class="dispatcher-strip">
+        <div class="dispatcher-avatar">
+          <ion-icon name="person-circle-outline"></ion-icon>
+        </div>
+        <div class="dispatcher-details">
+          <span class="dispatcher-role">Designated Crew Supervisor</span>
+          <span class="dispatcher-name">{{ leadSupervisor }}</span>
+        </div>
+        <button class="dispatcher-call-btn" (click)="callHelper()">
+          <ion-icon name="call-outline"></ion-icon>
+          <span>Call Supervisor</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Official Digital Workforce Deployment Pass -->
+    <div class="card-surface voucher-ticket fade-in-up delay-2">
+      <div class="voucher-top-bar">
+        <div class="pass-branding">
+          <ion-icon name="people-circle-outline" class="brand-icon"></ion-icon>
+          <div>
+            <span class="brand-label">CIVILWORKS SKILLED LABOR DIVISION</span>
+            <h3 class="pass-heading">Site Deployment Pass</h3>
+          </div>
+        </div>
+        <span class="pass-tag">OFFICIAL CREW VOUCHER</span>
+      </div>
+
+      <!-- Crew Detail Banner -->
+      <div class="equipment-showcase">
+        <div class="equipment-img-box crew-icon-box">
+          <ion-icon name="people" class="crew-lead-icon"></ion-icon>
+        </div>
+        <div class="equipment-meta">
+          <span class="category-badge">SKILLED ON-SITE LABOR</span>
+          <h2 class="machine-title">{{ serviceName }}</h2>
+          <div class="spec-pills">
+            <span class="spec-pill"><ion-icon name="shield-checkmark-outline"></ion-icon> Background Verified</span>
+            <span class="spec-pill"><ion-icon name="construct-outline"></ion-icon> Standard Safety Kit Included</span>
+            <span class="spec-pill"><ion-icon name="timer-outline"></ion-icon> 8-Hour Full Day Shift</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Perforated Ticket Divider with Notches -->
+      <div class="ticket-perforation">
+        <span class="notch notch-left"></span>
+        <div class="dashed-line"></div>
+        <span class="notch notch-right"></span>
+      </div>
+
+      <!-- Deployment Logistics Specs Grid -->
+      <div class="specs-grid">
+        <div class="spec-cell">
+          <span class="cell-label"><ion-icon name="people-outline"></ion-icon> Assigned Strength</span>
+          <span class="cell-value">{{ membersCount }} Skilled Artisans</span>
+          <span class="cell-sub">Daily Shift Rate: ₹{{ wagePerMember }}/member</span>
+        </div>
+
+        <div class="spec-cell">
+          <span class="cell-label"><ion-icon name="location-outline"></ion-icon> Reporting Site</span>
+          <span class="cell-value">{{ booking.siteName || 'Phoenix Tech Zone, Tower B' }}</span>
+          <span class="cell-sub">{{ booking.address || 'Financial District, Hyderabad' }}</span>
+        </div>
+
+        <div class="spec-cell">
+          <span class="cell-label"><ion-icon name="time-outline"></ion-icon> Shift Timings</span>
+          <span class="cell-value">08:30 AM - 05:30 PM</span>
+          <span class="cell-sub">1 Hour Lunch Break</span>
+        </div>
+
+        <div class="spec-cell">
+          <span class="cell-label"><ion-icon name="card-outline"></ion-icon> Billing Status</span>
+          <span class="cell-value">Pay on Site</span>
+          <span class="cell-sub text-success">Guaranteed Zero Commission Markup</span>
+        </div>
+      </div>
+
+      <!-- Financial Breakdown -->
+      <div class="pricing-breakdown">
+        <div class="price-row">
+          <span class="price-desc">Standard Labor Charge ({{ membersCount }} Members × 1 Day)</span>
+          <span class="price-num">₹{{ totalAmount | number }}</span>
+        </div>
+        <div class="price-row">
+          <span class="price-desc">Supervisor On-Site Coordination Fee</span>
+          <span class="price-num waived-text">FREE</span>
+        </div>
+        <div class="price-row security-deposit">
+          <span class="price-desc">
+            Platform Service Assurance
+            <span class="waived-pill">PRO BENEFIT</span>
+          </span>
+          <span class="price-num waived-text">₹0</span>
+        </div>
+        <div class="price-total-row">
+          <div>
+            <span class="total-label">Total Shift Amount Payable</span>
+            <span class="total-note">Pay directly to lead supervisor at end of shift</span>
+          </div>
+          <span class="total-figure">₹{{ totalAmount | number }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Primary Action Controls -->
+    <div class="action-buttons-group fade-in-up delay-3">
+      <button class="btn-primary-orange" (click)="downloadPass()">
+        <ion-icon name="print-outline"></ion-icon>
+        <span>Download Deployment Pass (PDF)</span>
+      </button>
+
+      <button class="btn-secondary-navy" (click)="trackDeployment()">
+        <ion-icon name="navigate-circle-outline"></ion-icon>
+        <span>Track Crew Status in Orders</span>
+      </button>
+
+      <button class="btn-outline-slate" (click)="browseHelpers()">
+        <ion-icon name="people-outline"></ion-icon>
+        <span>Hire More Skilled Labor</span>
+      </button>
+    </div>
+
+    <!-- Direct WhatsApp & Help Card -->
+    <div class="card-surface help-card fade-in-up delay-4">
+      <div class="help-content">
+        <div class="help-icon-box">
+          <ion-icon name="logo-whatsapp"></ion-icon>
+        </div>
+        <div class="help-text">
+          <h4 class="help-title">Need Crew Coordination Support?</h4>
+          <p class="help-desc">Our dedicated workforce desk can adjust crew counts, replace artisans, or reschedule shifts.</p>
+        </div>
+      </div>
+      <div class="help-actions">
+        <button class="btn-whatsapp" (click)="openWhatsApp()">
+          <ion-icon name="logo-whatsapp"></ion-icon>
+          <span>WhatsApp Labor Desk</span>
+        </button>
+        <button class="btn-call" (click)="callHelper()">
+          <ion-icon name="call"></ion-icon>
+          <span>Call Desk</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Return to Home Link -->
+    <div class="home-link-section fade-in-up delay-4">
+      <button class="back-home-btn" (click)="goToHome()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+        <span>Return to CivilWorks Homepage</span>
+      </button>
+    </div>
   </div>
-
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed" class="fab-call">
-    <ion-fab-button class="call-btn" (click)="callHelper()" *ngIf="booking">
-      <ion-icon name="call"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
 </ion-content>

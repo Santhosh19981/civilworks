@@ -1,108 +1,459 @@
-<ion-header [translucent]="true">
-    <ion-toolbar>
-        <ion-buttons slot="start">
-            <ion-button (click)="goBack()">
-                <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
-            </ion-button>
-        </ion-buttons>
-        <ion-title>Checkout</ion-title>
-    </ion-toolbar>
+<ion-header class="ion-no-border checkout-header-bar" [translucent]="true">
+    <div class="header-inner">
+        <div class="header-left">
+            <button (click)="goBack()" class="nav-back-btn" aria-label="Go back">
+                <ion-icon name="arrow-back"></ion-icon>
+            </button>
+            <div class="header-title-box">
+                <span class="header-brand-tag">CIVILWORKS PROCUREMENT</span>
+                <h1 class="header-page-title">Secure Checkout & Site Dispatch</h1>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="ssl-security-badge">
+                <ion-icon name="shield-checkmark"></ion-icon>
+                <span>256-Bit SSL Encrypted</span>
+            </div>
+        </div>
+    </div>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-    <div class="checkout-container">
-        <h2 class="section-title"> Site / Delivery Address</h2>
+<ion-content [fullscreen]="true" class="checkout-content">
+    <div class="checkout-page-container fade-in">
 
-        <form [formGroup]="checkoutForm">
-            <ion-item lines="none" class="input-item" [class.ion-invalid]="name?.invalid && name?.touched">
-                <ion-label position="stacked">Full Name *</ion-label>
-                <ion-input formControlName="name" type="text" placeholder="Enter your full name"></ion-input>
-            </ion-item>
-            <div class="error-message" *ngIf="name?.invalid && name?.touched">
-                {{ getErrorMessage('name') }}
+        <!-- Progress Steps Bar -->
+        <div class="checkout-steps-bar">
+            <div class="step-item active">
+                <div class="step-circle">1</div>
+                <div class="step-meta">
+                    <span class="step-title">Site Address</span>
+                    <span class="step-sub">Delivery Location</span>
+                </div>
             </div>
-
-            <ion-item lines="none" class="input-item" [class.ion-invalid]="phone?.invalid && phone?.touched">
-                <ion-label position="stacked">Phone Number *</ion-label>
-                <ion-input formControlName="phone" type="tel" maxlength="10"
-                    placeholder="10-digit mobile number"></ion-input>
-            </ion-item>
-            <div class="error-message" *ngIf="phone?.invalid && phone?.touched">
-                {{ getErrorMessage('phone') }}
+            <div class="step-connector active"></div>
+            <div class="step-item active">
+                <div class="step-circle">2</div>
+                <div class="step-meta">
+                    <span class="step-title">Mobilization</span>
+                    <span class="step-sub">Dispatch Schedule</span>
+                </div>
             </div>
-
-            <ion-item lines="none" class="input-item"
-                [class.ion-invalid]="addressLine1?.invalid && addressLine1?.touched">
-                <ion-label position="stacked">Address Line 1 *</ion-label>
-                <ion-input formControlName="addressLine1" type="text"
-                    placeholder="House/Flat No, Building Name"></ion-input>
-            </ion-item>
-            <div class="error-message" *ngIf="addressLine1?.invalid && addressLine1?.touched">
-                {{ getErrorMessage('addressLine1') }}
+            <div class="step-connector"></div>
+            <div class="step-item">
+                <div class="step-circle">3</div>
+                <div class="step-meta">
+                    <span class="step-title">Confirmation</span>
+                    <span class="step-sub">Pay & Dispatch</span>
+                </div>
             </div>
+        </div>
 
-            <ion-item lines="none" class="input-item">
-                <ion-label position="stacked">Address Line 2</ion-label>
-                <ion-input formControlName="addressLine2" type="text"
-                    placeholder="Street, Area, Landmark (Optional)"></ion-input>
-            </ion-item>
+        <!-- Main 2-Column Responsive Layout -->
+        <div class="checkout-main-grid">
 
-            <div class="form-row">
-                <div class="form-col">
-                    <ion-item lines="none" class="input-item" [class.ion-invalid]="city?.invalid && city?.touched">
-                        <ion-label position="stacked">City *</ion-label>
-                        <ion-input formControlName="city" type="text" placeholder="City"></ion-input>
-                    </ion-item>
-                    <div class="error-message" *ngIf="city?.invalid && city?.touched">
-                        {{ getErrorMessage('city') }}
+            <!-- Left Column: Form & Preferences -->
+            <div class="checkout-form-column">
+
+                <!-- 1. Site / Delivery Address Card -->
+                <div class="checkout-card">
+                    <div class="card-header-row">
+                        <div class="header-left-wrap">
+                            <div class="card-icon-badge orange-badge">
+                                <ion-icon name="location"></ion-icon>
+                            </div>
+                            <div>
+                                <h2 class="card-heading">Project Site & Delivery Location</h2>
+                                <p class="card-subheading">Provide exact site coordinates for heavy transport & crew arrival</p>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-sample-fill" (click)="fillSampleAddress()">
+                            <ion-icon name="flash"></ion-icon>
+                            <span>Fill Sample Site</span>
+                        </button>
+                    </div>
+
+                    <form [formGroup]="checkoutForm" (ngSubmit)="proceedToPayment()" novalidate class="modern-checkout-form">
+                        
+                        <!-- Row 1: Full Name & Mobile Number -->
+                        <div class="form-grid-2">
+                            <!-- Full Name -->
+                            <div class="form-field-group" [class.has-error]="isFieldInvalid('name')">
+                                <label class="field-label" for="field-name">
+                                    <span>Site Contact / Contractor Name</span>
+                                    <span class="req-star">*</span>
+                                </label>
+                                <div class="field-input-box">
+                                    <ion-icon name="person-outline" class="input-icon"></ion-icon>
+                                    <input id="field-name" type="text" formControlName="name" placeholder="Enter site supervisor or contractor name" autocomplete="name" />
+                                    <ion-icon *ngIf="checkoutForm.get('name')?.valid" name="checkmark-circle" class="valid-check-icon"></ion-icon>
+                                </div>
+                                <div class="field-error-pill" *ngIf="isFieldInvalid('name')">
+                                    <ion-icon name="alert-circle"></ion-icon>
+                                    <span>{{ getErrorMessage('name') }}</span>
+                                </div>
+                            </div>
+
+                            <!-- Mobile Number (Matching Login Page Component) -->
+                            <div class="form-field-group" [class.has-error]="isFieldInvalid('phone')">
+                                <label class="field-label" for="field-phone">
+                                    <span>Site Mobile Number</span>
+                                    <span class="req-star">*</span>
+                                </label>
+                                <div class="field-input-box phone-input-box">
+                                    <div class="country-badge">
+                                        <svg class="india-flag-svg" width="20" height="14" viewBox="0 0 20 14" fill="none">
+                                            <rect width="20" height="4.67" fill="#FF9933" />
+                                            <rect y="4.67" width="20" height="4.67" fill="#FFFFFF" />
+                                            <rect y="9.33" width="20" height="4.67" fill="#138808" />
+                                            <circle cx="10" cy="7" r="1.8" fill="#000080" />
+                                        </svg>
+                                        <span class="prefix-code">+91</span>
+                                    </div>
+                                    <div class="input-divider-bar"></div>
+                                    <ion-icon name="call-outline" class="input-icon"></ion-icon>
+                                    <input id="field-phone" type="tel" formControlName="phone" maxlength="10" placeholder="10-digit mobile number" autocomplete="tel" />
+                                    <ion-icon *ngIf="checkoutForm.get('phone')?.valid" name="checkmark-circle" class="valid-check-icon"></ion-icon>
+                                </div>
+                                <div class="field-error-pill" *ngIf="isFieldInvalid('phone')">
+                                    <ion-icon name="alert-circle"></ion-icon>
+                                    <span>{{ getErrorMessage('phone') }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Address Line 1: Site / Project Name -->
+                        <div class="form-field-group" [class.has-error]="isFieldInvalid('addressLine1')">
+                            <label class="field-label" for="field-addressLine1">
+                                <span>Project Name / Site Address Line 1</span>
+                                <span class="req-star">*</span>
+                            </label>
+                            <div class="field-input-box">
+                                <ion-icon name="business-outline" class="input-icon"></ion-icon>
+                                <input id="field-addressLine1" type="text" formControlName="addressLine1" placeholder="e.g. Tower 3, Phoenix Tech Hub, Survey No 45" />
+                                <ion-icon *ngIf="checkoutForm.get('addressLine1')?.valid" name="checkmark-circle" class="valid-check-icon"></ion-icon>
+                            </div>
+                            <div class="field-error-pill" *ngIf="isFieldInvalid('addressLine1')">
+                                <ion-icon name="alert-circle"></ion-icon>
+                                <span>{{ getErrorMessage('addressLine1') }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Address Line 2: Landmark / Street -->
+                        <div class="form-field-group">
+                            <label class="field-label" for="field-addressLine2">
+                                <span>Landmark, Street or Entry Gate (Optional)</span>
+                            </label>
+                            <div class="field-input-box">
+                                <ion-icon name="navigate-outline" class="input-icon"></ion-icon>
+                                <input id="field-addressLine2" type="text" formControlName="addressLine2" placeholder="e.g. Opposite Metro Pillar 114, Heavy Vehicle Gate 2" />
+                            </div>
+                        </div>
+
+                        <!-- Row 3: City, State, Pincode -->
+                        <div class="form-grid-3">
+                            <!-- City -->
+                            <div class="form-field-group" [class.has-error]="isFieldInvalid('city')">
+                                <label class="field-label" for="field-city">
+                                    <span>City</span>
+                                    <span class="req-star">*</span>
+                                </label>
+                                <div class="field-input-box">
+                                    <ion-icon name="map-outline" class="input-icon"></ion-icon>
+                                    <input id="field-city" type="text" formControlName="city" placeholder="e.g. Hyderabad" />
+                                </div>
+                                <div class="field-error-pill" *ngIf="isFieldInvalid('city')">
+                                    <ion-icon name="alert-circle"></ion-icon>
+                                    <span>{{ getErrorMessage('city') }}</span>
+                                </div>
+                            </div>
+
+                            <!-- State -->
+                            <div class="form-field-group" [class.has-error]="isFieldInvalid('state')">
+                                <label class="field-label" for="field-state">
+                                    <span>State</span>
+                                    <span class="req-star">*</span>
+                                </label>
+                                <div class="field-input-box">
+                                    <ion-icon name="compass-outline" class="input-icon"></ion-icon>
+                                    <input id="field-state" type="text" formControlName="state" placeholder="e.g. Telangana" />
+                                </div>
+                                <div class="field-error-pill" *ngIf="isFieldInvalid('state')">
+                                    <ion-icon name="alert-circle"></ion-icon>
+                                    <span>{{ getErrorMessage('state') }}</span>
+                                </div>
+                            </div>
+
+                            <!-- Pincode -->
+                            <div class="form-field-group" [class.has-error]="isFieldInvalid('pincode')">
+                                <label class="field-label" for="field-pincode">
+                                    <span>Site Pincode</span>
+                                    <span class="req-star">*</span>
+                                </label>
+                                <div class="field-input-box">
+                                    <ion-icon name="pin-outline" class="input-icon"></ion-icon>
+                                    <input id="field-pincode" type="text" maxlength="6" formControlName="pincode" placeholder="6-digit PIN" />
+                                    <ion-icon *ngIf="checkoutForm.get('pincode')?.valid" name="checkmark-circle" class="valid-check-icon"></ion-icon>
+                                </div>
+                                <div class="field-error-pill" *ngIf="isFieldInvalid('pincode')">
+                                    <ion-icon name="alert-circle"></ion-icon>
+                                    <span>{{ getErrorMessage('pincode') }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Site Access Instructions Note -->
+                        <div class="form-field-group">
+                            <label class="field-label" for="field-notes">
+                                <span>Site Gate Pass / Unloading Instructions (Optional)</span>
+                            </label>
+                            <div class="field-input-box">
+                                <ion-icon name="document-text-outline" class="input-icon"></ion-icon>
+                                <input id="field-notes" type="text" formControlName="siteNotes" placeholder="e.g. Security clearance needed, trailer parking space available" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- 2. Mobilization & Dispatch Preferences Card -->
+                <div class="checkout-card">
+                    <div class="card-header-row">
+                        <div class="header-left-wrap">
+                            <div class="card-icon-badge blue-badge">
+                                <ion-icon name="speedometer-outline"></ion-icon>
+                            </div>
+                            <div>
+                                <h2 class="card-heading">Mobilization Schedule & Logistics Mode</h2>
+                                <p class="card-subheading">Select dispatch priority for materials or equipment transport</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dispatch-modes-grid">
+                        <div class="dispatch-card" [class.active]="selectedDispatchMode === 'standard'" (click)="selectDispatchMode('standard')">
+                            <div class="dispatch-radio">
+                                <div class="radio-inner" *ngIf="selectedDispatchMode === 'standard'"></div>
+                            </div>
+                            <div class="dispatch-info">
+                                <div class="dispatch-top">
+                                    <strong>Standard Site Mobilization</strong>
+                                    <span class="dispatch-pill green">Included Free</span>
+                                </div>
+                                <p>Scheduled arrival on project site by 8:00 AM next morning with verified transit manifest.</p>
+                            </div>
+                        </div>
+
+                        <div class="dispatch-card" [class.active]="selectedDispatchMode === 'priority'" (click)="selectDispatchMode('priority')">
+                            <div class="dispatch-radio">
+                                <div class="radio-inner" *ngIf="selectedDispatchMode === 'priority'"></div>
+                            </div>
+                            <div class="dispatch-info">
+                                <div class="dispatch-top">
+                                    <strong>Priority Express Mobilization</strong>
+                                    <span class="dispatch-pill orange">Within 4 Hours</span>
+                                </div>
+                                <p>Immediate warehouse trailer loading & direct dispatch for time-critical concrete or earthwork operations.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="form-col">
-                    <ion-item lines="none" class="input-item" [class.ion-invalid]="state?.invalid && state?.touched">
-                        <ion-label position="stacked">State *</ion-label>
-                        <ion-input formControlName="state" type="text" placeholder="State"></ion-input>
-                    </ion-item>
-                    <div class="error-message" *ngIf="state?.invalid && state?.touched">
-                        {{ getErrorMessage('state') }}
+                <!-- 3. Payment Method Selection Card -->
+                <div class="checkout-card">
+                    <div class="card-header-row">
+                        <div class="header-left-wrap">
+                            <div class="card-icon-badge green-badge">
+                                <ion-icon name="wallet-outline"></ion-icon>
+                            </div>
+                            <div>
+                                <h2 class="card-heading">Select Payment Method</h2>
+                                <p class="card-subheading">100% Secure contractor payment gateway with GST tax invoice</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="payment-options-list">
+                        <!-- Option 1: Pay on Site Mobilization -->
+                        <div class="payment-tile" [class.active]="selectedPaymentMethod === 'pay_on_site'" (click)="selectPaymentMethod('pay_on_site')">
+                            <div class="tile-radio">
+                                <div class="radio-dot" *ngIf="selectedPaymentMethod === 'pay_on_site'"></div>
+                            </div>
+                            <div class="tile-icon-box orange">
+                                <ion-icon name="construct-outline"></ion-icon>
+                            </div>
+                            <div class="tile-content">
+                                <div class="tile-title-row">
+                                    <h4>Pay on Site Mobilization / Delivery</h4>
+                                    <span class="tag-pill-badge recommended">CONTRACTOR RECOMMENDED</span>
+                                </div>
+                                <p>Inspect machinery & materials on your project site before releasing payment via UPI, NEFT or Cheque.</p>
+                            </div>
+                        </div>
+
+                        <!-- Option 2: Instant UPI -->
+                        <div class="payment-tile" [class.active]="selectedPaymentMethod === 'upi'" (click)="selectPaymentMethod('upi')">
+                            <div class="tile-radio">
+                                <div class="radio-dot" *ngIf="selectedPaymentMethod === 'upi'"></div>
+                            </div>
+                            <div class="tile-icon-box blue">
+                                <ion-icon name="qr-code-outline"></ion-icon>
+                            </div>
+                            <div class="tile-content">
+                                <div class="tile-title-row">
+                                    <h4>UPI / Instant QR Payment</h4>
+                                    <span class="tag-pill-badge">GPay • PhonePe • Paytm</span>
+                                </div>
+                                <p>Instant zero-fee payment confirmation with instant digital dispatch slip & receipt.</p>
+                            </div>
+                        </div>
+
+                        <!-- Option 3: Cards & Net Banking -->
+                        <div class="payment-tile" [class.active]="selectedPaymentMethod === 'card'" (click)="selectPaymentMethod('card')">
+                            <div class="tile-radio">
+                                <div class="radio-dot" *ngIf="selectedPaymentMethod === 'card'"></div>
+                            </div>
+                            <div class="tile-icon-box amber">
+                                <ion-icon name="card-outline"></ion-icon>
+                            </div>
+                            <div class="tile-content">
+                                <div class="tile-title-row">
+                                    <h4>Credit / Debit Card & Corporate Net Banking</h4>
+                                    <span class="tag-pill-badge">Visa • MasterCard • RuPay</span>
+                                </div>
+                                <p>Support for contractor corporate accounts, GST billing, and all major Indian banks.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <ion-item lines="none" class="input-item">
-                <ion-label position="stacked">Pincode *</ion-label>
-                <ion-input formControlName="pincode" type="text" maxlength="6" placeholder="6-digit pincode"
-                    inputmode="numeric"></ion-input>
-            </ion-item>
-        </form>
+            <!-- Right Column: Sticky Order Intelligence & Pricing Summary -->
+            <div class="checkout-summary-column">
+                <div class="summary-sticky-card">
+                    
+                    <div class="summary-card-header">
+                        <div class="header-icon-wrap">
+                            <ion-icon name="receipt-outline"></ion-icon>
+                        </div>
+                        <div>
+                            <h3 class="summary-title">Order Intelligence & Summary</h3>
+                            <span class="summary-subtitle">CivilWorks Verified Procurement</span>
+                        </div>
+                    </div>
 
-        <!-- Order Summary -->
-        <div class="summary-card">
-            <h3 class="summary-title">📋 Order Summary</h3>
-            <div class="summary-content">
-                <div class="summary-row">
-                    <span>Items ({{ itemCount }})</span>
-                    <span>₹{{ total }}</span>
-                </div>
-                <div class="summary-row">
-                    <span>Delivery</span>
-                    <span class="free-text">FREE</span>
-                </div>
-                <div class="summary-divider"></div>
-                <div class="summary-row total-row">
-                    <span>Total Amount</span>
-                    <span>₹{{ total }}</span>
+                    <!-- Flow A: Machinery or Helper Booking Visual Card -->
+                    <div class="procurement-preview-card" *ngIf="isBookingFlow && bookingData">
+                        <div class="item-visual-row">
+                            <img [src]="bookingData.image || 'assets/rentals/jcb_3dx.jpg'" [alt]="bookingData.rentalName || bookingData.serviceName" class="procurement-thumbnail" />
+                            <div class="procurement-meta">
+                                <span class="flow-type-pill">{{ bookingData.type === 'rental' ? 'Heavy Machinery Rental' : 'Skilled Site Crew' }}</span>
+                                <h4 class="procurement-name">{{ bookingData.rentalName || bookingData.serviceName }}</h4>
+                                <div class="procurement-tags">
+                                    <span class="mini-tag" *ngIf="bookingData.days">⏱️ {{ bookingData.days }} Day(s)</span>
+                                    <span class="mini-tag" *ngIf="bookingData.members">👷 {{ bookingData.members }} Worker(s)</span>
+                                    <span class="mini-tag green">✔ Inspected</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="inclusions-strip">
+                            <div class="strip-item">
+                                <ion-icon name="shield-checkmark" class="inc-green"></ion-icon>
+                                <span>CivilWorks Comprehensive Site Cover</span>
+                            </div>
+                            <div class="strip-item">
+                                <ion-icon name="checkmark-circle" class="inc-green"></ion-icon>
+                                <span>Certified Operator & Fuel Standards</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Flow B: Materials E-Commerce Cart Items Preview -->
+                    <div class="cart-items-preview-list" *ngIf="!isBookingFlow && cartItems.length > 0">
+                        <div class="cart-preview-item" *ngFor="let item of cartItems">
+                            <img [src]="getItemImage(item)" [alt]="item.product?.name || 'Material'" class="cart-thumb" />
+                            <div class="cart-item-details">
+                                <span class="c-name">{{ item.product?.name || 'Construction Material' }}</span>
+                                <span class="c-meta">Qty: {{ item.quantity }} × ₹{{ item.product?.price || 100 }}</span>
+                            </div>
+                            <span class="c-total">₹{{ (item.product?.price || 100) * item.quantity | number }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Coupon Code Input Box -->
+                    <div class="coupon-box-wrap">
+                        <div class="coupon-input-row" *ngIf="!couponApplied">
+                            <ion-icon name="pricetag-outline" class="coupon-icon"></ion-icon>
+                            <input type="text" [(ngModel)]="couponInput" placeholder="Enter coupon (e.g. CIVIL10)" (keyup.enter)="applyCoupon()" />
+                            <button type="button" class="btn-apply-coupon" (click)="applyCoupon()">Apply</button>
+                        </div>
+                        <div class="coupon-applied-pill" *ngIf="couponApplied">
+                            <div class="applied-left">
+                                <ion-icon name="checkmark-circle"></ion-icon>
+                                <span>Coupon Applied (-₹{{ couponDiscount | number }})</span>
+                            </div>
+                            <button type="button" class="btn-remove-coupon" (click)="removeCoupon()">Remove</button>
+                        </div>
+                        <span class="coupon-msg" *ngIf="couponMessage" [class.success]="couponApplied">{{ couponMessage }}</span>
+                    </div>
+
+                    <!-- Detailed Price Breakdown -->
+                    <div class="financial-breakdown-section">
+                        <div class="breakdown-row">
+                            <span class="row-label">Base Order Value</span>
+                            <span class="row-val">₹{{ subtotal | number }}</span>
+                        </div>
+                        <div class="breakdown-row" *ngIf="couponApplied && couponDiscount > 0">
+                            <span class="row-label discount-green">Project Coupon Discount</span>
+                            <span class="row-val discount-green">- ₹{{ couponDiscount | number }}</span>
+                        </div>
+                        <div class="breakdown-row">
+                            <span class="row-label">Site Delivery & Mobilization</span>
+                            <span class="row-val free-badge">FREE (Promotional)</span>
+                        </div>
+                        <div class="breakdown-row">
+                            <span class="row-label">Transit & Damage Insurance</span>
+                            <span class="row-val free-badge">INCLUDED</span>
+                        </div>
+                        <div class="breakdown-row">
+                            <span class="row-label">GST & Toll Surcharges</span>
+                            <span class="row-val">Inclusive (18%)</span>
+                        </div>
+
+                        <div class="breakdown-divider"></div>
+
+                        <div class="grand-total-row">
+                            <div class="total-label-box">
+                                <span class="gt-title">Total Amount Payable</span>
+                                <span class="gt-sub">All taxes, toll & unloading covered</span>
+                            </div>
+                            <div class="total-amount-box">
+                                <span class="currency">₹</span>
+                                <span class="amount">{{ total | number }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Primary Action Button -->
+                    <button type="button" class="btn-place-order-cta" (click)="proceedToPayment()" [disabled]="isSubmitting">
+                        <ion-spinner *ngIf="isSubmitting" name="crescent" class="cta-spinner"></ion-spinner>
+                        <ion-icon *ngIf="!isSubmitting" name="checkmark-done-circle"></ion-icon>
+                        <span>{{ isSubmitting ? 'Finalizing Site Dispatch...' : 'Confirm & Place Order' }}</span>
+                        <ion-icon *ngIf="!isSubmitting" name="arrow-forward" class="arrow-forward-icon"></ion-icon>
+                    </button>
+
+                    <!-- Trust Footer -->
+                    <div class="summary-trust-footer">
+                        <div class="trust-pill-item">
+                            <ion-icon name="shield-checkmark" class="shield-ic"></ion-icon>
+                            <span>100% Genuine BIS / ISI Certified Materials</span>
+                        </div>
+                        <div class="trust-pill-item">
+                            <ion-icon name="time-outline" class="time-ic"></ion-icon>
+                            <span>Free Cancellation up to 4 Hrs Before Site Dispatch</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </ion-content>
-
-<ion-footer>
-    <ion-toolbar>
-        <ion-button expand="block" class="cta-button" (click)="proceedToPayment()" [disabled]="!checkoutForm.valid">
-            <ion-icon slot="start" [name]="isBookingFlow ? 'checkmark-circle' : 'card'"></ion-icon>
-            {{ checkoutButtonText }}
-        </ion-button>
-    </ion-toolbar>
-</ion-footer>

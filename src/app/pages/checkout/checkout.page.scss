@@ -1,234 +1,1231 @@
-.checkout-container {
-    padding: 20px;
-    background: linear-gradient(to bottom, #f8f9fa 0%, #ffffff 100%);
-    min-height: 100%;
+// ==========================================
+// CivilWorks Unified Checkout Page Styling
+// Professional, Modern & Rich Enterprise UI
+// Matches Login Page UI & Animation Effects
+// ==========================================
+
+$primary-orange: #FF6B00;
+$primary-orange-light: #FF882E;
+$primary-orange-dark: #E05300;
+
+$navy-dark: #09192C;
+$navy-surface: #0F2744;
+$navy-deep: #061322;
+
+$cyan-electric: #0284C7;
+$amber-gold: #F59E0B;
+$emerald-green: #10B981;
+$danger-red: #EF4444;
+
+$bg-slate: #F8FAFC;
+$border-light: #E2E8F0;
+$border-focus: #FF6B00;
+$text-main: #0F172A;
+$text-muted: #64748B;
+$text-soft: #94A3B8;
+
+:host {
+    display: block;
+    height: 100%;
 }
 
-.section-title {
-    font-size: 20px;
-    font-weight: 800;
-    color: #0B2C4D;
-    margin-bottom: 20px;
-    padding-left: 4px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+// 1. Modern Top Header
+.checkout-header-bar {
+    background: $navy-dark;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.16);
 
-    &:before {
-        content: "📍";
-        font-size: 22px;
-    }
-}
+    .header-inner {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 14px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
 
-.input-item {
-    --background: #ffffff !important;
-    --border-radius: 12px;
-    --padding-start: 16px;
-    --padding-end: 16px;
-    --min-height: 56px;
-    margin-bottom: 16px;
-    border-radius: 12px;
-    border: 2px solid #e0e0e0 !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease;
-    background: #ffffff !important;
+        @media (max-width: 768px) {
+            padding: 12px 16px;
+        }
 
-    &.item-has-focus {
-        border-color: #F7931E !important;
-        box-shadow: 0 4px 12px rgba(247, 147, 30, 0.2);
-        background: #ffffff !important;
-    }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
 
-    // Override Angular validation styles and filled state background
-    &.ion-valid,
-    &.ion-invalid,
-    &.ion-touched,
-    &.item-has-value,
-    &.item-interactive,
-    &.item-input {
-        border-color: #e0e0e0 !important;
-        background: #ffffff !important;
-    }
+            .nav-back-btn {
+                width: 40px;
+                height: 40px;
+                border-radius: 12px;
+                background: rgba(255, 255, 255, 0.08);
+                border: 1px solid rgba(255, 255, 255, 0.14);
+                color: #FFFFFF;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+                flex-shrink: 0;
 
-    &.item-has-focus.ion-valid,
-    &.item-has-focus.ion-invalid {
-        border-color: #F7931E !important;
-    }
+                ion-icon {
+                    font-size: 20px;
+                    transition: transform 0.2s ease;
+                }
 
-    ion-label {
-        color: #666 !important;
-        font-size: 13px;
-        font-weight: 600;
-        margin-bottom: 4px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
+                &:hover {
+                    background: rgba(255, 107, 0, 0.25);
+                    border-color: $primary-orange;
+                    transform: translateX(-2px);
+                }
 
-    ion-input {
-        --color: #0B2C4D !important;
-        --placeholder-color: #999 !important;
-        --placeholder-opacity: 0.7 !important;
-        --background: transparent !important;
-        --padding-start: 0 !important;
-        --padding-end: 0 !important;
-        font-size: 16px;
-        font-weight: 600;
+                &:active {
+                    transform: scale(0.95);
+                }
+            }
 
-        // Override native input background and caret
-        input,
-        .native-input {
-            background: transparent !important;
-            background-color: transparent !important;
-            caret-color: #F7931E !important;
+            .header-title-box {
+                display: flex;
+                flex-direction: column;
 
-            &:focus,
-            &:active,
-            &:valid,
-            &:invalid {
-                background: transparent !important;
-                background-color: transparent !important;
+                .header-brand-tag {
+                    font-size: 10.5px;
+                    font-weight: 800;
+                    letter-spacing: 1px;
+                    color: $primary-orange;
+                    text-transform: uppercase;
+                }
+
+                .header-page-title {
+                    font-size: 20px;
+                    font-weight: 800;
+                    color: #FFFFFF;
+                    margin: 2px 0 0 0;
+                    letter-spacing: -0.4px;
+
+                    @media (max-width: 768px) {
+                        font-size: 16px;
+                    }
+                }
             }
         }
 
-        // Remove autofill background
-        input:-webkit-autofill,
-        input:-webkit-autofill:hover,
-        input:-webkit-autofill:focus,
-        input:-webkit-autofill:active {
-            -webkit-box-shadow: 0 0 0 1000px white inset !important;
-            -webkit-text-fill-color: #0B2C4D !important;
-            background-color: transparent !important;
-            transition: background-color 5000s ease-in-out 0s;
+        .header-right {
+            .ssl-security-badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                background: rgba(16, 185, 129, 0.12);
+                border: 1px solid rgba(16, 185, 129, 0.3);
+                color: $emerald-green;
+                font-size: 11.5px;
+                font-weight: 700;
+                padding: 6px 14px;
+                border-radius: 20px;
+                backdrop-filter: blur(8px);
+
+                ion-icon {
+                    font-size: 15px;
+                }
+
+                @media (max-width: 600px) {
+                    display: none;
+                }
+            }
         }
     }
 }
 
-// Additional overrides for Ionic's internal classes
-.input-item {
+.checkout-content {
+    --background: #{$bg-slate};
 
-    .item-inner,
-    .item-highlight {
-        background: transparent !important;
-        background-color: transparent !important;
-    }
+    .checkout-page-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 28px 24px 80px;
 
-    // Override the native wrapper
-    .native-wrapper {
-        background: transparent !important;
+        @media (max-width: 768px) {
+            padding: 16px 16px 100px;
+        }
     }
 }
 
-.form-row {
+// 2. Progress Steps Bar
+.checkout-steps-bar {
     display: flex;
-    gap: 12px;
+    align-items: center;
+    justify-content: center;
+    background: #FFFFFF;
+    border: 1.5px solid $border-light;
+    border-radius: 18px;
+    padding: 16px 28px;
+    margin-bottom: 28px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
 
-    .input-item {
+    @media (max-width: 768px) {
+        padding: 12px 16px;
+    }
+
+    .step-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        .step-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #F1F5F9;
+            color: $text-muted;
+            font-size: 13px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1.5px solid $border-light;
+            transition: all 0.25s ease;
+        }
+
+        .step-meta {
+            display: flex;
+            flex-direction: column;
+
+            .step-title {
+                font-size: 13.5px;
+                font-weight: 700;
+                color: $text-muted;
+            }
+
+            .step-sub {
+                font-size: 11px;
+                color: $text-soft;
+
+                @media (max-width: 600px) {
+                    display: none;
+                }
+            }
+        }
+
+        &.active {
+            .step-circle {
+                background: linear-gradient(135deg, $primary-orange 0%, $primary-orange-light 100%);
+                color: #FFFFFF;
+                border-color: $primary-orange;
+                box-shadow: 0 4px 10px rgba(255, 107, 0, 0.35);
+            }
+
+            .step-meta .step-title {
+                color: $navy-dark;
+                font-weight: 800;
+            }
+        }
+    }
+
+    .step-connector {
         flex: 1;
+        max-width: 90px;
+        height: 2px;
+        background: $border-light;
+        margin: 0 16px;
+
+        @media (max-width: 600px) {
+            margin: 0 8px;
+            max-width: 40px;
+        }
+
+        &.active {
+            background: $primary-orange;
+        }
     }
 }
 
-.form-col {
-    flex: 1;
+// 3. 2-Column Grid Layout
+.checkout-main-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 32px;
+    align-items: flex-start;
+
+    @media (max-width: 1024px) {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+}
+
+// Left Column: Cards
+.checkout-form-column {
     display: flex;
     flex-direction: column;
+    gap: 24px;
 }
 
-.error-message {
-    color: #eb445a;
-    font-size: 12px;
-    font-weight: 600;
-    padding: 4px 16px 8px 16px;
-    margin-top: -12px;
+// Modern White Card
+.checkout-card {
+    background: #FFFFFF;
+    border: 1.5px solid $border-light;
+    border-radius: 22px;
+    padding: 26px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+    transition: all 0.25s ease;
+
+    &:hover {
+        box-shadow: 0 14px 36px rgba(0, 0, 0, 0.05);
+    }
+
+    @media (max-width: 480px) {
+        padding: 20px 16px;
+        border-radius: 18px;
+    }
+
+    .card-header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 16px;
+        margin-bottom: 22px;
+        flex-wrap: wrap;
+
+        .header-left-wrap {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+
+            .card-icon-badge {
+                width: 44px;
+                height: 44px;
+                border-radius: 14px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+                font-size: 22px;
+
+                &.orange-badge {
+                    background: rgba(255, 107, 0, 0.12);
+                    color: $primary-orange;
+                }
+
+                &.blue-badge {
+                    background: rgba(2, 132, 199, 0.12);
+                    color: $cyan-electric;
+                }
+
+                &.green-badge {
+                    background: rgba(16, 185, 129, 0.12);
+                    color: $emerald-green;
+                }
+            }
+
+            .card-heading {
+                font-size: 18px;
+                font-weight: 800;
+                color: $navy-dark;
+                margin: 0 0 4px 0;
+                letter-spacing: -0.3px;
+            }
+
+            .card-subheading {
+                font-size: 13px;
+                color: $text-muted;
+                margin: 0;
+                line-height: 1.4;
+            }
+        }
+
+        .btn-sample-fill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 107, 0, 0.08);
+            border: 1px dashed rgba(255, 107, 0, 0.4);
+            color: $primary-orange;
+            font-size: 12px;
+            font-weight: 800;
+            padding: 8px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+
+            ion-icon {
+                font-size: 14px;
+            }
+
+            &:hover {
+                background: $primary-orange;
+                color: #FFFFFF;
+                border-style: solid;
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(255, 107, 0, 0.25);
+            }
+
+            &:active {
+                transform: scale(0.96);
+            }
+        }
+    }
 }
 
-.input-item.ion-invalid {
-    border-color: #eb445a !important;
-}
-
-.summary-card {
-    margin-top: 32px;
-    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-    border-radius: 20px;
-    padding: 24px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
-    border: 2px solid rgba(247, 147, 30, 0.1);
-}
-
-.summary-title {
-    font-size: 20px;
-    font-weight: 800;
-    color: #0B2C4D;
-    margin-bottom: 20px;
+// 4. Form Fields & Clean Inputs (NO Red on Page Load!)
+.modern-checkout-form {
     display: flex;
-    align-items: center;
-    gap: 8px;
+    flex-direction: column;
+    gap: 18px;
 }
 
-.summary-content {
-    background: white;
-    padding: 16px;
-    border-radius: 12px;
+.form-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+
+    @media (max-width: 640px) {
+        grid-template-columns: 1fr;
+    }
 }
 
-.summary-row {
+.form-grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 0.9fr;
+    gap: 14px;
+
+    @media (max-width: 640px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.form-field-group {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 14px;
-    font-size: 15px;
-    color: #666;
+    flex-direction: column;
+    gap: 6px;
 
-    span:last-child {
+    .field-label {
+        font-size: 13px;
         font-weight: 700;
-        color: #0B2C4D;
+        color: $navy-dark;
+        letter-spacing: 0.1px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+
+        .req-star {
+            color: $primary-orange;
+            font-weight: 800;
+        }
+    }
+
+    // Input Box Container (Pristine White with Clean Border)
+    .field-input-box {
+        display: flex;
+        align-items: center;
+        background: #FFFFFF;
+        border: 1.5px solid $border-light;
+        border-radius: 12px;
+        height: 50px;
+        padding: 0 14px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+        .input-icon {
+            font-size: 18px;
+            color: $text-soft;
+            margin-right: 10px;
+            flex-shrink: 0;
+            transition: color 0.2s ease;
+        }
+
+        input {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 14.5px;
+            font-weight: 600;
+            color: $text-main;
+            height: 100%;
+            width: 100%;
+            font-family: inherit;
+
+            &::placeholder {
+                color: #94A3B8;
+                font-weight: 500;
+            }
+        }
+
+        .valid-check-icon {
+            color: $emerald-green;
+            font-size: 18px;
+            margin-left: 8px;
+            flex-shrink: 0;
+            animation: scaleIn 0.2s ease-out;
+        }
+
+        // Active Focus State
+        &:focus-within {
+            border-color: $primary-orange;
+            box-shadow: 0 0 0 3.5px rgba(255, 107, 0, 0.16);
+
+            .input-icon {
+                color: $primary-orange;
+            }
+        }
+    }
+
+    // Phone Native Input Box (Matching Login Page)
+    .phone-input-box {
+        padding-left: 10px;
+
+        .country-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+            user-select: none;
+
+            .india-flag-svg {
+                border-radius: 2px;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+                display: block;
+            }
+
+            .prefix-code {
+                font-size: 13.5px;
+                font-weight: 700;
+                color: $navy-dark;
+            }
+        }
+
+        .input-divider-bar {
+            width: 1.5px;
+            height: 22px;
+            background: $border-light;
+            margin: 0 10px;
+            flex-shrink: 0;
+        }
+    }
+
+    // Error State ONLY when has-error is explicitly active!
+    &.has-error {
+        .field-input-box {
+            border-color: $danger-red !important;
+            box-shadow: 0 0 0 3.5px rgba(239, 68, 68, 0.12) !important;
+
+            .input-icon {
+                color: $danger-red !important;
+            }
+        }
+    }
+
+    .field-error-pill {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: #DC2626;
+        font-size: 12px;
+        font-weight: 600;
+        margin-top: 2px;
+        animation: fadeIn 0.2s ease-out;
+
+        ion-icon {
+            font-size: 14px;
+            flex-shrink: 0;
+        }
     }
 }
 
-.free-text {
-    color: #2dd36f !important;
-    font-weight: 800 !important;
-    font-size: 14px !important;
+// 5. Mobilization Dispatch Mode Tiles
+.dispatch-modes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+
+    @media (max-width: 640px) {
+        grid-template-columns: 1fr;
+    }
+
+    .dispatch-card {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        background: #F8FAFC;
+        border: 1.5px solid $border-light;
+        border-radius: 16px;
+        padding: 16px;
+        cursor: pointer;
+        transition: all 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
+
+        .dispatch-radio {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid $border-light;
+            margin-top: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            background: #FFFFFF;
+            transition: all 0.2s ease;
+
+            .radio-inner {
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                background: $primary-orange;
+            }
+        }
+
+        .dispatch-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+
+            .dispatch-top {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 8px;
+
+                strong {
+                    font-size: 14px;
+                    color: $navy-dark;
+                    font-weight: 800;
+                }
+
+                .dispatch-pill {
+                    font-size: 10.5px;
+                    font-weight: 800;
+                    padding: 3px 8px;
+                    border-radius: 6px;
+
+                    &.green {
+                        background: #F0FDF4;
+                        color: $emerald-green;
+                    }
+
+                    &.orange {
+                        background: rgba(255, 107, 0, 0.12);
+                        color: $primary-orange;
+                    }
+                }
+            }
+
+            p {
+                font-size: 12.5px;
+                color: $text-muted;
+                margin: 0;
+                line-height: 1.4;
+            }
+        }
+
+        &:hover {
+            border-color: rgba(255, 107, 0, 0.4);
+            background: #FFFFFF;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.04);
+        }
+
+        &.active {
+            background: #FFF9F5;
+            border-color: $primary-orange;
+            box-shadow: 0 0 0 3px rgba(255, 107, 0, 0.12);
+
+            .dispatch-radio {
+                border-color: $primary-orange;
+            }
+        }
+    }
 }
 
-.summary-divider {
-    height: 2px;
-    background: linear-gradient(to right, transparent, #e0e0e0, transparent);
-    margin: 18px 0;
+// 6. Payment Selection Tiles
+.payment-options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    .payment-tile {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        background: #F8FAFC;
+        border: 1.5px solid $border-light;
+        border-radius: 16px;
+        padding: 16px 18px;
+        cursor: pointer;
+        transition: all 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
+
+        .tile-radio {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid $border-light;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            background: #FFFFFF;
+            transition: all 0.2s ease;
+
+            .radio-dot {
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                background: $primary-orange;
+            }
+        }
+
+        .tile-icon-box {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 22px;
+
+            &.orange {
+                background: rgba(255, 107, 0, 0.12);
+                color: $primary-orange;
+            }
+
+            &.blue {
+                background: rgba(2, 132, 199, 0.12);
+                color: $cyan-electric;
+            }
+
+            &.amber {
+                background: rgba(245, 158, 11, 0.12);
+                color: $amber-gold;
+            }
+        }
+
+        .tile-content {
+            flex: 1;
+
+            .tile-title-row {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                flex-wrap: wrap;
+                margin-bottom: 2px;
+
+                h4 {
+                    font-size: 14.5px;
+                    font-weight: 800;
+                    color: $navy-dark;
+                    margin: 0;
+                }
+
+                .tag-pill-badge {
+                    font-size: 10.5px;
+                    font-weight: 800;
+                    color: $text-muted;
+                    background: #FFFFFF;
+                    border: 1px solid $border-light;
+                    padding: 2px 8px;
+                    border-radius: 6px;
+
+                    &.recommended {
+                        background: #F0FDF4;
+                        color: $emerald-green;
+                        border-color: rgba(16, 185, 129, 0.3);
+                    }
+                }
+            }
+
+            p {
+                font-size: 12.5px;
+                color: $text-muted;
+                margin: 0;
+                line-height: 1.35;
+            }
+        }
+
+        &:hover {
+            border-color: rgba(255, 107, 0, 0.4);
+            background: #FFFFFF;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.04);
+        }
+
+        &.active {
+            background: #FFF9F5;
+            border-color: $primary-orange;
+            box-shadow: 0 0 0 3px rgba(255, 107, 0, 0.12);
+
+            .tile-radio {
+                border-color: $primary-orange;
+            }
+        }
+    }
 }
 
-.total-row {
-    margin-bottom: 0;
-    font-size: 18px;
+// 7. Right Column: Sticky Summary
+.checkout-summary-column {
+    position: sticky;
+    top: 24px;
+}
+
+.summary-sticky-card {
+    background: #FFFFFF;
+    border: 1.5px solid $border-light;
+    border-radius: 22px;
+    padding: 24px;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.05);
+
+    .summary-card-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+        padding-bottom: 16px;
+        border-bottom: 1.5px solid $border-light;
+
+        .header-icon-wrap {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: rgba(255, 107, 0, 0.12);
+            color: $primary-orange;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .summary-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: $navy-dark;
+            margin: 0;
+            letter-spacing: -0.3px;
+        }
+
+        .summary-subtitle {
+            font-size: 11.5px;
+            color: $text-muted;
+            font-weight: 500;
+        }
+    }
+}
+
+// Procurement Item Preview
+.procurement-preview-card {
+    background: #F8FAFC;
+    border: 1px solid $border-light;
+    border-radius: 16px;
+    padding: 14px;
+    margin-bottom: 18px;
+
+    .item-visual-row {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        margin-bottom: 12px;
+
+        .procurement-thumbnail {
+            width: 72px;
+            height: 72px;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 1px solid $border-light;
+            background: #FFFFFF;
+            flex-shrink: 0;
+        }
+
+        .procurement-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+
+            .flow-type-pill {
+                font-size: 10px;
+                font-weight: 800;
+                color: $primary-orange;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .procurement-name {
+                font-size: 14.5px;
+                font-weight: 800;
+                color: $navy-dark;
+                margin: 0;
+                line-height: 1.25;
+            }
+
+            .procurement-tags {
+                display: flex;
+                gap: 6px;
+                flex-wrap: wrap;
+
+                .mini-tag {
+                    font-size: 10.5px;
+                    font-weight: 700;
+                    color: $navy-dark;
+                    background: #FFFFFF;
+                    border: 1px solid $border-light;
+                    padding: 2px 6px;
+                    border-radius: 6px;
+
+                    &.green {
+                        color: $emerald-green;
+                        background: #F0FDF4;
+                        border-color: rgba(16, 185, 129, 0.3);
+                    }
+                }
+            }
+        }
+    }
+
+    .inclusions-strip {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        padding-top: 10px;
+        border-top: 1px dashed $border-light;
+
+        .strip-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11.5px;
+            color: $text-muted;
+            font-weight: 600;
+
+            .inc-green {
+                color: $emerald-green;
+                font-size: 14px;
+            }
+        }
+    }
+}
+
+// Cart Items Preview
+.cart-items-preview-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 18px;
+    max-height: 180px;
+    overflow-y: auto;
+
+    .cart-preview-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: #F8FAFC;
+        border: 1px solid $border-light;
+        border-radius: 12px;
+        padding: 8px 10px;
+
+        .cart-thumb {
+            width: 42px;
+            height: 42px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid $border-light;
+        }
+
+        .cart-item-details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+
+            .c-name {
+                font-size: 13px;
+                font-weight: 700;
+                color: $navy-dark;
+                line-height: 1.2;
+            }
+
+            .c-meta {
+                font-size: 11px;
+                color: $text-muted;
+            }
+        }
+
+        .c-total {
+            font-size: 13.5px;
+            font-weight: 800;
+            color: $navy-dark;
+        }
+    }
+}
+
+// Coupon Input Box
+.coupon-box-wrap {
+    margin-bottom: 20px;
+
+    .coupon-input-row {
+        display: flex;
+        align-items: center;
+        background: #F8FAFC;
+        border: 1.5px solid $border-light;
+        border-radius: 12px;
+        height: 44px;
+        padding: 0 10px;
+        transition: all 0.2s ease;
+
+        &:focus-within {
+            border-color: $primary-orange;
+            background: #FFFFFF;
+        }
+
+        .coupon-icon {
+            font-size: 16px;
+            color: $text-muted;
+            margin-right: 8px;
+        }
+
+        input {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 13px;
+            font-weight: 700;
+            color: $navy-dark;
+            text-transform: uppercase;
+            font-family: inherit;
+
+            &::placeholder {
+                text-transform: none;
+                color: $text-soft;
+                font-weight: 500;
+            }
+        }
+
+        .btn-apply-coupon {
+            background: $navy-dark;
+            border: none;
+            color: #FFFFFF;
+            font-size: 12px;
+            font-weight: 800;
+            padding: 6px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+
+            &:hover {
+                background: $primary-orange;
+            }
+        }
+    }
+
+    .coupon-applied-pill {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #F0FDF4;
+        border: 1px solid rgba(16, 185, 129, 0.35);
+        padding: 8px 12px;
+        border-radius: 10px;
+
+        .applied-left {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: $emerald-green;
+            font-size: 12px;
+            font-weight: 700;
+
+            ion-icon {
+                font-size: 16px;
+            }
+        }
+
+        .btn-remove-coupon {
+            background: none;
+            border: none;
+            color: $text-muted;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+
+            &:hover {
+                color: $danger-red;
+                text-decoration: underline;
+            }
+        }
+    }
+
+    .coupon-msg {
+        display: block;
+        font-size: 11.5px;
+        margin-top: 4px;
+        color: $danger-red;
+        font-weight: 600;
+
+        &.success {
+            color: $emerald-green;
+        }
+    }
+}
+
+// Financial Breakdown Section
+.financial-breakdown-section {
+    background: #F8FAFC;
+    border: 1px solid $border-light;
+    border-radius: 16px;
+    padding: 16px 18px;
+    margin-bottom: 20px;
+
+    .breakdown-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 13.5px;
+        margin-bottom: 10px;
+
+        .row-label {
+            color: $text-muted;
+            font-weight: 500;
+
+            &.discount-green {
+                color: $emerald-green;
+                font-weight: 700;
+            }
+        }
+
+        .row-val {
+            color: $navy-dark;
+            font-weight: 700;
+
+            &.discount-green {
+                color: $emerald-green;
+            }
+
+            &.free-badge {
+                color: $emerald-green;
+                font-size: 12px;
+                font-weight: 800;
+            }
+        }
+    }
+
+    .breakdown-divider {
+        height: 1px;
+        background: $border-light;
+        margin: 12px 0;
+    }
+
+    .grand-total-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .total-label-box {
+            display: flex;
+            flex-direction: column;
+
+            .gt-title {
+                font-size: 15px;
+                font-weight: 800;
+                color: $navy-dark;
+            }
+
+            .gt-sub {
+                font-size: 11px;
+                color: $text-muted;
+            }
+        }
+
+        .total-amount-box {
+            display: flex;
+            align-items: baseline;
+            gap: 2px;
+
+            .currency {
+                color: $primary-orange;
+                font-size: 20px;
+                font-weight: 800;
+            }
+
+            .amount {
+                color: $navy-dark;
+                font-size: 28px;
+                font-weight: 900;
+                letter-spacing: -0.5px;
+            }
+        }
+    }
+}
+
+// Confirm CTA Action Button (Matching Login Submit Button Design)
+.btn-place-order-cta {
+    width: 100%;
+    height: 52px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, $primary-orange 0%, $primary-orange-light 100%);
+    border: none;
+    color: #FFFFFF;
+    font-size: 15.5px;
     font-weight: 800;
-    color: #0B2C4D;
-    padding-top: 8px;
+    letter-spacing: 0.3px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(255, 107, 0, 0.35);
+    transition: all 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
+    margin-bottom: 16px;
 
-    span:last-child {
-        font-size: 26px;
-        color: #F7931E;
-        font-weight: 900;
+    ion-icon {
+        font-size: 20px;
+        transition: transform 0.2s ease;
+    }
+
+    .cta-spinner {
+        width: 22px;
+        height: 22px;
+        color: #FFFFFF;
+    }
+
+    &:hover:not(:disabled) {
+        background: linear-gradient(135deg, $primary-orange-dark 0%, $primary-orange 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 24px rgba(255, 107, 0, 0.45);
+
+        .arrow-forward-icon {
+            transform: translateX(3px);
+        }
+    }
+
+    &:active:not(:disabled) {
+        transform: scale(0.98);
+    }
+
+    &:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
     }
 }
 
-ion-footer {
-    ion-toolbar {
-        --background: #ffffff;
-        padding: 16px 20px;
-        box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.1);
-    }
+// Summary Trust Footer
+.summary-trust-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 14px;
+    border-top: 1px solid $border-light;
 
-    .cta-button {
-        --background: linear-gradient(135deg, #F7931E 0%, #ff8c00 100%);
-        --box-shadow: 0 4px 16px rgba(247, 147, 30, 0.4);
-        font-size: 17px;
-        font-weight: 800;
-        height: 56px;
-        margin: 0;
-        letter-spacing: 0.5px;
-        text-transform: uppercase;
+    .trust-pill-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 11.5px;
+        color: $text-muted;
+        font-weight: 600;
 
-        &:active {
-            transform: scale(0.98);
+        .shield-ic {
+            color: $emerald-green;
+            font-size: 15px;
+            flex-shrink: 0;
+        }
+
+        .time-ic {
+            color: $cyan-electric;
+            font-size: 15px;
+            flex-shrink: 0;
         }
     }
 }

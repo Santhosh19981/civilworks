@@ -1,6 +1,7 @@
 export const environment = {
     production: false,
     qa: true,
-    apiUrl: 'https://api-qa.civilworks.in/api/v1',
-    uploadUrl: 'https://api-qa.civilworks.in/uploads'
+    apiUrl: 'https://qa-api.inframart.app/api/v1',
+    uploadUrl: 'https://qa-api.inframart.app/uploads'
 };
+

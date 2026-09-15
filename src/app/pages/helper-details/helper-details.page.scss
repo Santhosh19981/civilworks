@@ -1,154 +1,714 @@
+// ==========================================
+// CivilWorks Unified Helper Details Styling
+// Clean White / Slate & Vibrant Orange Theme
+// Matches Login Page UI & Animation Effects
+// ==========================================
+
+$primary-orange: #FF6B00;
+$primary-orange-light: #FF882E;
+$primary-orange-dark: #E05300;
+
+$navy-dark: #09192C;
+$navy-surface: #0F2744;
+$navy-deep: #061322;
+
+$cyan-electric: #0284C7;
+$amber-gold: #F59E0B;
+$emerald-green: #10B981;
+
+$bg-slate: #F8FAFC;
+$border-light: #E2E8F0;
+$border-focus: #FF6B00;
+$text-main: #0F172A;
+$text-muted: #64748B;
+$text-soft: #94A3B8;
+
+.detail-header {
+    background: $navy-dark;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.16);
+
+    .toolbar-dark {
+        --background: #{$navy-dark};
+        --color: #ffffff;
+        --border-color: rgba(255, 255, 255, 0.08);
+
+        ion-title {
+            font-weight: 800;
+            font-size: 18px;
+            color: #ffffff;
+            letter-spacing: -0.3px;
+        }
+
+        .back-circle-btn {
+            --color: #ffffff;
+            font-size: 20px;
+            transition: transform 0.2s ease;
+
+            &:hover {
+                transform: translateX(-2px);
+            }
+        }
+
+        .share-btn {
+            --color: #{$primary-orange};
+            font-size: 20px;
+            transition: transform 0.2s ease;
+
+            &:hover {
+                transform: scale(1.1);
+            }
+        }
+    }
+}
+
+.detail-content {
+    --background: #{$bg-slate};
+
+    .content-container {
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 32px 24px 80px;
+
+        @media (max-width: 768px) {
+            padding: 16px 16px 100px;
+        }
+    }
+}
+
+// Hero Helper Banner
 .helper-hero {
     position: relative;
-    height: 300px;
+    height: 380px;
     width: 100%;
-    border-radius: 0 0 24px 24px;
+    background: #09192C;
     overflow: hidden;
 
-    img {
+    @media (max-width: 768px) {
+        height: 280px;
+    }
+
+    .hero-image {
         width: 100%;
         height: 100%;
         object-fit: cover;
+        transition: transform 0.5s ease;
+
+        &:hover {
+            transform: scale(1.03);
+        }
     }
 
-    .hero-overlay {
+    .hero-gradient-overlay {
         position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        padding: 24px;
-        background: linear-gradient(transparent, rgba(11, 44, 77, 0.9));
-        color: #ffffff;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(9, 25, 44, 0.15) 0%, rgba(9, 25, 44, 0.88) 100%);
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 32px;
 
-        h1 {
-            margin: 0;
-            font-size: 28px;
-            font-weight: 800;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        @media (max-width: 768px) {
+            padding: 20px;
         }
 
-        .price-tag {
-            margin-top: 8px;
+        .hero-tags {
             display: flex;
-            align-items: baseline;
-            gap: 4px;
+            gap: 10px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
 
-            .currency {
-                font-size: 18px;
-                font-weight: 600;
-                color: #FFD700;
+            .status-pill {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                background: #F0FDF4;
+                border: 1px solid rgba(16, 185, 129, 0.4);
+                color: $emerald-green;
+                font-size: 12px;
+                font-weight: 700;
+                padding: 5px 12px;
+                border-radius: 20px;
+                box-shadow: 0 2px 8px rgba(16, 185, 129, 0.15);
+
+                ion-icon {
+                    font-size: 14px;
+                }
             }
 
-            .amount {
-                font-size: 26px;
+            .category-pill {
+                background: linear-gradient(135deg, $primary-orange 0%, $primary-orange-light 100%);
+                color: #ffffff;
+                font-size: 12px;
                 font-weight: 800;
-                color: #FFD700;
+                text-transform: uppercase;
+                letter-spacing: 0.6px;
+                padding: 5px 14px;
+                border-radius: 20px;
+                box-shadow: 0 4px 12px rgba(255, 107, 0, 0.35);
+            }
+        }
+
+        .hero-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: #ffffff;
+            margin: 0 0 10px 0;
+            line-height: 1.2;
+            letter-spacing: -0.6px;
+
+            @media (max-width: 768px) {
+                font-size: 24px;
+            }
+        }
+
+        .rating-strip {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+
+            .star {
+                color: $amber-gold;
+                font-size: 16px;
             }
 
-            .unit {
+            .score {
+                color: #ffffff;
+                font-weight: 800;
                 font-size: 14px;
-                opacity: 0.9;
-                margin-left: 4px;
+            }
+
+            .reviews-count {
+                color: rgba(255, 255, 255, 0.75);
+                font-size: 13px;
+            }
+
+            .exp-tag {
+                color: #FFA366;
+                font-size: 13px;
+                font-weight: 700;
+            }
+        }
+    }
+
+    .hero-price-badge {
+        position: absolute;
+        top: 24px;
+        right: 24px;
+        background: rgba(255, 255, 255, 0.96);
+        border: 1.5px solid $border-light;
+        backdrop-filter: blur(12px);
+        padding: 10px 20px;
+        border-radius: 16px;
+        color: $navy-dark;
+        display: flex;
+        align-items: baseline;
+        gap: 4px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+
+        @media (max-width: 768px) {
+            top: 16px;
+            right: 16px;
+            padding: 6px 14px;
+        }
+
+        .currency {
+            color: $primary-orange;
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .amount {
+            font-size: 28px;
+            font-weight: 900;
+            color: $navy-dark;
+            letter-spacing: -0.5px;
+
+            @media (max-width: 768px) {
+                font-size: 20px;
+            }
+        }
+
+        .unit {
+            color: $text-muted;
+            font-size: 13px;
+            font-weight: 600;
+        }
+    }
+}
+
+// Trust Assurance Banner
+.trust-banner {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: #FFFFFF;
+    border: 1.5px solid $border-light;
+    border-radius: 18px;
+    padding: 18px 22px;
+    margin-bottom: 28px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+    }
+
+    .trust-icon-box {
+        width: 46px;
+        height: 46px;
+        border-radius: 14px;
+        background: rgba(255, 107, 0, 0.12);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: $primary-orange;
+        font-size: 24px;
+        flex-shrink: 0;
+    }
+
+    .trust-text {
+        flex: 1;
+
+        h4 {
+            margin: 0 0 4px 0;
+            font-size: 16px;
+            font-weight: 800;
+            color: $navy-dark;
+        }
+
+        p {
+            margin: 0;
+            font-size: 13px;
+            color: $text-muted;
+            line-height: 1.45;
+        }
+    }
+
+    .verified-stamp {
+        background: #F0FDF4;
+        border: 1px solid rgba(16, 185, 129, 0.35);
+        color: $emerald-green;
+        font-size: 11px;
+        font-weight: 900;
+        letter-spacing: 1px;
+        padding: 6px 12px;
+        border-radius: 8px;
+
+        @media (max-width: 480px) {
+            display: none;
+        }
+    }
+}
+
+// Grid Layout
+.details-grid-layout {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 32px;
+
+    @media (max-width: 992px) {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+}
+
+.left-column {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+// Crisp White Info Card (Matching Login Page Theme)
+.info-card {
+    background: #FFFFFF;
+    border: 1.5px solid $border-light;
+    border-radius: 20px;
+    padding: 26px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.03);
+
+    .card-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 18px;
+        font-weight: 800;
+        color: $navy-dark;
+        margin: 0 0 16px 0;
+        letter-spacing: -0.3px;
+
+        ion-icon {
+            color: $primary-orange;
+            font-size: 22px;
+        }
+    }
+
+    .description-text {
+        font-size: 14.5px;
+        color: $text-main;
+        line-height: 1.65;
+        margin: 0;
+    }
+
+    .skills-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+
+        .skill-bubble {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: #F8FAFC;
+            border: 1.5px solid $border-light;
+            color: $navy-dark;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 8px 14px;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+
+            ion-icon {
+                color: $primary-orange;
+                font-size: 16px;
+            }
+
+            &:hover {
+                border-color: rgba(255, 107, 0, 0.4);
+                background: #FFF9F5;
+                transform: translateY(-1px);
+            }
+        }
+    }
+
+    .included-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+
+        .included-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            color: $text-main;
+            font-weight: 500;
+
+            .inc-icon {
+                color: $emerald-green;
+                font-size: 16px;
+                background: #F0FDF4;
+                border: 1px solid rgba(16, 185, 129, 0.3);
+                padding: 4px;
+                border-radius: 50%;
+                flex-shrink: 0;
             }
         }
     }
 }
 
-.details-container {
-    .section {
-        margin-bottom: 24px;
+// Right Column: Calculator
+.booking-calculator-card {
+    background: #FFFFFF;
+    border: 1.5px solid $border-light;
+    border-radius: 22px;
+    padding: 26px;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 24px;
+    transition: all 0.25s ease;
 
-        .section-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: #0B2C4D;
-            margin-bottom: 12px;
-        }
+    .card-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 18px;
+        font-weight: 800;
+        color: $navy-dark;
+        margin: 0 0 20px 0;
+        letter-spacing: -0.3px;
 
-        .description-text {
-            color: #666;
-            line-height: 1.6;
-            font-size: 15px;
+        ion-icon {
+            color: $primary-orange;
+            font-size: 22px;
         }
     }
-}
 
-.booking-form {
-    background: #ffffff;
-    padding: 20px;
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-
-    .input-group {
+    .stepper-row {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 24px;
+        background: #F8FAFC;
+        border: 1.5px solid $border-light;
+        border-radius: 14px;
+        padding: 12px 16px;
+        margin-bottom: 14px;
 
-        label {
-            font-weight: 600;
-            color: #0B2C4D;
-        }
-
-        .members-selector {
+        .stepper-label {
             display: flex;
-            align-items: center;
-            gap: 16px;
-            background: #F5F6F8;
-            border-radius: 12px;
-            padding: 4px;
+            flex-direction: column;
 
-            ion-button {
-                --padding-start: 4px;
-                --padding-end: 4px;
-                font-size: 24px;
-                --color: #0B2C4D;
+            .main {
+                color: $navy-dark;
+                font-weight: 700;
+                font-size: 14px;
             }
 
-            .count {
+            .sub {
+                color: $text-muted;
+                font-size: 12px;
+            }
+        }
+
+        .stepper-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            .step-btn {
+                width: 34px;
+                height: 34px;
+                border-radius: 10px;
+                background: #FFFFFF;
+                border: 1px solid $border-light;
+                color: $navy-dark;
                 font-size: 18px;
-                font-weight: 700;
-                color: #0B2C4D;
-                min-width: 24px;
+                font-weight: 800;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+                transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+
+                &:hover:not(:disabled) {
+                    background: $primary-orange;
+                    color: #FFFFFF;
+                    border-color: $primary-orange;
+                    transform: scale(1.05);
+                }
+
+                &:active:not(:disabled) {
+                    transform: scale(0.92);
+                }
+
+                &:disabled {
+                    opacity: 0.35;
+                    cursor: not-allowed;
+                }
+            }
+
+            .step-value {
+                color: $navy-dark;
+                font-weight: 800;
+                font-size: 15px;
+                min-width: 75px;
                 text-align: center;
             }
         }
     }
-}
 
-.total-section {
-    .total-row {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 10px;
-        color: #666;
-        font-size: 14px;
+    .cost-breakdown {
+        background: #F8FAFC;
+        border: 1px solid $border-light;
+        border-radius: 16px;
+        padding: 18px;
+        margin-bottom: 22px;
+        margin-top: 18px;
 
-        &.grand-total {
-            color: #0B2C4D;
-            font-weight: 800;
-            font-size: 18px;
-            margin-top: 15px;
+        .cost-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13.5px;
+            margin-bottom: 10px;
 
-            span:last-child {
-                color: #F7931E;
-                font-size: 22px;
+            .cost-label {
+                color: $text-muted;
+
+                &.discount-label {
+                    color: $emerald-green;
+                    font-weight: 700;
+                }
+            }
+
+            .cost-val {
+                color: $navy-dark;
+                font-weight: 700;
+
+                &.discount-val {
+                    color: $emerald-green;
+                }
+
+                &.free-val {
+                    color: $cyan-electric;
+                    font-size: 12px;
+                    font-weight: 800;
+                }
+            }
+        }
+
+        .cost-divider {
+            height: 1px;
+            background: $border-light;
+            margin: 14px 0;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            .total-label-box {
+                display: flex;
+                flex-direction: column;
+
+                .total-title {
+                    font-size: 16px;
+                    font-weight: 800;
+                    color: $navy-dark;
+                }
+
+                .total-subtitle {
+                    font-size: 11px;
+                    color: $text-muted;
+                }
+            }
+
+            .total-amount-box {
+                display: flex;
+                align-items: baseline;
+                gap: 2px;
+
+                .currency {
+                    color: $primary-orange;
+                    font-size: 20px;
+                    font-weight: 800;
+                }
+
+                .amount {
+                    color: $navy-dark;
+                    font-size: 28px;
+                    font-weight: 900;
+                    letter-spacing: -0.5px;
+                }
             }
         }
     }
 
-    hr {
+    // Submit Book Action Button (Matching Login Submit Button Design)
+    .action-book-btn {
+        width: 100%;
+        height: 52px;
+        background: linear-gradient(135deg, $primary-orange 0%, $primary-orange-light 100%);
         border: none;
-        border-top: 1px dashed #ddd;
-        margin: 15px 0;
+        border-radius: 14px;
+        color: #ffffff;
+        font-weight: 800;
+        font-size: 16px;
+        letter-spacing: 0.3px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        box-shadow: 0 6px 18px rgba(255, 107, 0, 0.35);
+        transition: all 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
+
+        ion-icon {
+            font-size: 20px;
+            transition: transform 0.2s ease;
+        }
+
+        &:hover {
+            background: linear-gradient(135deg, $primary-orange-dark 0%, $primary-orange 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(255, 107, 0, 0.45);
+
+            ion-icon {
+                transform: translateX(3px);
+            }
+        }
+
+        &:active {
+            transform: scale(0.98);
+        }
+    }
+
+    .guarantee-footer {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 14px;
+        justify-content: center;
+        font-size: 11px;
+        color: $text-muted;
+        font-weight: 600;
+
+        ion-icon {
+            color: $emerald-green;
+            font-size: 14px;
+        }
     }
 }
 
-.book-btn {
-    --background: #F7931E;
-    --border-radius: 14px;
-    --box-shadow: 0 4px 12px rgba(247, 147, 30, 0.3);
-    height: 56px;
-    font-weight: 700;
-    font-size: 17px;
+// Mobile Fixed Footer
+.mobile-action-footer {
+    display: none;
+    background: #FFFFFF;
+    border-top: 1.5px solid $border-light;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
+    padding: 12px 16px;
+
+    @media (max-width: 992px) {
+        display: block;
+    }
+
+    .footer-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+
+        .price-summary {
+            display: flex;
+            flex-direction: column;
+
+            .sub {
+                font-size: 11px;
+                color: $text-muted;
+                font-weight: 600;
+            }
+
+            .amount {
+                font-size: 22px;
+                font-weight: 900;
+                color: $navy-dark;
+                letter-spacing: -0.5px;
+            }
+        }
+
+        .footer-book-btn {
+            flex: 1;
+            max-width: 210px;
+            height: 48px;
+            background: linear-gradient(135deg, $primary-orange 0%, $primary-orange-light 100%);
+            border: none;
+            border-radius: 12px;
+            color: #ffffff;
+            font-weight: 800;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 14px rgba(255, 107, 0, 0.35);
+            transition: all 0.2s ease;
+
+            &:active {
+                transform: scale(0.96);
+            }
+        }
+    }
 }

@@ -1,28 +1,24 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { Helper } from '../models/helper.model';
-import helpersData from '../../data/helpers.json';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class HelperService {
-    private helpersSubject = new BehaviorSubject<Helper[]>([]);
-    public helpers$: Observable<Helper[]> = this.helpersSubject.asObservable();
+    constructor(private http: HttpClient) { }
 
-    constructor() {
-        this.loadHelpers();
+    getHelpers(params: any = {}): Observable<any[]> {
+        return this.http.get<any>(`${environment.apiUrl}/helpers`, { params }).pipe(
+            map(res => res.data || [])
+        );
     }
 
-    private loadHelpers(): void {
-        this.helpersSubject.next(helpersData as Helper[]);
-    }
-
-    getHelpers(): Helper[] {
-        return this.helpersSubject.value;
-    }
-
-    getHelperById(id: string): Helper | undefined {
-        return this.helpersSubject.value.find(h => h.id === id);
+    getHelperById(id: string | number): Observable<any> {
+        return this.http.get<any>(`${environment.apiUrl}/helpers/${id}`).pipe(
+            map(res => res.data)
+        );
     }
 }

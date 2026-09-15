@@ -1,69 +1,300 @@
-<ion-header [translucent]="true">
-    <ion-toolbar>
-        <ion-buttons slot="start">
-            <!-- <ion-button (click)="goBack()">
-                <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
-            </ion-button> -->
-        </ion-buttons>
-        <ion-title>{{ step === 'phone' ? 'Login' : 'Verify OTP' }}</ion-title>
-    </ion-toolbar>
-</ion-header>
+<ion-content [fullscreen]="true" class="login-page-content">
+    <div class="split-layout-wrapper">
+        <!-- Left Showcase Side (Desktop / Tablet) -->
+        <div class="showcase-side">
+            <div class="showcase-ambient-orb orb-1"></div>
+            <div class="showcase-ambient-orb orb-2"></div>
 
-<ion-content [fullscreen]="true">
-    <div class="login-container">
-        <div class="skip-wrapper" *ngIf="showSkip && step === 'phone'">
-            <ion-button (click)="skipLogin()" fill="clear" class="skip-btn">
-                Skip
-            </ion-button>
-        </div>
-        <div class="login-header">
-            <div class="logo-circle">
-                <ion-icon name="lock-closed"></ion-icon>
+            <div class="showcase-content">
+                <div class="showcase-brand" (click)="skipLogin()">
+                    <div class="brand-badge-box">
+                        <ion-icon name="hammer" class="brand-hammer-icon"></ion-icon>
+                    </div>
+                    <div class="brand-text">
+                        <span class="brand-title">CivilWorks<span class="brand-dot">.</span></span>
+                        <span class="brand-subtitle">Construction Marketplace</span>
+                    </div>
+                </div>
+
+                <div class="showcase-hero">
+                    <span class="platform-pill">
+                        <ion-icon name="shield-checkmark"></ion-icon>
+                        INDIA'S TRUSTED INFRA NETWORK
+                    </span>
+                    <h1 class="hero-quote">One Mobile Number to Access All Construction Essentials.</h1>
+                    <p class="hero-desc">
+                        No complex passwords required. Log in instantly with your verified mobile number to manage materials, fleet bookings, and site workforce.
+                    </p>
+                </div>
+
+                <!-- 3 Feature Pillars -->
+                <div class="showcase-pillars">
+                    <div class="pillar-item">
+                        <div class="pillar-icon-box orange-box">
+                            <ion-icon name="cube"></ion-icon>
+                        </div>
+                        <div class="pillar-info">
+                            <h4>Wholesale Building Supplies</h4>
+                            <p>Cement, TMT steel & sand direct from verified mills at wholesale rates.</p>
+                        </div>
+                    </div>
+
+                    <div class="pillar-item">
+                        <div class="pillar-icon-box blue-box">
+                            <ion-icon name="construct"></ion-icon>
+                        </div>
+                        <div class="pillar-info">
+                            <h4>Heavy Machinery Fleet</h4>
+                            <p>JCB 3DX, cranes & concrete mixers with certified operators on daily hire.</p>
+                        </div>
+                    </div>
+
+                    <div class="pillar-item">
+                        <div class="pillar-icon-box amber-box">
+                            <ion-icon name="people"></ion-icon>
+                        </div>
+                        <div class="pillar-info">
+                            <h4>Verified On-Demand Labor</h4>
+                            <p>Masons, carpenters, electricians & site helpers ready to deploy.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Metrics Footer -->
+                <div class="showcase-metrics">
+                    <div class="metric-col">
+                        <span class="metric-val">10,000+</span>
+                        <span class="metric-lbl">Sites Supplied</span>
+                    </div>
+                    <div class="metric-separator"></div>
+                    <div class="metric-col">
+                        <span class="metric-val">500+</span>
+                        <span class="metric-lbl">Verified Items</span>
+                    </div>
+                    <div class="metric-separator"></div>
+                    <div class="metric-col">
+                        <span class="metric-val">24/7</span>
+                        <span class="metric-lbl">Site Support</span>
+                    </div>
+                </div>
             </div>
-            <h1>Welcome to CivilWorks</h1>
-            <p>{{ step === 'phone' ? 'Enter your mobile number or email' : 'Enter the OTP sent to your device' }}</p>
         </div>
 
-        <!-- Phone/Email Step -->
-        <div *ngIf="step === 'phone'" class="login-form fade-in">
-            <ion-item lines="none" class="input-item">
-                <ion-icon name="call" slot="start" color="primary"></ion-icon>
-                <ion-input [(ngModel)]="phoneOrEmail" type="text" placeholder="Mobile number" inputmode="text"
-                    maxlength="10" inputmode="numeric" pattern="[0-9]*">
-                </ion-input>
-            </ion-item>
-
-            <ion-button expand="block" class="cta-button" (click)="sendOTP()" [disabled]="!phoneOrEmail.trim()">
-                Send OTP
-            </ion-button>
-
-            <div class="helper-text">
-                <ion-icon name="information-circle"></ion-icon>
-                <span>We'll send you a verification code</span>
+        <!-- Right Side: Mobile Number & OTP Auth Card -->
+        <div class="auth-side">
+            <!-- Mobile Brand Bar (Only on small screens) -->
+            <div class="mobile-brand-bar">
+                <div class="brand-mini-badge" (click)="skipLogin()">
+                    <div class="mini-icon">
+                        <ion-icon name="hammer"></ion-icon>
+                    </div>
+                    <span class="mini-name">CivilWorks<span>.</span></span>
+                </div>
+                <button *ngIf="showSkip" (click)="skipLogin()" class="skip-text-btn" type="button">
+                    <span>Skip</span>
+                    <ion-icon name="arrow-forward-outline"></ion-icon>
+                </button>
             </div>
-        </div>
 
-        <!-- OTP Step -->
-        <div *ngIf="step === 'otp'" class="login-form fade-in">
-            <ion-item lines="none" class="input-item">
-                <ion-icon name="key" slot="start" color="primary"></ion-icon>
-                <ion-input [(ngModel)]="otp" type="text" placeholder="Enter OTP" maxlength="4" inputmode="numeric"
-                    pattern="[0-9]*">
-                </ion-input>
-            </ion-item>
+            <div class="auth-card-wrapper">
+                <div class="auth-card">
+                    <!-- ───────────────────────────────────────────── -->
+                    <!-- STEP 1: MOBILE NUMBER ENTRY                   -->
+                    <!-- ───────────────────────────────────────────── -->
+                    <div *ngIf="step === 'phone'" class="step-container fade-in">
+                        <!-- Top Header inside Card -->
+                        <div class="card-top-bar">
+                            <span class="step-badge-pill">STEP 1 OF 2</span>
+                            <button *ngIf="showSkip" (click)="skipLogin()" class="card-skip-btn" type="button">
+                                <span>Skip</span>
+                                <ion-icon name="arrow-forward-outline"></ion-icon>
+                            </button>
+                        </div>
 
-            <ion-button expand="block" class="cta-button" (click)="verifyOTP()" [disabled]="otp.length !== 4">
-                Verify & Login
-            </ion-button>
+                        <div class="auth-card-header">
+                            <div class="auth-icon-badge">
+                                <ion-icon name="phone-portrait-outline"></ion-icon>
+                            </div>
+                            <h2 class="auth-title">Mobile Login</h2>
+                            <p class="auth-subtitle">
+                                Enter your mobile number to receive an instant OTP verification code
+                            </p>
+                        </div>
 
-            <div class="helper-text">
-                <ion-icon name="information-circle"></ion-icon>
-                <span>For demo, use OTP: <strong>1234</strong></span>
+                        <form (ngSubmit)="sendOTP()" class="auth-form">
+                            <div class="form-group">
+                                <label class="field-label">Mobile Number</label>
+                                
+                                <!-- Unified Single Input Container -->
+                                <div class="unified-phone-wrapper">
+                                    <div class="country-badge">
+                                        <svg class="india-flag-svg" viewBox="0 0 24 16" width="22" height="15" aria-hidden="true">
+                                            <rect width="24" height="5.33" fill="#FF9933"/>
+                                            <rect y="5.33" width="24" height="5.33" fill="#FFFFFF"/>
+                                            <rect y="10.66" width="24" height="5.33" fill="#138808"/>
+                                            <circle cx="12" cy="8" r="2" fill="#000080"/>
+                                        </svg>
+                                        <span class="prefix-code">+91</span>
+                                    </div>
+                                    <div class="input-divider-bar"></div>
+                                    <div class="phone-field-area">
+                                        <ion-icon name="call-outline" class="field-icon"></ion-icon>
+                                        <input type="tel" [(ngModel)]="phone" name="phone"
+                                            placeholder="Enter 10-digit mobile number" maxlength="10" inputmode="numeric"
+                                            pattern="[0-9]*" class="phone-native-input" required autofocus />
+                                        <button *ngIf="phone" (click)="phone = ''" type="button" class="clear-btn" aria-label="Clear input">
+                                            <ion-icon name="close-circle"></ion-icon>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="info-helper-strip">
+                                    <ion-icon name="information-circle-outline"></ion-icon>
+                                    <span>We will send an instant 4-digit verification code</span>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="submit-action-btn" [disabled]="loading || phone.trim().length !== 10">
+                                <span *ngIf="!loading">Get OTP</span>
+                                <span *ngIf="loading" class="spinner-text">Sending Code...</span>
+                                <ion-icon *ngIf="!loading" name="arrow-forward-outline"></ion-icon>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- ───────────────────────────────────────────── -->
+                    <!-- STEP 2: 4-BOX OTP VERIFICATION                -->
+                    <!-- ───────────────────────────────────────────── -->
+                    <div *ngIf="step === 'otp'" class="step-container fade-in">
+                        <!-- Top Header inside Card -->
+                        <div class="card-top-bar">
+                            <button type="button" (click)="changeNumber()" class="card-back-btn">
+                                <ion-icon name="arrow-back-outline"></ion-icon>
+                                <span>Change Number</span>
+                            </button>
+                            <span class="step-badge-pill green-pill">STEP 2 OF 2</span>
+                        </div>
+
+                        <div class="auth-card-header">
+                            <div class="auth-icon-badge key-badge">
+                                <ion-icon name="key-outline"></ion-icon>
+                            </div>
+                            <h2 class="auth-title">Verify Phone Number</h2>
+                            <p class="auth-subtitle">
+                                Enter the 4-digit code sent to your registered number
+                            </p>
+                        </div>
+
+                        <!-- Target Phone Display with Edit Button -->
+                        <div class="otp-target-card">
+                            <div class="target-left">
+                                <div class="target-icon-wrap">
+                                    <ion-icon name="checkmark-circle"></ion-icon>
+                                </div>
+                                <div class="target-meta">
+                                    <span class="target-label">OTP sent to</span>
+                                    <strong class="target-phone">+91 {{ phone }}</strong>
+                                </div>
+                            </div>
+                            <button type="button" (click)="changeNumber()" class="change-num-btn">
+                                <ion-icon name="pencil-outline"></ion-icon>
+                                <span>Edit</span>
+                            </button>
+                        </div>
+
+                        <form (ngSubmit)="verifyOTP()" class="auth-form">
+                            <div class="form-group">
+                                <label class="field-label text-center-label">Enter 4-Digit OTP</label>
+                                
+                                <!-- Bulletproof Unified OTP Input System -->
+                                <div class="otp-box-wrapper" (click)="focusOtpInput()">
+                                    <!-- Single real native input -->
+                                    <input #otpInput
+                                        id="real-otp-input"
+                                        type="tel"
+                                        maxlength="4"
+                                        inputmode="numeric"
+                                        pattern="[0-9]*"
+                                        autocomplete="one-time-code"
+                                        [ngModel]="otp"
+                                        (ngModelChange)="onOtpChange($event)"
+                                        name="otp"
+                                        (focus)="isOtpFocused = true"
+                                        (blur)="isOtpFocused = false"
+                                        class="hidden-otp-receiver" />
+
+                                    <!-- 4 Visual Digit Display Boxes -->
+                                    <div class="visual-otp-row">
+                                        <div class="otp-digit-box"
+                                            [class.filled]="otp.length > 0"
+                                            [class.active]="otp.length === 0 && isOtpFocused">
+                                            <span class="digit-char">{{ otp[0] || '' }}</span>
+                                            <span class="blinking-cursor" *ngIf="otp.length === 0 && isOtpFocused"></span>
+                                        </div>
+
+                                        <div class="otp-digit-box"
+                                            [class.filled]="otp.length > 1"
+                                            [class.active]="otp.length === 1 && isOtpFocused">
+                                            <span class="digit-char">{{ otp[1] || '' }}</span>
+                                            <span class="blinking-cursor" *ngIf="otp.length === 1 && isOtpFocused"></span>
+                                        </div>
+
+                                        <div class="otp-digit-box"
+                                            [class.filled]="otp.length > 2"
+                                            [class.active]="otp.length === 2 && isOtpFocused">
+                                            <span class="digit-char">{{ otp[2] || '' }}</span>
+                                            <span class="blinking-cursor" *ngIf="otp.length === 2 && isOtpFocused"></span>
+                                        </div>
+
+                                        <div class="otp-digit-box"
+                                            [class.filled]="otp.length > 3"
+                                            [class.active]="(otp.length === 3 || otp.length === 4) && isOtpFocused">
+                                            <span class="digit-char">{{ otp[3] || '' }}</span>
+                                            <span class="blinking-cursor" *ngIf="otp.length === 3 && isOtpFocused"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Demo Auto-Fill Pill -->
+                            <div class="demo-otp-pill" (click)="fillDemoOTP()">
+                                <ion-icon name="sparkles" class="sparkle-icon"></ion-icon>
+                                <span>Demo Fast-Track: Tap here to fill <strong>1234</strong></span>
+                            </div>
+
+                            <button type="submit" class="submit-action-btn" [disabled]="loading || otp.length !== 4">
+                                <span *ngIf="!loading">Verify & Sign In</span>
+                                <span *ngIf="loading" class="spinner-text">Verifying...</span>
+                                <ion-icon *ngIf="!loading" name="checkmark-outline"></ion-icon>
+                            </button>
+
+                            <!-- Resend Code Timer -->
+                            <div class="resend-row">
+                                <span *ngIf="!canResend" class="timer-countdown">
+                                    <ion-icon name="time-outline"></ion-icon>
+                                    Resend OTP in <strong>{{ resendTimer }}s</strong>
+                                </span>
+                                <button *ngIf="canResend" (click)="resendCode()" type="button" class="resend-active-btn">
+                                    Didn't receive code? <strong>Resend OTP</strong>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Trust & Security Signals -->
+                    <div class="auth-security-badge">
+                        <ion-icon name="shield-checkmark"></ion-icon>
+                        <span>256-Bit SSL Encrypted • Passwordless Security</span>
+                    </div>
+
+                    <!-- Legal Footer -->
+                    <div class="auth-legal-footer">
+                        By continuing, you agree to CivilWorks'
+                        <a class="legal-link">Terms of Service</a> &
+                        <a class="legal-link">Privacy Policy</a>
+                    </div>
+                </div>
             </div>
-        </div>
-
-        <div class="legal-text">
-            By continuing, you agree to our <span>Terms of Service</span> & <span>Privacy Policy</span>
         </div>
     </div>
 </ion-content>

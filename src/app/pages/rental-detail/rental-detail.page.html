@@ -1,89 +1,224 @@
-<ion-header [translucent]="true">
-    <ion-toolbar>
+<ion-header [translucent]="true" class="detail-header">
+    <ion-toolbar class="toolbar-dark">
         <ion-buttons slot="start">
-            <ion-back-button defaultHref="/tabs/rentals" color="navy"></ion-back-button>
+            <ion-button (click)="goBack()" class="back-circle-btn">
+                <ion-icon name="arrow-back"></ion-icon>
+            </ion-button>
         </ion-buttons>
-        <ion-title>Equipment Details</ion-title>
+        <ion-title>Machinery Details</ion-title>
+        <ion-buttons slot="end">
+            <ion-button class="share-btn">
+                <ion-icon name="share-social-outline"></ion-icon>
+            </ion-button>
+        </ion-buttons>
     </ion-toolbar>
 </ion-header>
 
-<ion-content>
-    <div *ngIf="rental" class="fade-in">
-        <div class="rental-hero">
-            <img [src]="rental.image" [alt]="rental.name">
-            <div class="hero-overlay">
-                <h1>{{rental.name}}</h1>
-                <div class="price-tag">
-                    <span class="currency">₹</span>
-                    <span class="amount">{{rental.pricePerDay}}</span>
-                    <span class="unit">/day</span>
+<ion-content class="detail-content">
+    <div *ngIf="rental" class="detail-wrapper fade-in">
+        <!-- Hero Machinery Showcase -->
+        <div class="machinery-hero">
+            <img [src]="rental.image" (error)="onImageError($event)" [alt]="rental.name" class="hero-image">
+            <div class="hero-gradient-overlay">
+                <div class="hero-tags">
+                    <span class="status-pill">
+                        <span class="green-dot"></span>
+                        Site Ready • Instant Dispatch
+                    </span>
+                    <span class="category-pill">{{ rental.category }}</span>
                 </div>
+                <h1 class="hero-title">{{ rental.name }}</h1>
+                <div class="rating-strip">
+                    <span class="star">★</span>
+                    <span class="score">{{ rental.rating }}</span>
+                    <span class="reviews-count">({{ rental.reviewCount }} verified site rentals)</span>
+                </div>
+            </div>
+            <div class="hero-price-badge">
+                <span class="currency">₹</span>
+                <span class="amount">{{ rental.pricePerDay | number }}</span>
+                <span class="unit">/ day</span>
             </div>
         </div>
 
-        <div class="details-container ion-padding">
-            <div class="section">
-                <h2 class="section-title">
-                    <ion-icon name="document-text-outline"></ion-icon>
-                    Description
-                </h2>
-                <p class="description-text">{{rental.description}}</p>
+        <div class="content-container">
+            <!-- Inspection Assurance Banner -->
+            <div class="trust-banner">
+                <div class="trust-icon-box">
+                    <ion-icon name="shield-checkmark"></ion-icon>
+                </div>
+                <div class="trust-text">
+                    <h4>CivilWorks Fleet Assured</h4>
+                    <p>50-point hydraulic, engine & safety audit completed. Free site technician assistance included.</p>
+                </div>
+                <span class="verified-stamp">AUDITED</span>
             </div>
 
-            <div class="section booking-form">
-                <h2 class="section-title">
-                    <ion-icon name="calendar-outline"></ion-icon>
-                    Booking Details
-                </h2>
-
-                <div class="input-group">
-                    <div class="label-info">
-                        <span class="main-label">Rental Duration</span>
-                        <span class="sub-label">Number of days</span>
+            <!-- Two-Column Layout on Desktop -->
+            <div class="details-grid-layout">
+                <!-- Left Column: Specs & Overview -->
+                <div class="left-column">
+                    <!-- Machine Overview -->
+                    <div class="info-card">
+                        <h2 class="card-title">
+                            <ion-icon name="information-circle-outline"></ion-icon>
+                            Machine Overview
+                        </h2>
+                        <p class="description-text">{{ rental.description }}</p>
                     </div>
-                    <div class="selector">
-                        <ion-button fill="clear" (click)="decrementDays()">
-                            <ion-icon name="remove-circle-outline"></ion-icon>
-                        </ion-button>
-                        <span class="count">{{daysCount}}</span>
-                        <ion-button fill="clear" (click)="incrementDays()">
-                            <ion-icon name="add-circle-outline"></ion-icon>
-                        </ion-button>
+
+                    <!-- Technical Specifications Grid -->
+                    <div class="info-card" *ngIf="rental.specsMatrix && rental.specsMatrix.length">
+                        <h2 class="card-title">
+                            <ion-icon name="hardware-chip-outline"></ion-icon>
+                            Technical Specifications
+                        </h2>
+                        <div class="specs-table">
+                            <div class="spec-row" *ngFor="let item of rental.specsMatrix">
+                                <span class="spec-label">{{ item.label }}</span>
+                                <span class="spec-value">{{ item.value }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- What's Included -->
+                    <div class="info-card">
+                        <h2 class="card-title">
+                            <ion-icon name="checkmark-done-circle-outline"></ion-icon>
+                            Included with Rental
+                        </h2>
+                        <div class="included-list">
+                            <div class="included-item">
+                                <ion-icon name="checkmark" class="inc-icon"></ion-icon>
+                                <span>Certified and experienced machine operator</span>
+                            </div>
+                            <div class="included-item">
+                                <ion-icon name="checkmark" class="inc-icon"></ion-icon>
+                                <span>Transit and on-site comprehensive accidental insurance</span>
+                            </div>
+                            <div class="included-item">
+                                <ion-icon name="checkmark" class="inc-icon"></ion-icon>
+                                <span>2-Hour on-site replacement guarantee if mechanical fault</span>
+                            </div>
+                            <div class="included-item">
+                                <ion-icon name="checkmark" class="inc-icon"></ion-icon>
+                                <span>Zero maintenance or lubrication charges</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="total-section">
-                    <div class="total-row">
-                        <span>Rate (per day)</span>
-                        <span>₹{{rental.pricePerDay}}</span>
-                    </div>
-                    <div class="total-row">
-                        <span>Duration</span>
-                        <span>{{daysCount}} Days</span>
-                    </div>
-                    <hr>
-                    <div class="total-row grand-total">
-                        <span>Total Amount</span>
-                        <span>₹{{totalAmount}}</span>
+                <!-- Right Column: Interactive Booking & Cost Calculator -->
+                <div class="right-column">
+                    <div class="booking-calculator-card">
+                        <h2 class="card-title">
+                            <ion-icon name="calculator-outline"></ion-icon>
+                            Rental Duration & Pricing
+                        </h2>
+
+                        <!-- Duration Presets -->
+                        <div class="duration-presets">
+                            <button class="preset-btn" [class.active]="daysCount === 1" (click)="setPresetDays(1)">
+                                1 Day
+                            </button>
+                            <button class="preset-btn" [class.active]="daysCount === 3" (click)="setPresetDays(3)">
+                                3 Days <span class="save-tag">-5%</span>
+                            </button>
+                            <button class="preset-btn" [class.active]="daysCount === 7" (click)="setPresetDays(7)">
+                                7 Days <span class="save-tag">-10%</span>
+                            </button>
+                            <button class="preset-btn" [class.active]="daysCount === 30" (click)="setPresetDays(30)">
+                                30 Days <span class="save-tag">-20%</span>
+                            </button>
+                        </div>
+
+                        <!-- Stepper -->
+                        <div class="duration-stepper-box">
+                            <div class="stepper-label">
+                                <span class="main">Custom Days</span>
+                                <span class="sub">Adjust exact hire timeline</span>
+                            </div>
+                            <div class="stepper-controls">
+                                <button class="step-btn" (click)="decrementDays()" [disabled]="daysCount <= 1">−</button>
+                                <span class="step-value">{{ daysCount }} Days</span>
+                                <button class="step-btn" (click)="incrementDays()">+</button>
+                            </div>
+                        </div>
+
+                        <!-- Price Breakdown -->
+                        <div class="cost-breakdown">
+                            <div class="cost-row">
+                                <span class="cost-label">Base Rate (per day)</span>
+                                <span class="cost-val">₹{{ rental.pricePerDay | number }}</span>
+                            </div>
+                            <div class="cost-row">
+                                <span class="cost-label">Total Duration</span>
+                                <span class="cost-val">{{ daysCount }} Days</span>
+                            </div>
+                            <div class="cost-row" *ngIf="discountAmount > 0">
+                                <span class="cost-label discount-label">Duration Discount</span>
+                                <span class="cost-val discount-val">- ₹{{ discountAmount | number }}</span>
+                            </div>
+                            <div class="cost-row">
+                                <span class="cost-label">Site Insurance & Operator</span>
+                                <span class="cost-val free-val">FREE (CivilWorks Cover)</span>
+                            </div>
+                            <div class="cost-row">
+                                <span class="cost-label">Refundable Security Deposit</span>
+                                <span class="cost-val free-val">₹0 (Zero Deposit)</span>
+                            </div>
+
+                            <div class="cost-divider"></div>
+
+                            <div class="total-row">
+                                <div class="total-label-box">
+                                    <span class="total-title">Total Estimate</span>
+                                    <span class="total-subtitle">Taxes & operator included</span>
+                                </div>
+                                <div class="total-amount-box">
+                                    <span class="currency">₹</span>
+                                    <span class="amount">{{ totalAmount | number }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Checkout CTA -->
+                        <button class="action-book-btn" (click)="placeBooking()">
+                            <span>Book Machine Now</span>
+                            <ion-icon name="arrow-forward"></ion-icon>
+                        </button>
+
+                        <div class="guarantee-footer">
+                            <ion-icon name="lock-closed"></ion-icon>
+                            <span>Secure checkout • Free cancellation up to 6 hours before dispatch</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div *ngIf="loading" class="ion-padding">
-        <ion-skeleton-text [animated]="true"
-            style="width: 100%; height: 250px; border-radius: 0 0 24px 24px; margin: -16px -16px 16px -16px;"></ion-skeleton-text>
-        <ion-skeleton-text [animated]="true" style="width: 40%; height: 24px;"></ion-skeleton-text>
-        <ion-skeleton-text [animated]="true" style="width: 90%; height: 16px; margin-top: 12px;"></ion-skeleton-text>
-        <ion-skeleton-text [animated]="true" style="width: 80%; height: 16px; margin-top: 8px;"></ion-skeleton-text>
+    <!-- Skeleton Loader -->
+    <div *ngIf="loading" class="detail-skeleton">
+        <ion-skeleton-text [animated]="true" style="width: 100%; height: 320px;"></ion-skeleton-text>
+        <div style="padding: 24px;">
+            <ion-skeleton-text [animated]="true" style="width: 60%; height: 32px; margin-bottom: 16px;"></ion-skeleton-text>
+            <ion-skeleton-text [animated]="true" style="width: 90%; height: 20px; margin-bottom: 10px;"></ion-skeleton-text>
+            <ion-skeleton-text [animated]="true" style="width: 80%; height: 20px; margin-bottom: 24px;"></ion-skeleton-text>
+            <ion-skeleton-text [animated]="true" style="width: 100%; height: 200px; border-radius: 16px;"></ion-skeleton-text>
+        </div>
     </div>
 </ion-content>
 
-<ion-footer class="ion-no-border">
-    <ion-toolbar class="ion-padding-horizontal ion-padding-bottom footer-navy">
-        <ion-button expand="block" class="book-btn-orange" (click)="placeBooking()">
-            Continue Booking
-        </ion-button>
-    </ion-toolbar>
+<ion-footer class="mobile-action-footer">
+    <div class="footer-inner" *ngIf="rental">
+        <div class="price-summary">
+            <span class="sub">Total ({{ daysCount }} Days)</span>
+            <span class="amount">₹{{ totalAmount | number }}</span>
+        </div>
+        <button class="footer-book-btn" (click)="placeBooking()">
+            <span>Book & Dispatch</span>
+            <ion-icon name="arrow-forward"></ion-icon>
+        </button>
+    </div>
 </ion-footer>

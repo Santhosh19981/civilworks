@@ -1,43 +1,286 @@
-<ion-content class="ion-padding ion-text-center">
-    <div class="success-container fade-in" *ngIf="booking">
-        <div class="success-anim">
-            <ion-icon name="checkmark-circle" class="success-icon scale-in"></ion-icon>
-        </div>
-
-        <h1 class="success-title">Equipment Booked Successfully!</h1>
-        <p class="success-msg">Your rental request has been received. We will contact you shortly.</p>
-
-        <div class="booking-details-card">
-            <div class="detail-row">
-                <span>Equipment</span>
-                <span class="val">{{booking.rentalName}}</span>
-            </div>
-            <div class="detail-row">
-                <span>Rental Days</span>
-                <span class="val">{{booking.days}} Days</span>
-            </div>
-            <div class="detail-row">
-                <span>Total Amount</span>
-                <span class="val highlight">₹{{booking.totalAmount}}</span>
-            </div>
-            <div class="detail-row">
-                <span>Booking ID</span>
-                <span class="val">#{{booking.bookingId}}</span>
-            </div>
-            <div class="detail-row">
-                <span>Contact Number</span>
-                <span class="val">{{booking.mobile}}</span>
-            </div>
-        </div>
-
-        <ion-button expand="block" fill="clear" class="home-btn" (click)="goToHome()">
-            Back to Home
-        </ion-button>
+<ion-content [fullscreen]="true" class="success-page-content">
+  <div class="success-wrapper">
+    <!-- Confetti & Celebration Sparkles -->
+    <div class="confetti-sparkles" aria-hidden="true">
+      <span class="sparkle s1">✨</span>
+      <span class="sparkle s2">⭐</span>
+      <span class="sparkle s3">⚡</span>
+      <span class="sparkle s4">✨</span>
+      <span class="sparkle s5">🎉</span>
     </div>
 
-    <ion-fab vertical="bottom" horizontal="end" slot="fixed" class="fab-call">
-        <ion-fab-button class="call-btn" (click)="callOwner()" *ngIf="booking">
-            <ion-icon name="call"></ion-icon>
-        </ion-fab-button>
-    </ion-fab>
+    <!-- Celebration Badge Section -->
+    <div class="hero-celebration-section fade-in-up">
+      <div class="success-rings-container">
+        <div class="pulse-ring pulse-ring-outer"></div>
+        <div class="pulse-ring pulse-ring-inner"></div>
+        <div class="checkmark-badge">
+          <ion-icon name="checkmark-circle" class="checkmark-icon"></ion-icon>
+        </div>
+      </div>
+
+      <div class="verified-pill">
+        <span class="live-dot"></span>
+        <span>RESERVATION CONFIRMED</span>
+      </div>
+
+      <h1 class="main-title">Equipment Mobilization Booked!</h1>
+      <p class="main-subtitle">
+        Your heavy machinery rental request is logged and verified. Pre-dispatch inspection has commenced at the Hyderabad Central Depot.
+      </p>
+
+      <!-- Booking ID & Quick Action Pill -->
+      <div class="reference-strip">
+        <div class="ref-item">
+          <span class="ref-label">Booking Reference</span>
+          <div class="ref-copy-box" (click)="copyBookingId()">
+            <span class="ref-val">#{{ booking.bookingId }}</span>
+            <ion-icon [name]="copied ? 'checkmark-done-outline' : 'copy-outline'" [class.copied-icon]="copied"></ion-icon>
+            <span class="copied-tooltip" *ngIf="copied">Copied!</span>
+          </div>
+        </div>
+        <div class="ref-divider"></div>
+        <div class="ref-item">
+          <span class="ref-label">Booking Date</span>
+          <span class="ref-date">{{ formattedDate }}</span>
+        </div>
+        <div class="ref-divider"></div>
+        <div class="ref-item">
+          <span class="ref-label">Estimated Dispatch</span>
+          <span class="ref-eta">{{ estimatedArrival }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live 4-Stage Mobilization Timeline -->
+    <div class="card-surface timeline-card fade-in-up delay-1">
+      <div class="card-header-flex">
+        <div class="header-tag-group">
+          <span class="card-badge-emerald">
+            <span class="ping-dot"></span>
+            LIVE LOGISTICS TRACKER
+          </span>
+          <span class="unit-code">Fleet Unit: #FLATBED-1618</span>
+        </div>
+        <button class="text-link-btn" (click)="trackDispatch()">
+          <span>View Orders</span>
+          <ion-icon name="arrow-forward"></ion-icon>
+        </button>
+      </div>
+
+      <div class="timeline-stepper">
+        <!-- Step 1 -->
+        <div class="timeline-step completed">
+          <div class="step-marker">
+            <ion-icon name="checkmark-sharp"></ion-icon>
+          </div>
+          <div class="step-info">
+            <h4 class="step-name">Order Verified</h4>
+            <p class="step-desc">Machine reserved in inventory</p>
+            <span class="step-time">Just now</span>
+          </div>
+        </div>
+
+        <div class="timeline-line completed-line"></div>
+
+        <!-- Step 2 -->
+        <div class="timeline-step active">
+          <div class="step-marker active-marker">
+            <ion-icon name="construct-outline"></ion-icon>
+          </div>
+          <div class="step-info">
+            <h4 class="step-name">PDI & Yard Quality Check</h4>
+            <p class="step-desc">Engine, hydraulic & safety tests</p>
+            <span class="step-time active-badge">In Progress</span>
+          </div>
+        </div>
+
+        <div class="timeline-line"></div>
+
+        <!-- Step 3 -->
+        <div class="timeline-step upcoming">
+          <div class="step-marker">
+            <ion-icon name="car-outline"></ion-icon>
+          </div>
+          <div class="step-info">
+            <h4 class="step-name">Flatbed Trailer Transit</h4>
+            <p class="step-desc">Ashok Leyland 1618 Flatbed</p>
+            <span class="step-time">Est. 2 hrs</span>
+          </div>
+        </div>
+
+        <div class="timeline-line"></div>
+
+        <!-- Step 4 -->
+        <div class="timeline-step upcoming">
+          <div class="step-marker">
+            <ion-icon name="location-outline"></ion-icon>
+          </div>
+          <div class="step-info">
+            <h4 class="step-name">Site Delivery & Briefing</h4>
+            <p class="step-desc">On-site handover & test run</p>
+            <span class="step-time">Est. 3-4 hrs</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Yard Dispatcher Strip -->
+      <div class="dispatcher-strip">
+        <div class="dispatcher-avatar">
+          <ion-icon name="person-circle-outline"></ion-icon>
+        </div>
+        <div class="dispatcher-details">
+          <span class="dispatcher-role">Yard Dispatch Officer</span>
+          <span class="dispatcher-name">Suresh Varma • Hyderabad Logistics Hub</span>
+        </div>
+        <button class="dispatcher-call-btn" (click)="callLogistics()">
+          <ion-icon name="call-outline"></ion-icon>
+          <span>Call Dispatcher</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Official Digital Dispatch Voucher Pass -->
+    <div class="card-surface voucher-ticket fade-in-up delay-2">
+      <div class="voucher-top-bar">
+        <div class="pass-branding">
+          <ion-icon name="business-outline" class="brand-icon"></ion-icon>
+          <div>
+            <span class="brand-label">CIVILWORKS HEAVY MACHINERY DIVISION</span>
+            <h3 class="pass-heading">Site Mobilization Pass</h3>
+          </div>
+        </div>
+        <span class="pass-tag">OFFICIAL DISPATCH SLIP</span>
+      </div>
+
+      <!-- Equipment Detail Banner -->
+      <div class="equipment-showcase">
+        <div class="equipment-img-box">
+          <img [src]="equipmentImage" [alt]="equipmentName" (error)="equipmentImage = 'assets/rentals/concrete_mixer.jpg'" />
+        </div>
+        <div class="equipment-meta">
+          <span class="category-badge">CONSTRUCTION EQUIPMENT</span>
+          <h2 class="machine-title">{{ equipmentName }}</h2>
+          <div class="spec-pills">
+            <span class="spec-pill"><ion-icon name="shield-checkmark-outline"></ion-icon> Inspected & Certified</span>
+            <span class="spec-pill"><ion-icon name="person-outline"></ion-icon> Operator Included</span>
+            <span class="spec-pill"><ion-icon name="speedometer-outline"></ion-icon> Full Tank Fuel Handover</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Perforated Ticket Divider with Notches -->
+      <div class="ticket-perforation">
+        <span class="notch notch-left"></span>
+        <div class="dashed-line"></div>
+        <span class="notch notch-right"></span>
+      </div>
+
+      <!-- Rental Logistics Specs Grid -->
+      <div class="specs-grid">
+        <div class="spec-cell">
+          <span class="cell-label"><ion-icon name="calendar-outline"></ion-icon> Rental Duration</span>
+          <span class="cell-value">{{ booking.days }} Days</span>
+          <span class="cell-sub">Return: {{ returnDate }}</span>
+        </div>
+
+        <div class="spec-cell">
+          <span class="cell-label"><ion-icon name="navigate-outline"></ion-icon> Delivery Site</span>
+          <span class="cell-value">{{ booking.siteName || 'Phoenix Tech Zone, Tower B' }}</span>
+          <span class="cell-sub">{{ booking.customerAddress?.addressLine2 || 'Financial District, Hyderabad' }}</span>
+        </div>
+
+        <div class="spec-cell">
+          <span class="cell-label"><ion-icon name="person-outline"></ion-icon> Site Supervisor</span>
+          <span class="cell-value">{{ booking.customerAddress?.name || 'Vikramaditya Reddy' }}</span>
+          <span class="cell-sub">{{ booking.mobile || '+91 9876543212' }}</span>
+        </div>
+
+        <div class="spec-cell">
+          <span class="cell-label"><ion-icon name="card-outline"></ion-icon> Payment Method</span>
+          <span class="cell-value">Pay on Site / Mobilization</span>
+          <span class="cell-sub text-success">Verified CivilWorks Account</span>
+        </div>
+      </div>
+
+      <!-- Financial Breakdown -->
+      <div class="pricing-breakdown">
+        <div class="price-row">
+          <span class="price-desc">Base Equipment Rental ({{ booking.days }} Days)</span>
+          <span class="price-num">₹{{ baseRental | number }}</span>
+        </div>
+        <div class="price-row">
+          <span class="price-desc">Flatbed Freight, Rigging & Mobilization</span>
+          <span class="price-num">₹{{ logisticsFee | number }}</span>
+        </div>
+        <div class="price-row">
+          <span class="price-desc">GST (18% Applicable Input Tax Credit)</span>
+          <span class="price-num">₹{{ gstAmount | number }}</span>
+        </div>
+        <div class="price-row security-deposit">
+          <span class="price-desc">
+            Refundable Security Deposit
+            <span class="waived-pill">PRO WAIVER</span>
+          </span>
+          <span class="price-num waived-text">₹0</span>
+        </div>
+        <div class="price-total-row">
+          <div>
+            <span class="total-label">Total Mobilization Payable</span>
+            <span class="total-note">Payable on site upon machine inspection</span>
+          </div>
+          <span class="total-figure">₹{{ totalAmount | number }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Primary Action Controls -->
+    <div class="action-buttons-group fade-in-up delay-3">
+      <button class="btn-primary-orange" (click)="downloadReceipt()">
+        <ion-icon name="print-outline"></ion-icon>
+        <span>Download Mobilization Slip (PDF)</span>
+      </button>
+
+      <button class="btn-secondary-navy" (click)="trackDispatch()">
+        <ion-icon name="navigate-circle-outline"></ion-icon>
+        <span>Track Live Dispatch in Orders</span>
+      </button>
+
+      <button class="btn-outline-slate" (click)="browseRentals()">
+        <ion-icon name="grid-outline"></ion-icon>
+        <span>Browse More Machinery</span>
+      </button>
+    </div>
+
+    <!-- Direct WhatsApp & Help Card -->
+    <div class="card-surface help-card fade-in-up delay-4">
+      <div class="help-content">
+        <div class="help-icon-box">
+          <ion-icon name="logo-whatsapp"></ion-icon>
+        </div>
+        <div class="help-text">
+          <h4 class="help-title">Need Immediate Dispatch Updates?</h4>
+          <p class="help-desc">Our 24/7 site operations team is available via direct WhatsApp or toll-free hotline.</p>
+        </div>
+      </div>
+      <div class="help-actions">
+        <button class="btn-whatsapp" (click)="openWhatsAppSupport()">
+          <ion-icon name="logo-whatsapp"></ion-icon>
+          <span>WhatsApp Operations</span>
+        </button>
+        <button class="btn-call" (click)="callLogistics()">
+          <ion-icon name="call"></ion-icon>
+          <span>1800-425-WORKS</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Return to Home Link -->
+    <div class="home-link-section fade-in-up delay-4">
+      <button class="back-home-btn" (click)="goToHome()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+        <span>Return to CivilWorks Homepage</span>
+      </button>
+    </div>
+  </div>
 </ion-content>

@@ -1,215 +1,1424 @@
-.header-title {
+// ==========================================
+// Modern Construction E-Commerce Design System
+// ==========================================
+
+$primary-orange: #FF6B00;
+$primary-orange-light: #FF882E;
+$primary-orange-dark: #E05300;
+
+$navy-dark: #0B192C;
+$navy-slate: #1E293B;
+$navy-surface: #0F172A;
+
+$amber-gold: #F59E0B;
+$amber-light: #FEF3C7;
+$emerald-green: #10B981;
+$cyan-electric: #0284C7;
+
+$bg-slate: #F8FAFC;
+$border-light: #E2E8F0;
+$text-main: #0F172A;
+$text-muted: #64748B;
+$text-soft: #94A3B8;
+
+:host {
+    display: block;
+    --background: #{$bg-slate};
+    background-color: $bg-slate;
+}
+
+// ------------------------------------------
+// 1. Header & Navigation Bar
+// ------------------------------------------
+.modern-header {
+    background: $navy-dark;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-inner {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 12px 16px 14px;
+}
+
+.top-nav {
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-weight: 700;
-    font-size: 20px;
-
-    ion-icon {
-        font-size: 24px;
-    }
-}
-
-.banner-carousel {
-    position: relative;
-    width: 100%;
-    height: 240px;
-    overflow: hidden;
-    background: #0B2C4D;
-}
-
-.banner-slides {
-    display: flex;
-    height: 100%;
-    transition: transform 0.5s ease-in-out;
-}
-
-.banner-slide {
-    min-width: 100%;
-    height: 100%;
-    position: relative;
-
-    img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-}
-
-.banner-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 24px;
-    background: linear-gradient(to top, rgba(11, 44, 77, 0.9), transparent);
-
-    h2 {
-        color: #ffffff;
-        font-size: 24px;
-        font-weight: 800;
-        margin: 0;
-        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    }
-}
-
-.banner-indicators {
-    position: absolute;
-    bottom: 16px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 8px;
-    z-index: 10;
-}
-
-.indicator {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.5);
-    transition: all 0.3s;
-
-    &.active {
-        width: 24px;
-        border-radius: 4px;
-        background: #F7931E;
-    }
-}
-
-.features-grid {
-    padding: 20px 16px;
-    display: flex;
-    flex-direction: column;
+    justify-content: space-between;
     gap: 16px;
+    margin-bottom: 12px;
 }
 
-.feature-card {
+.brand-wrapper {
     display: flex;
     align-items: center;
-    padding: 16px;
-    border-radius: 20px;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    gap: 10px;
     cursor: pointer;
+    user-select: none;
+    transition: opacity 0.2s ease;
 
-    &:active {
-        transform: scale(0.97);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    .card-icon {
-        width: 50px;
-        height: 50px;
-        border-radius: 14px;
-        background: rgba(255, 255, 255, 0.2);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-right: 16px;
-        backdrop-filter: blur(4px);
-
-        ion-icon {
-            font-size: 26px;
-            color: #ffffff;
-        }
-    }
-
-    .card-content {
-        flex: 1;
-
-        h3 {
-            margin: 0;
-            font-size: 18px;
-            font-weight: 700;
-            color: #ffffff;
-            letter-spacing: -0.5px;
-        }
-
-        p {
-            margin: 4px 0 0;
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.85);
-            font-weight: 400;
-        }
-    }
-
-    .arrow-icon {
-        font-size: 20px;
-        color: rgba(255, 255, 255, 0.7);
+    &:hover {
+        opacity: 0.92;
     }
 }
 
-.buy-card {
-    background: linear-gradient(135deg, #F7931E 0%, #FFB258 100%);
-}
-
-.rent-card {
-    background: linear-gradient(135deg, #0B2C4D 0%, #1A4B7C 100%);
-}
-
-.hire-card {
-    background: linear-gradient(135deg, #FFD700 0%, #FFEA00 100%);
-
-    .card-content h3,
-    .card-content p,
-    .arrow-icon,
-    .card-icon ion-icon {
-        color: #0B2C4D !important;
-    }
-
-    .card-icon {
-        background: rgba(11, 44, 77, 0.1);
-    }
-}
-
-.horizontal-scroll-item {
-    width: 160px;
-}
-
-// Cart button with badge styling
-.cart-button {
-    position: relative;
-
-    ion-icon {
-        font-size: 26px;
-        color: var(--ion-color-primary);
-    }
-}
-
-.cart-badge {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    min-width: 18px;
-    height: 18px;
-    padding: 2px 5px;
-    font-size: 11px;
-    font-weight: 700;
-    line-height: 14px;
+.brand-icon-box {
+    width: 38px;
+    height: 38px;
     border-radius: 10px;
-    background: #F7931E;
-    color: white;
+    background: linear-gradient(135deg, $primary-orange 0%, $primary-orange-dark 100%);
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    animation: badge-pop 0.3s ease;
+    box-shadow: 0 4px 12px rgba(255, 107, 0, 0.35);
+
+    .brand-icon {
+        font-size: 22px;
+        color: #FFFFFF;
+    }
+}
+
+.brand-text-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.brand-name {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: #FFFFFF;
+    line-height: 1.1;
+
+    .brand-dot {
+        color: $primary-orange;
+    }
+}
+
+.brand-tagline {
+    font-size: 10px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.6);
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.location-pill {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    padding: 6px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.12);
+    }
+
+    .location-icon {
+        font-size: 16px;
+        color: $primary-orange;
+    }
+
+    .location-info {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.1;
+
+        .loc-label {
+            font-size: 9px;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .loc-val {
+            font-size: 12px;
+            color: #FFFFFF;
+            font-weight: 600;
+        }
+    }
+
+    .loc-arrow {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.6);
+    }
+}
+
+@media (min-width: 640px) {
+    .location-pill {
+        display: flex;
+    }
+}
+
+.cart-btn {
+    --padding-start: 6px;
+    --padding-end: 6px;
+    margin: 0;
+    height: 40px;
+}
+
+.cart-icon-wrapper {
+    position: relative;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+
+    ion-icon {
+        font-size: 22px;
+        color: #FFFFFF;
+    }
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.15);
+    }
+}
+
+.cart-counter-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 9px;
+    background: $primary-orange;
+    color: #FFFFFF;
+    font-size: 10px;
+    font-weight: 800;
+    line-height: 18px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+    animation: badge-pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 @keyframes badge-pop {
-    0% {
-        transform: scale(0);
+    0% { transform: scale(0.4); }
+    100% { transform: scale(1); }
+}
+
+// Search Input Bar
+.search-container {
+    width: 100%;
+}
+
+.search-input-box {
+    display: flex;
+    align-items: center;
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 3px 6px 3px 14px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: box-shadow 0.2s ease;
+
+    &:focus-within {
+        box-shadow: 0 0 0 3px rgba(255, 107, 0, 0.35);
     }
 
-    50% {
-        transform: scale(1.2);
+    .search-icon {
+        font-size: 20px;
+        color: $text-muted;
+        margin-right: 10px;
+        flex-shrink: 0;
     }
 
-    100% {
-        transform: scale(1);
+    .search-input {
+        flex: 1;
+        border: none;
+        outline: none;
+        font-size: 14px;
+        color: $text-main;
+        background: transparent;
+        height: 38px;
+        font-family: inherit;
+
+        &::placeholder {
+            color: #94A3B8;
+            font-size: 13.5px;
+        }
     }
+
+    .clear-search-btn {
+        background: none;
+        border: none;
+        padding: 4px;
+        color: $text-soft;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+
+        ion-icon {
+            font-size: 18px;
+        }
+    }
+
+    .search-submit-btn {
+        background: $primary-orange;
+        border: none;
+        color: #FFFFFF;
+        font-size: 13px;
+        font-weight: 700;
+        padding: 8px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.2s ease;
+        flex-shrink: 0;
+
+        &:hover {
+            background: $primary-orange-dark;
+        }
+    }
+}
+
+// ------------------------------------------
+// Main Page Body Content
+// ------------------------------------------
+.page-content {
+    --background: #{$bg-slate};
+}
+
+.home-wrapper {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+// ------------------------------------------
+// 2. Modern Hero Promo Carousel
+// ------------------------------------------
+.hero-carousel-section {
+    width: 100%;
+}
+
+.carousel-viewport {
+    position: relative;
+    width: 100%;
+    height: 220px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+    background: $navy-dark;
+}
+
+@media (min-width: 768px) {
+    .carousel-viewport {
+        height: 300px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .carousel-viewport {
+        height: 340px;
+    }
+}
+
+.carousel-track {
+    display: flex;
+    height: 100%;
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.carousel-slide {
+    min-width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+}
+
+.slide-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    transform: scale(1.02);
+    transition: transform 6s ease-out;
+}
+
+.carousel-slide:hover .slide-bg {
+    transform: scale(1.06);
+}
+
+.slide-gradient-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(11, 25, 44, 0.2) 0%, rgba(11, 25, 44, 0.85) 75%, rgba(11, 25, 44, 0.96) 100%);
+}
+
+.slide-content {
+    position: relative;
+    z-index: 2;
+    padding: 24px 20px;
+    max-width: 680px;
+
+    @media (min-width: 768px) {
+        padding: 36px 32px;
+    }
+}
+
+.slide-badge {
+    display: inline-block;
+    background: $primary-orange;
+    color: #FFFFFF;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 8px rgba(255, 107, 0, 0.4);
+}
+
+.slide-title {
+    color: #FFFFFF;
+    font-size: 22px;
+    font-weight: 800;
+    line-height: 1.2;
+    margin: 0 0 6px 0;
+    letter-spacing: -0.5px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+
+    @media (min-width: 768px) {
+        font-size: 32px;
+    }
+}
+
+.slide-subtitle {
+    color: rgba(255, 255, 255, 0.88);
+    font-size: 13px;
+    line-height: 1.4;
+    margin: 0 0 16px 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+
+    @media (min-width: 768px) {
+        font-size: 15px;
+        -webkit-line-clamp: 3;
+    }
+}
+
+.slide-cta-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.slide-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #FFFFFF;
+    color: $navy-dark;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 9px 18px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+    transition: all 0.2s ease;
+
+    ion-icon {
+        font-size: 16px;
+        color: $primary-orange;
+        transition: transform 0.2s ease;
+    }
+
+    &:hover {
+        background: $primary-orange;
+        color: #FFFFFF;
+
+        ion-icon {
+            color: #FFFFFF;
+            transform: translateX(3px);
+        }
+    }
+}
+
+.slide-assurance {
+    display: none;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 500;
+
+    ion-icon {
+        color: $emerald-green;
+        font-size: 16px;
+    }
+
+    @media (min-width: 640px) {
+        display: inline-flex;
+    }
+}
+
+// Carousel Controls
+.slider-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.2s ease;
+
+    ion-icon {
+        font-size: 20px;
+    }
+
+    &:hover {
+        background: $primary-orange;
+        border-color: $primary-orange;
+    }
+
+    &.prev-arrow { left: 14px; }
+    &.next-arrow { right: 14px; }
+}
+
+@media (max-width: 640px) {
+    .slider-arrow {
+        display: none;
+    }
+}
+
+.carousel-indicators {
+    position: absolute;
+    bottom: 14px;
+    right: 20px;
+    display: flex;
+    gap: 6px;
+    z-index: 10;
+}
+
+.indicator-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.4);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &.active {
+        width: 24px;
+        background: $primary-orange;
+    }
+}
+
+// ------------------------------------------
+// 3. Redesigned 3-Core Services Hub
+// ------------------------------------------
+.services-hub-section {
+    width: 100%;
+}
+
+.section-intro {
+    text-align: center;
+    margin-bottom: 20px;
+
+    .intro-tag {
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 1px;
+        color: $primary-orange;
+        background: rgba(255, 107, 0, 0.08);
+        padding: 4px 12px;
+        border-radius: 20px;
+        margin-bottom: 6px;
+    }
+
+    .hub-main-title {
+        font-size: 22px;
+        font-weight: 800;
+        color: $navy-dark;
+        margin: 0 0 6px 0;
+        letter-spacing: -0.5px;
+
+        @media (min-width: 768px) {
+            font-size: 26px;
+        }
+    }
+
+    .hub-subtitle {
+        font-size: 14px;
+        color: $text-muted;
+        margin: 0;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+
+    @media (min-width: 768px) {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+    }
+}
+
+.service-card {
+    position: relative;
+    background: #FFFFFF;
+    border-radius: 18px;
+    padding: 22px;
+    border: 1px solid $border-light;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
+    cursor: pointer;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+
+    &:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 16px 36px rgba(0, 0, 0, 0.09);
+        border-color: rgba(255, 107, 0, 0.3);
+
+        .action-arrow {
+            transform: translateX(4px);
+            background: $primary-orange;
+            color: #FFFFFF;
+        }
+    }
+
+    &:active {
+        transform: scale(0.98);
+    }
+}
+
+.card-glow-bg {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    filter: blur(50px);
+    opacity: 0.12;
+    pointer-events: none;
+}
+
+.card-materials .card-glow-bg { background: $primary-orange; }
+.card-equipment .card-glow-bg { background: $cyan-electric; }
+.card-helpers .card-glow-bg { background: $amber-gold; }
+
+.service-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.service-chip {
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    text-transform: uppercase;
+
+    &.chip-orange {
+        background: rgba(255, 107, 0, 0.12);
+        color: $primary-orange-dark;
+    }
+
+    &.chip-navy {
+        background: rgba(2, 132, 199, 0.12);
+        color: $cyan-electric;
+    }
+
+    &.chip-amber {
+        background: rgba(217, 119, 6, 0.12);
+        color: #B45309;
+    }
+}
+
+.service-speed {
+    font-size: 11px;
+    font-weight: 600;
+    color: $text-muted;
+}
+
+.service-body {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.icon-avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+
+    ion-icon {
+        font-size: 26px;
+        color: #FFFFFF;
+    }
+
+    &.avatar-orange {
+        background: linear-gradient(135deg, $primary-orange 0%, #FF9040 100%);
+    }
+
+    &.avatar-navy {
+        background: linear-gradient(135deg, $navy-dark 0%, #0369A1 100%);
+    }
+
+    &.avatar-amber {
+        background: linear-gradient(135deg, #D97706 0%, $amber-gold 100%);
+    }
+}
+
+.service-text {
+    flex: 1;
+
+    .service-title {
+        font-size: 19px;
+        font-weight: 800;
+        color: $navy-dark;
+        margin: 0 0 4px 0;
+        letter-spacing: -0.3px;
+    }
+
+    .service-desc {
+        font-size: 13px;
+        color: $text-muted;
+        line-height: 1.4;
+        margin: 0;
+    }
+}
+
+.service-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-top: 12px;
+    border-top: 1px dashed $border-light;
+    margin-bottom: 16px;
+
+    .feat-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 11.5px;
+        font-weight: 600;
+        color: $text-main;
+        background: $bg-slate;
+        padding: 4px 8px;
+        border-radius: 6px;
+
+        ion-icon {
+            color: $emerald-green;
+            font-size: 14px;
+        }
+    }
+}
+
+.service-action {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 6px;
+
+    .action-text {
+        font-size: 13.5px;
+        font-weight: 700;
+        color: $navy-dark;
+    }
+
+    .action-arrow {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: $bg-slate;
+        border: 1px solid $border-light;
+        color: $navy-dark;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+
+        ion-icon {
+            font-size: 16px;
+        }
+    }
+}
+
+// ------------------------------------------
+// 4. Quick Categories Explorer
+// ------------------------------------------
+.quick-categories-section {
+    width: 100%;
+}
+
+.section-top-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    gap: 12px;
+}
+
+.badge-mini {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-bottom: 4px;
+
+    &.orange-mini {
+        background: rgba(255, 107, 0, 0.12);
+        color: $primary-orange-dark;
+    }
+
+    &.blue-mini {
+        background: rgba(2, 132, 199, 0.12);
+        color: $cyan-electric;
+    }
+}
+
+.section-heading {
+    font-size: 20px;
+    font-weight: 800;
+    color: $navy-dark;
+    margin: 0;
+    letter-spacing: -0.4px;
+
+    @media (min-width: 768px) {
+        font-size: 24px;
+    }
+}
+
+.section-subheading {
+    font-size: 13px;
+    color: $text-muted;
+    display: block;
+    margin-top: 2px;
+}
+
+.view-all-link {
+    font-size: 13px;
+    font-weight: 700;
+    color: $primary-orange;
+    text-decoration: none;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: opacity 0.2s ease;
+
+    &:hover {
+        opacity: 0.8;
+    }
+}
+
+.view-all-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 107, 0, 0.09);
+    color: $primary-orange-dark;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 7px 14px;
+    border-radius: 8px;
+    text-decoration: none;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+
+    ion-icon {
+        font-size: 15px;
+        transition: transform 0.2s ease;
+    }
+
+    &:hover {
+        background: $primary-orange;
+        color: #FFFFFF;
+
+        ion-icon {
+            transform: translateX(3px);
+        }
+    }
+
+    &.blue-btn {
+        background: rgba(2, 132, 199, 0.09);
+        color: $cyan-electric;
+
+        &:hover {
+            background: $cyan-electric;
+            color: #FFFFFF;
+        }
+    }
+}
+
+.categories-scroll-wrapper {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 4px 2px 14px 2px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar {
+        height: 4px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: $border-light;
+        border-radius: 2px;
+    }
+}
+
+.category-chip {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #FFFFFF;
+    border: 1px solid $border-light;
+    border-radius: 14px;
+    padding: 10px 16px;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+    transition: all 0.2s ease;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.07);
+        border-color: rgba(255, 107, 0, 0.3);
+    }
+}
+
+.cat-icon-bubble {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    ion-icon {
+        font-size: 20px;
+    }
+}
+
+.cat-meta {
+    display: flex;
+    flex-direction: column;
+
+    .cat-name {
+        font-size: 13.5px;
+        font-weight: 700;
+        color: $navy-dark;
+        white-space: nowrap;
+    }
+
+    .cat-count {
+        font-size: 11px;
+        color: $text-muted;
+        font-weight: 500;
+    }
+}
+
+// ------------------------------------------
+// 5. Featured Products Showcase
+// ------------------------------------------
+.products-showcase-section,
+.rentals-showcase-section {
+    width: 100%;
+}
+
+.products-scroll-container {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    padding: 4px 2px 16px 2px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar {
+        height: 5px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: #CBD5E1;
+        border-radius: 3px;
+    }
+}
+
+.product-item-card {
+    flex: 0 0 220px;
+    scroll-snap-align: start;
+    background: #FFFFFF;
+    border-radius: 16px;
+    border: 1px solid $border-light;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.25s ease;
+
+    @media (min-width: 768px) {
+        flex: 0 0 240px;
+    }
+
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+        border-color: rgba(255, 107, 0, 0.25);
+
+        .card-img {
+            transform: scale(1.06);
+        }
+    }
+}
+
+.card-media {
+    position: relative;
+    width: 100%;
+    height: 160px;
+    overflow: hidden;
+    background: #F1F5F9;
+
+    .card-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+    }
+
+    .stock-badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(4px);
+        color: #0F172A;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 3px 8px;
+        border-radius: 6px;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+
+        .dot-live {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: $emerald-green;
+        }
+    }
+
+    .quick-add-btn {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        background: $primary-orange;
+        color: #FFFFFF;
+        border: none;
+        border-radius: 8px;
+        padding: 6px 12px;
+        font-size: 12px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        cursor: pointer;
+        box-shadow: 0 3px 8px rgba(255, 107, 0, 0.4);
+        transition: all 0.2s ease;
+
+        ion-icon {
+            font-size: 14px;
+        }
+
+        &:hover {
+            background: $primary-orange-dark;
+            transform: scale(1.05);
+        }
+
+        &.loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+    }
+}
+
+.card-body {
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.product-category-tag {
+    font-size: 10.5px;
+    font-weight: 700;
+    color: $text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.product-title {
+    font-size: 14.5px;
+    font-weight: 700;
+    color: $navy-dark;
+    line-height: 1.3;
+    margin: 0 0 8px 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 38px;
+}
+
+.rating-strip {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 10px;
+
+    .stars {
+        display: flex;
+        color: #F59E0B;
+        font-size: 13px;
+    }
+
+    .rating-score {
+        font-size: 11.5px;
+        font-weight: 700;
+        color: $navy-dark;
+    }
+
+    .orders-count {
+        font-size: 11px;
+        color: $text-soft;
+    }
+}
+
+.price-row {
+    margin-top: auto;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+
+    .price-box {
+        display: flex;
+        align-items: baseline;
+        gap: 3px;
+
+        .currency {
+            font-size: 14px;
+            font-weight: 700;
+            color: $navy-dark;
+        }
+
+        .amount {
+            font-size: 18px;
+            font-weight: 800;
+            color: $navy-dark;
+        }
+
+        .mrp-strikethrough {
+            font-size: 12px;
+            color: $text-soft;
+            text-decoration: line-through;
+            margin-left: 4px;
+        }
+    }
+
+    .savings-tag {
+        font-size: 10px;
+        font-weight: 800;
+        color: $emerald-green;
+        background: rgba(16, 185, 129, 0.1);
+        padding: 2px 6px;
+        border-radius: 4px;
+    }
+}
+
+// ------------------------------------------
+// 6. Popular Rentals Cards
+// ------------------------------------------
+.rental-item-card {
+    flex: 0 0 240px;
+    scroll-snap-align: start;
+    background: #FFFFFF;
+    border-radius: 16px;
+    border: 1px solid $border-light;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.25s ease;
+
+    @media (min-width: 768px) {
+        flex: 0 0 260px;
+    }
+
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+        border-color: rgba(2, 132, 199, 0.3);
+
+        .card-img {
+            transform: scale(1.06);
+        }
+    }
+
+    .avail-badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: rgba(15, 23, 42, 0.85);
+        backdrop-filter: blur(4px);
+        color: #FFFFFF;
+        font-size: 10.5px;
+        font-weight: 700;
+        padding: 3px 8px;
+        border-radius: 6px;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+
+        .dot-green {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: $emerald-green;
+            box-shadow: 0 0 6px $emerald-green;
+        }
+    }
+}
+
+.rental-category-tag {
+    font-size: 10.5px;
+    font-weight: 700;
+    color: $cyan-electric;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.rental-title {
+    font-size: 14.5px;
+    font-weight: 700;
+    color: $navy-dark;
+    line-height: 1.3;
+    margin: 0 0 8px 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 38px;
+}
+
+.rental-specs-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+
+    .spec-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 11.5px;
+        color: $text-muted;
+        font-weight: 500;
+
+        ion-icon {
+            font-size: 13px;
+            color: $cyan-electric;
+        }
+    }
+}
+
+.rental-rate-row {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 10px;
+    border-top: 1px solid $border-light;
+
+    .rate-box {
+        display: flex;
+        align-items: baseline;
+        gap: 3px;
+
+        .rate-amt {
+            font-size: 18px;
+            font-weight: 800;
+            color: $navy-dark;
+        }
+
+        .rate-cycle {
+            font-size: 12px;
+            color: $text-muted;
+            font-weight: 600;
+        }
+    }
+
+    .rent-action-btn {
+        background: $navy-dark;
+        color: #FFFFFF;
+        border: none;
+        border-radius: 8px;
+        padding: 6px 14px;
+        font-size: 12.5px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover {
+            background: $cyan-electric;
+        }
+    }
+}
+
+// ------------------------------------------
+// 7. Trust Pillars Value Strip
+// ------------------------------------------
+.trust-pillars-section {
+    width: 100%;
+    margin-top: 8px;
+}
+
+.trust-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+
+    @media (min-width: 640px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (min-width: 1024px) {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.trust-card {
+    background: #FFFFFF;
+    border-radius: 14px;
+    padding: 16px;
+    border: 1px solid $border-light;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+
+    .trust-icon-box {
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+
+        ion-icon {
+            font-size: 22px;
+        }
+
+        &.orange-box {
+            background: rgba(255, 107, 0, 0.1);
+            color: $primary-orange;
+        }
+
+        &.blue-box {
+            background: rgba(2, 132, 199, 0.1);
+            color: $cyan-electric;
+        }
+
+        &.amber-box {
+            background: rgba(245, 158, 11, 0.1);
+            color: $amber-gold;
+        }
+
+        &.green-box {
+            background: rgba(16, 185, 129, 0.1);
+            color: $emerald-green;
+        }
+    }
+
+    .trust-text {
+        h4 {
+            font-size: 14px;
+            font-weight: 700;
+            color: $navy-dark;
+            margin: 0 0 2px 0;
+        }
+
+        p {
+            font-size: 12px;
+            color: $text-muted;
+            line-height: 1.35;
+            margin: 0;
+        }
+    }
+}
+
+// ------------------------------------------
+// 8. Skeleton Items
+// ------------------------------------------
+.skeleton-item {
+    flex: 0 0 220px;
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 12px;
+    border: 1px solid $border-light;
 }

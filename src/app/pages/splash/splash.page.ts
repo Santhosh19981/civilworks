@@ -15,13 +15,15 @@ export class SplashPage implements OnInit {
     ) { }
 
     ngOnInit() {
-        // Navigate after 3 seconds based on auth status
+        const isAuth = this.authService.isAuthenticated();
+        const delay = isAuth ? 400 : 1000;
         setTimeout(() => {
             if (this.authService.isAuthenticated()) {
                 this.router.navigateByUrl('/tabs/home', { replaceUrl: true });
             } else {
                 this.router.navigateByUrl('/login', { replaceUrl: true });
             }
-        }, 3000);
+        }, delay);
     }
+
 }

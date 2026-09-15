@@ -13,7 +13,7 @@
         <ion-list>
             <ion-item *ngFor="let item of cartItems" class="cart-item">
                 <ion-thumbnail slot="start">
-                    <img [src]="item.product.image" [alt]="item.product.name">
+                    <img [src]="getProductImage(item.product)" (error)="onImageError($event, item.product)" [alt]="item.product.name">
                 </ion-thumbnail>
                 <ion-label>
                     <h2>{{ item.product.name }}</h2>
