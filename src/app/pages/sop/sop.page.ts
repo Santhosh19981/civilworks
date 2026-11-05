@@ -154,10 +154,11 @@ export class SOPPage implements OnInit, OnDestroy {
                     if (this.selectedService) {
                         const found = this.sopData.services.find(s => s.id === this.selectedService!.id);
                         this.selectedService = found || this.sopData.services[0];
-                    } else {
-                        // prefer in_progress service as in reference UI
+                    } else if (typeof window !== 'undefined' && window.innerWidth > 960) {
                         const inProg = this.sopData.services.find(s => s.service_status === 'in_progress');
                         this.selectedService = inProg || this.sopData.services[0];
+                    } else {
+                        this.selectedService = null;
                     }
                 } else {
                     this.selectedService = null;
@@ -212,7 +213,11 @@ export class SOPPage implements OnInit, OnDestroy {
     }
 
     selectService(service: SOPServiceItem) {
-        this.selectedService = service;
+        if (this.selectedService?.id === service.id && typeof window !== 'undefined' && window.innerWidth <= 960) {
+            this.selectedService = null;
+        } else {
+            this.selectedService = service;
+        }
     }
 
     get isOrderClosed(): boolean {

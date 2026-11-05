@@ -971,9 +971,11 @@ export class ChatPanelComponent implements OnInit, OnDestroy, OnChanges {
                         if (this.selectedSopService) {
                             const found = this.sopData.services.find(s => s && s.id === this.selectedSopService?.id);
                             this.selectedSopService = found || this.sopData.services[0];
-                        } else {
+                        } else if (typeof window !== 'undefined' && window.innerWidth > 960) {
                             const inProg = this.sopData.services.find(s => s && (s.service_status === 'in_progress' || s.vendor_status === 'accepted'));
                             this.selectedSopService = inProg || this.sopData.services[0];
+                        } else {
+                            this.selectedSopService = null;
                         }
                     } else {
                         this.selectedSopService = null;
@@ -1015,7 +1017,11 @@ export class ChatPanelComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     selectSopService(s: SOPServiceItem) {
-        this.selectedSopService = s;
+        if (this.selectedSopService?.id === s.id && typeof window !== 'undefined' && window.innerWidth <= 960) {
+            this.selectedSopService = null;
+        } else {
+            this.selectedSopService = s;
+        }
     }
 
     formatDateForInput(d?: string | null): string {

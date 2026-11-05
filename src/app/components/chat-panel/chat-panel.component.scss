@@ -5020,6 +5020,103 @@
         }
     }
 
+    // Single-page natural flow layout for embedded SOP (No inner scrollboxes or clipped cards)
+    .sop-embedded-view {
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        height: 100% !important;
+        max-height: none !important;
+    }
+
+    .sop-emb-order-bar {
+        padding: 8px 12px !important;
+        gap: 6px 12px !important;
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        flex-shrink: 0 !important;
+
+        .emb-info-cell {
+            min-width: 0 !important;
+            .emb-lbl {
+                font-size: 8.5px !important;
+            }
+            .emb-val {
+                font-size: 11px !important;
+                white-space: nowrap !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+            }
+        }
+    }
+
+    .sop-two-column-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        height: auto !important;
+        min-height: auto !important;
+        overflow: visible !important;
+    }
+
+    .service-sequence-col {
+        flex: none !important;
+        height: auto !important;
+        max-height: none !important;
+        min-height: auto !important;
+        overflow-y: visible !important;
+        overflow-x: hidden !important;
+        padding: 10px 12px 16px !important;
+        gap: 10px !important;
+
+        .sequence-panel-header {
+            padding-bottom: 8px !important;
+            gap: 6px !important;
+
+            .panel-heading-wrap {
+                .panel-section-title {
+                    font-size: 13.5px !important;
+                }
+                .panel-order-chip {
+                    font-size: 10px !important;
+                    padding: 1px 6px !important;
+                }
+            }
+
+            .status-legend-bar {
+                gap: 8px !important;
+                .legend-item {
+                    font-size: 10px !important;
+                    gap: 4px !important;
+                }
+            }
+        }
+
+        .stepper-timeline-container {
+            height: auto !important;
+            max-height: none !important;
+            overflow: visible !important;
+            padding: 4px 0 !important;
+        }
+
+        .sequence-footer-tip {
+            margin-top: 6px !important;
+            padding: 6px 10px !important;
+            font-size: 10.5px !important;
+        }
+    }
+
+    .service-details-col {
+        width: 100% !important;
+        max-width: 100% !important;
+        border-left: none !important;
+        border-top: 2px solid #e2e8f0 !important;
+        padding: 14px 12px !important;
+        height: auto !important;
+        max-height: none !important;
+        overflow-y: visible !important;
+        flex: none !important;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.03) !important;
+    }
+
     // Eliminate all horizontal scrolling in embedded SOP view
     .sop-embedded-view-container,
     .sop-content-area,
@@ -5036,22 +5133,30 @@
 
     .timeline-row {
         gap: 6px !important;
+        overflow: visible !important;
+        min-height: auto !important;
 
         .spine-drag-col {
             width: 12px !important;
         }
 
         .spine-track-col {
-            width: 28px !important;
+            width: 24px !important;
         }
 
         .spine-node-card {
             flex: 1 !important;
             min-width: 0 !important;
-            max-width: calc(100% - 46px) !important;
+            max-width: calc(100% - 40px) !important;
             box-sizing: border-box !important;
-            overflow: hidden !important;
+            overflow: visible !important;
         }
+    }
+
+    .major-service-card {
+        padding: 8px 10px !important;
+        border-radius: 10px !important;
+        margin-bottom: 4px !important;
     }
 
     .subtask-stepper-row {

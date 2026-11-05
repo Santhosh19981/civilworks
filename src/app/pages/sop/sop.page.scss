@@ -2386,6 +2386,43 @@
         }
     }
 
+    // Single-page natural flow layout for SOP (No inner scrollboxes or clipped cards)
+    .sop-two-column-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        height: auto !important;
+        min-height: auto !important;
+        overflow: visible !important;
+    }
+
+    .service-sequence-col {
+        flex: none !important;
+        height: auto !important;
+        max-height: none !important;
+        min-height: auto !important;
+        overflow-y: visible !important;
+        overflow-x: hidden !important;
+        padding: 12px 14px !important;
+
+        .stepper-timeline-container {
+            height: auto !important;
+            max-height: none !important;
+            overflow: visible !important;
+        }
+    }
+
+    .service-details-col {
+        width: 100% !important;
+        max-width: 100% !important;
+        border-left: none !important;
+        border-top: 2px solid #e2e8f0 !important;
+        padding: 16px 14px !important;
+        height: auto !important;
+        max-height: none !important;
+        overflow-y: visible !important;
+        flex: none !important;
+    }
+
     // Eliminate all horizontal scrolling in embedded SOP view
     .sop-embedded-view-container,
     .sop-content-area,
@@ -2402,22 +2439,30 @@
 
     .timeline-row {
         gap: 6px !important;
+        overflow: visible !important;
+        min-height: auto !important;
 
         .spine-drag-col {
             width: 12px !important;
         }
 
         .spine-track-col {
-            width: 28px !important;
+            width: 24px !important;
         }
 
         .spine-node-card {
             flex: 1 !important;
             min-width: 0 !important;
-            max-width: calc(100% - 46px) !important;
+            max-width: calc(100% - 40px) !important;
             box-sizing: border-box !important;
-            overflow: hidden !important;
+            overflow: visible !important;
         }
+    }
+
+    .major-service-card {
+        padding: 8px 10px !important;
+        border-radius: 10px !important;
+        margin-bottom: 4px !important;
     }
 
     .subtask-stepper-row {
