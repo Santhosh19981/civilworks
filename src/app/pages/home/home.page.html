@@ -2,7 +2,8 @@
     <div class="header-inner">
         <!-- Top Nav -->
         <div class="top-nav">
-            <div class="brand-wrapper" (click)="switchSector()" routerLink="/sector-select" title="Select Desired Sector" style="cursor: pointer;">
+            <div class="brand-wrapper" (click)="switchSector()" routerLink="/sector-select"
+                title="Select Desired Sector" style="cursor: pointer;">
                 <div class="brand-icon-box">
                     <ion-icon name="hammer" class="brand-icon"></ion-icon>
                 </div>
@@ -74,7 +75,8 @@
                             <h1 class="slide-title">{{ banner.title }}</h1>
                             <p class="slide-subtitle" *ngIf="banner.subtitle">{{ banner.subtitle }}</p>
                             <div class="slide-cta-row">
-                                <button class="slide-cta-btn" [routerLink]="banner.cta_link || banner.route || '/tabs/products'">
+                                <button class="slide-cta-btn"
+                                    [routerLink]="banner.cta_link || banner.route || '/tabs/products'">
                                     <span>{{ banner.cta || 'Explore' }}</span>
                                     <ion-icon name="arrow-forward-outline"></ion-icon>
                                 </button>
@@ -88,23 +90,30 @@
 
                     <!-- Sector Fallback when 0 advertisements are configured yet -->
                     <div class="carousel-slide" *ngIf="banners.length === 0">
-                        <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=1200&q=80')"></div>
+                        <div class="slide-bg"
+                            style="background-image: url('https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=1200&q=80')">
+                        </div>
                         <div class="slide-gradient-scrim"></div>
                         <div class="slide-content">
-                            <span class="slide-badge" *ngIf="!isPlusMember">{{ (activeSectorName || 'CivilWorks') | uppercase }} • PLUS MEMBERSHIP</span>
-                            <span class="slide-badge badge-plus-active" *ngIf="isPlusMember">{{ (activeSectorName || 'CivilWorks') | uppercase }} • ⭐ PLUS ACTIVE</span>
-                            <h1 class="slide-title">join us to use our services</h1>
-                            <p class="slide-subtitle" *ngIf="!isPlusMember">Subscribe to CivilWorks Plus membership to unlock verified contractors, direct booking, and end-to-end project management.</p>
-                            <p class="slide-subtitle" *ngIf="isPlusMember">You have active CivilWorks Plus access. Manage your ongoing projects, contractor communication, and SOP milestones.</p>
+                            <span class="slide-badge" *ngIf="!isPlusMember">{{ (activeSectorName || 'CivilWorks') |
+                                uppercase }} • PLUS MEMBERSHIP</span>
+                            <span class="slide-badge badge-plus-active" *ngIf="isPlusMember">{{ (activeSectorName ||
+                                'CivilWorks') | uppercase }} • ⭐ PLUS ACTIVE</span>
+                            <h1 class="slide-title" *ngIf="!isPlusMember">join us to use our services</h1>
+                            <h1 class="slide-title" *ngIf="isPlusMember">Track & Manage Your Projects</h1>
+                            <p class="slide-subtitle" *ngIf="!isPlusMember">Subscribe to CivilWorks Plus membership to
+                                unlock verified contractors, direct booking, and end-to-end project management.</p>
+                            <p class="slide-subtitle" *ngIf="isPlusMember">Access your live site updates, contractor chats, and SOP milestones directly from your project dashboard.</p>
                             <div class="slide-cta-row">
-                                <button type="button" class="slide-cta-btn" [ngClass]="isPlusMember ? 'btn-my-projects' : 'btn-join-membership'" (click)="handleHeroCtaClick()">
+                                <button type="button" class="slide-cta-btn"
+                                    [ngClass]="isPlusMember ? 'btn-my-projects' : 'btn-join-membership'"
+                                    (click)="handleHeroCtaClick()">
                                     <ion-icon [name]="isPlusMember ? 'folder-open' : 'sparkles'"></ion-icon>
                                     <span>{{ isPlusMember ? 'My Projects' : 'join membership' }}</span>
                                     <ion-icon name="arrow-forward-outline"></ion-icon>
                                 </button>
-                                <button type="button" class="slide-cta-btn btn-explore-catalog" [routerLink]="'/tabs/products' + (activeSectorId ? '?mainCategoryId=' + activeSectorId : '')">
-                                    <span>Explore Catalog</span>
-                                </button>
+
+
                                 <span class="slide-assurance">
                                     <ion-icon name="shield-checkmark"></ion-icon>
                                     Verified Solutions
@@ -115,10 +124,12 @@
                 </div>
 
                 <!-- Slide Navigation Arrows (only if multiple banners) -->
-                <button *ngIf="banners.length > 1" class="slider-arrow prev-arrow" (click)="prevSlide()" aria-label="Previous Slide">
+                <button *ngIf="banners.length > 1" class="slider-arrow prev-arrow" (click)="prevSlide()"
+                    aria-label="Previous Slide">
                     <ion-icon name="chevron-back-outline"></ion-icon>
                 </button>
-                <button *ngIf="banners.length > 1" class="slider-arrow next-arrow" (click)="nextSlide()" aria-label="Next Slide">
+                <button *ngIf="banners.length > 1" class="slider-arrow next-arrow" (click)="nextSlide()"
+                    aria-label="Next Slide">
                     <ion-icon name="chevron-forward-outline"></ion-icon>
                 </button>
 
@@ -137,14 +148,13 @@
             <div class="section-intro">
                 <div class="intro-tag">CATEGORIES IN {{ (activeSectorName || 'CivilWorks') | uppercase }}</div>
                 <h2 class="hub-main-title">Explore {{ activeSectorName || 'CivilWorks' }} Categories</h2>
-                <p class="hub-subtitle">Choose from the specialized categories and verified supply lines configured for {{ activeSectorName || 'this sector' }}</p>
+                <p class="hub-subtitle">Choose from the specialized categories and verified supply lines configured for
+                    {{ activeSectorName || 'this sector' }}</p>
             </div>
 
             <div class="services-grid dynamic-categories-grid" *ngIf="sectorCategories.length > 0">
-                <div *ngFor="let cat of sectorCategories; let i = index"
-                    class="service-card category-dyn-card"
-                    [ngClass]="getCategoryThemeClass(cat, i)"
-                    (click)="selectCategory(cat)">
+                <div *ngFor="let cat of sectorCategories; let i = index" class="service-card category-dyn-card"
+                    [ngClass]="getCategoryThemeClass(cat, i)" (click)="selectCategory(cat)">
                     <div class="card-glow-bg"></div>
                     <div class="service-header">
                         <span class="service-chip">CATEGORY #{{ cat.id }}</span>
@@ -176,7 +186,8 @@
             <div class="empty-categories-box" *ngIf="sectorCategories.length === 0 && !loading">
                 <div class="empty-icon-ring">📂</div>
                 <h3 class="empty-title">No Categories in {{ activeSectorName || 'this sector' }}</h3>
-                <p class="empty-desc">New product, equipment, and labor categories are currently being cataloged for {{ activeSectorName || 'this sector' }}.</p>
+                <p class="empty-desc">New product, equipment, and labor categories are currently being cataloged for {{
+                    activeSectorName || 'this sector' }}.</p>
                 <button class="switch-sector-btn" (click)="switchSector()">
                     <ion-icon name="swap-horizontal-outline"></ion-icon>
                     <span>Switch Business Sector</span>
@@ -184,7 +195,7 @@
             </div>
         </section>
 
-    <!-- Featured Products Section -->
+        <!-- Featured Products Section -->
         <section class="products-showcase-section">
             <div class="section-top-row">
                 <div>
@@ -200,14 +211,19 @@
 
             <!-- Products List -->
             <div class="products-scroll-container" *ngIf="!loading">
-                <div class="product-item-card" *ngFor="let product of featuredProducts" (click)="viewProduct(product.id)">
+                <div class="product-item-card" *ngFor="let product of featuredProducts"
+                    (click)="viewProduct(product.id)">
                     <div class="card-media">
-                        <img [src]="getProductImage(product)" (error)="onImageError($event, product)" [alt]="product.name" class="card-img" loading="lazy">
-                        <span class="stock-badge" [class.rental-badge]="isRenting(product)" [class.service-badge]="isService(product)">
+                        <img [src]="getProductImage(product)" (error)="onImageError($event, product)"
+                            [alt]="product.name" class="card-img" loading="lazy">
+                        <span class="stock-badge" [class.rental-badge]="isRenting(product)"
+                            [class.service-badge]="isService(product)">
                             <span class="dot-live"></span>
-                            {{ isService(product) ? 'Verified Service' : (isRenting(product) ? 'Available for Rent' : 'In Stock') }}
+                            {{ isService(product) ? 'Verified Service' : (isRenting(product) ? 'Available for Rent' :
+                            'In Stock') }}
                         </span>
-                        <button class="quick-add-btn" (click)="addToCart(product, $event)" [class.loading]="addingToCartId === product.id" aria-label="Add to cart">
+                        <button class="quick-add-btn" (click)="addToCart(product, $event)"
+                            [class.loading]="addingToCartId === product.id" aria-label="Add to cart">
                             <ion-icon name="cart"></ion-icon>
                             <span>Add</span>
                         </button>
@@ -250,10 +266,14 @@
             <!-- Loading Skeleton -->
             <div class="products-scroll-container" *ngIf="loading">
                 <div class="skeleton-item" *ngFor="let i of [1,2,3,4,5]">
-                    <ion-skeleton-text [animated]="true" style="width: 100%; height: 160px; border-radius: 12px;"></ion-skeleton-text>
-                    <ion-skeleton-text [animated]="true" style="width: 60%; margin-top: 12px; height: 14px;"></ion-skeleton-text>
-                    <ion-skeleton-text [animated]="true" style="width: 90%; margin-top: 8px; height: 18px;"></ion-skeleton-text>
-                    <ion-skeleton-text [animated]="true" style="width: 45%; margin-top: 10px; height: 20px;"></ion-skeleton-text>
+                    <ion-skeleton-text [animated]="true"
+                        style="width: 100%; height: 160px; border-radius: 12px;"></ion-skeleton-text>
+                    <ion-skeleton-text [animated]="true"
+                        style="width: 60%; margin-top: 12px; height: 14px;"></ion-skeleton-text>
+                    <ion-skeleton-text [animated]="true"
+                        style="width: 90%; margin-top: 8px; height: 18px;"></ion-skeleton-text>
+                    <ion-skeleton-text [animated]="true"
+                        style="width: 45%; margin-top: 10px; height: 20px;"></ion-skeleton-text>
                 </div>
             </div>
         </section>
@@ -264,7 +284,8 @@
                 <div>
                     <div class="badge-mini blue-mini">SITE MOBILIZATION</div>
                     <h2 class="section-heading">Machinery & Equipment for Rent</h2>
-                    <span class="section-subheading">Heavy earthmovers, scaffolding & compaction equipment on daily hire</span>
+                    <span class="section-subheading">Heavy earthmovers, scaffolding & compaction equipment on daily
+                        hire</span>
                 </div>
                 <a class="view-all-btn blue-btn" (click)="viewAllRentals()">
                     <span>View All Fleet</span>
@@ -276,7 +297,8 @@
             <div class="products-scroll-container" *ngIf="!loading && popularRentals.length > 0">
                 <div class="rental-item-card" *ngFor="let rental of popularRentals" (click)="viewRental(rental.id)">
                     <div class="card-media">
-                        <img [src]="getRentalImage(rental)" (error)="onRentalImageError($event)" [alt]="rental.name" class="card-img" loading="lazy">
+                        <img [src]="getRentalImage(rental)" (error)="onRentalImageError($event)" [alt]="rental.name"
+                            class="card-img" loading="lazy">
                         <span class="dispatch-badge">
                             <span class="dot-live blue-dot"></span>
                             Direct Dispatch
@@ -314,10 +336,14 @@
             <!-- Skeleton for Rentals -->
             <div class="products-scroll-container" *ngIf="loading">
                 <div class="skeleton-item" *ngFor="let i of [1,2,3,4]">
-                    <ion-skeleton-text [animated]="true" style="width: 100%; height: 160px; border-radius: 12px;"></ion-skeleton-text>
-                    <ion-skeleton-text [animated]="true" style="width: 50%; margin-top: 12px; height: 14px;"></ion-skeleton-text>
-                    <ion-skeleton-text [animated]="true" style="width: 85%; margin-top: 8px; height: 18px;"></ion-skeleton-text>
-                    <ion-skeleton-text [animated]="true" style="width: 50%; margin-top: 10px; height: 20px;"></ion-skeleton-text>
+                    <ion-skeleton-text [animated]="true"
+                        style="width: 100%; height: 160px; border-radius: 12px;"></ion-skeleton-text>
+                    <ion-skeleton-text [animated]="true"
+                        style="width: 50%; margin-top: 12px; height: 14px;"></ion-skeleton-text>
+                    <ion-skeleton-text [animated]="true"
+                        style="width: 85%; margin-top: 8px; height: 18px;"></ion-skeleton-text>
+                    <ion-skeleton-text [animated]="true"
+                        style="width: 50%; margin-top: 10px; height: 20px;"></ion-skeleton-text>
                 </div>
             </div>
         </section>
@@ -372,10 +398,11 @@
     <div class="floating-cap-chat-btn" (click)="toggleChatPanel()" title="Open Project Communication Groups">
         <div class="cap-btn-inner">
             <div class="cap-icon-wrap">
-                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M2 10l10-5 10 5-10 5z"/>
-                    <path d="M6 12v5c0 2 3 3 6 3s6-1 6-3v-5"/>
-                    <path d="M22 10v6"/>
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2 10l10-5 10 5-10 5z" />
+                    <path d="M6 12v5c0 2 3 3 6 3s6-1 6-3v-5" />
+                    <path d="M22 10v6" />
                 </svg>
             </div>
             <span class="cap-label">Project Chat</span>
@@ -385,16 +412,11 @@
 </ion-content>
 
 <!-- Multi-Service Order Editing Modal -->
-<app-edit-order-modal
-    *ngIf="showEditModal"
-    [order]="editingOrder"
-    (close)="showEditModal = false"
+<app-edit-order-modal *ngIf="showEditModal" [order]="editingOrder" (close)="showEditModal = false"
     (orderUpdated)="loadData()">
 </app-edit-order-modal>
 
 <!-- Slide-in WhatsApp-Web-Style Chat Drawer -->
-<app-chat-panel
-    [isOpen]="showChatPanel"
-    (close)="showChatPanel = false"
+<app-chat-panel [isOpen]="showChatPanel" (close)="showChatPanel = false"
     (editOrderRequested)="openEditOrderFromChat($event)">
 </app-chat-panel>

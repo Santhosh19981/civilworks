@@ -355,7 +355,8 @@ $text-soft: #94A3B8;
 .carousel-viewport {
     position: relative;
     width: 100%;
-    height: 220px;
+    min-height: 240px;
+    height: auto;
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
@@ -501,23 +502,6 @@ $text-soft: #94A3B8;
             background: linear-gradient(135deg, #E05300 0%, #FF6500 100%) !important;
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(255, 101, 0, 0.55) !important;
-        }
-    }
-
-    &.btn-explore-catalog {
-        background: rgba(255, 255, 255, 0.15) !important;
-        color: #FFFFFF !important;
-        border: 1px solid rgba(255, 255, 255, 0.3) !important;
-        backdrop-filter: blur(8px);
-
-        ion-icon {
-            color: #FFFFFF !important;
-        }
-
-        &:hover {
-            background: rgba(255, 255, 255, 0.25) !important;
-            border-color: #FFFFFF !important;
-            transform: translateY(-2px);
         }
     }
 
@@ -1881,4 +1865,199 @@ $text-soft: #94A3B8;
     background: rgba(16, 185, 129, 0.25) !important;
     color: #34D399 !important;
     border: 1px solid rgba(16, 185, 129, 0.4) !important;
+}
+
+
+// Enhanced Mobile Responsive Styles
+@media (max-width: 768px) {
+    .header-inner {
+        padding: 10px 12px 12px;
+    }
+
+    .top-nav {
+        gap: 8px;
+        margin-bottom: 10px;
+    }
+
+    .brand-icon-box {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        .brand-icon {
+            font-size: 19px;
+        }
+    }
+
+    .brand-name {
+        font-size: 18px;
+    }
+
+    .brand-tagline {
+        display: none;
+    }
+
+    .sector-switcher-pill {
+        padding: 5px 10px;
+        .sector-text {
+            font-size: 10.5px;
+            max-width: 90px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
+
+    .carousel-viewport {
+        border-radius: 16px;
+        min-height: 250px;
+    }
+
+    .slide-content {
+        padding: 18px 16px;
+    }
+
+    .slide-title {
+        font-size: 20px;
+        line-height: 1.25;
+        margin-bottom: 6px;
+    }
+
+    .slide-subtitle {
+        font-size: 12.5px;
+        line-height: 1.45;
+        margin-bottom: 14px;
+        -webkit-line-clamp: 3;
+    }
+
+    .slide-cta-row {
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .slide-cta-btn {
+        padding: 9px 18px;
+        font-size: 13px;
+    }
+
+    .services-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .service-card {
+        padding: 16px;
+        border-radius: 14px;
+        min-height: auto;
+    }
+
+    .service-body {
+        gap: 12px;
+        margin-bottom: 10px;
+        align-items: center;
+    }
+
+    .icon-avatar {
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+        border-radius: 12px;
+        ion-icon {
+            font-size: 22px;
+        }
+    }
+
+    .service-text {
+        .service-title {
+            font-size: 17px;
+        }
+        .service-desc {
+            font-size: 12px;
+            line-height: 1.35;
+        }
+    }
+
+    .service-features {
+        gap: 6px;
+        margin-bottom: 10px;
+        .feat-pill {
+            font-size: 11px;
+            padding: 2px 7px;
+        }
+    }
+
+    .category-cta-row {
+        padding-top: 10px;
+        font-size: 12.5px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-inner {
+        padding: 8px 10px 10px;
+    }
+
+    .brand-name {
+        font-size: 16.5px;
+    }
+
+    .sector-switcher-pill {
+        padding: 4px 8px;
+        gap: 5px;
+        .sector-text {
+            font-size: 9.5px;
+            max-width: 70px;
+        }
+    }
+
+    .cart-icon-wrapper {
+        width: 34px;
+        height: 34px;
+        ion-icon {
+            font-size: 20px;
+        }
+    }
+
+    .search-input-box {
+        height: 36px;
+        padding: 2px 4px 2px 8px;
+
+        .search-icon {
+            font-size: 17px;
+            margin-right: 6px;
+        }
+
+        .search-input {
+            font-size: 12.5px;
+            height: 34px;
+            &::placeholder {
+                font-size: 12px;
+            }
+        }
+
+        .search-submit-btn {
+            padding: 5px 10px;
+            font-size: 11.5px;
+        }
+    }
+
+    .carousel-viewport {
+        min-height: 230px;
+    }
+
+    .slide-content {
+        padding: 16px 12px;
+    }
+
+    .slide-title {
+        font-size: 18.5px;
+    }
+
+    .slide-subtitle {
+        font-size: 12px;
+    }
+
+    .slide-cta-btn {
+        padding: 8px 16px;
+        font-size: 12.5px;
+    }
 }
