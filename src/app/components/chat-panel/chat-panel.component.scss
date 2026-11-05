@@ -431,6 +431,46 @@
 
 // ── RIGHT HEADER (TIER 1) ──
 .right-header-bar {
+    padding: 10px 16px;
+    background: #ffffff;
+    border-bottom: 1px solid #f1f5f9;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-shrink: 0;
+    box-sizing: border-box;
+
+    .header-main-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .header-sub-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        width: 100%;
+        padding-top: 6px;
+        border-top: 1px dashed #f1f5f9;
+        flex-wrap: wrap;
+
+        .about-button-wrapper {
+            flex-shrink: 0;
+        }
+
+        .btn-header-complete-status {
+            margin-left: auto;
+        }
+
+        .badge-order-closed {
+            margin-left: auto;
+        }
+    }
     padding: 10px 20px;
     background: #ffffff;
     border-bottom: 1px solid #f1f5f9;
@@ -4787,6 +4827,103 @@
                     opacity: 0.6;
                     cursor: not-allowed;
                 }
+            }
+        }
+    }
+}
+
+// Enhanced Mobile Responsive Styles for Chat Drawer & Header
+@media (max-width: 768px) {
+    .right-header-bar {
+        padding: 8px 12px;
+        gap: 6px;
+
+        .header-main-row {
+            gap: 8px;
+        }
+
+        .header-left-col {
+            gap: 8px;
+            min-width: 0;
+            flex: 1;
+
+            .btn-mobile-back {
+                width: 32px;
+                height: 32px;
+                min-width: 32px;
+            }
+
+            .header-project-identity {
+                min-width: 0;
+                flex: 1;
+
+                .title-status-line {
+                    gap: 6px;
+                    flex-wrap: nowrap;
+
+                    .project-title {
+                        font-size: 14.5px;
+                        max-width: 140px;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                    }
+
+                    .order-status-badge {
+                        font-size: 9px;
+                        padding: 1px 6px;
+                        flex-shrink: 0;
+                    }
+                }
+
+                .order-meta-subtitle {
+                    font-size: 10.5px;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+            }
+        }
+
+        .header-right-actions {
+            gap: 6px;
+            flex-shrink: 0;
+
+            .header-chat-sop-segmented {
+                padding: 2px;
+                gap: 2px;
+
+                .tab-pill-btn {
+                    padding: 4px 10px;
+                    font-size: 11px;
+                }
+            }
+
+            .right-close-btn {
+                width: 30px;
+                height: 30px;
+            }
+        }
+
+        .header-sub-row {
+            padding-top: 4px;
+            gap: 6px;
+
+            .btn-group-about {
+                padding: 4px 10px;
+                font-size: 11px;
+                height: 28px;
+            }
+
+            .btn-header-complete-status {
+                padding: 4px 10px;
+                font-size: 11px;
+                height: 28px;
+            }
+
+            .badge-order-closed {
+                font-size: 10.5px;
+                padding: 3px 8px;
             }
         }
     }

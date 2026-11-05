@@ -119,38 +119,61 @@
         <div class="chat-right-pane" *ngIf="activeConversation">
             <!-- Tier 1: Main Header (Title, Status, Actions, About, Close) -->
             <div class="right-header-bar">
-                <div class="header-left-col">
-                    <button type="button" class="btn-mobile-back" (click)="activeConversation = null"
-                        aria-label="Back to conversations" title="Back to project groups">
-                        <ion-icon name="arrow-back"></ion-icon>
-                    </button>
+                <div class="header-main-row">
+                    <div class="header-left-col">
+                        <button type="button" class="btn-mobile-back" (click)="activeConversation = null"
+                            aria-label="Back to conversations" title="Back to project groups">
+                            <ion-icon name="arrow-back"></ion-icon>
+                        </button>
 
-                    <div class="header-project-identity">
-                        <div class="title-status-line">
-                            <h2 class="project-title">{{ activeConversation.title || ('Project Order #' +
-                                activeConversation.order_no) }}</h2>
-                            <span class="order-status-badge" [class.live]="!isOrderClosed">
-                                <span class="badge-dot"></span>
-                                {{ (isOrderClosed ? 'DELIVERED' : (activeConversation.order_status || 'Active')) |
-                                uppercase }}
-                            </span>
+                        <div class="header-project-identity">
+                            <div class="title-status-line">
+                                <h2 class="project-title">{{ activeConversation.title || ('Project Order #' +
+                                    activeConversation.order_no) }}</h2>
+                                <span class="order-status-badge" [class.live]="!isOrderClosed">
+                                    <span class="badge-dot"></span>
+                                    {{ (isOrderClosed ? 'DELIVERED' : (activeConversation.order_status || 'Active')) |
+                                    uppercase }}
+                                </span>
+                            </div>
+                            <div class="order-meta-subtitle">
+                                <span>Order #{{ activeConversation.order_no }}</span>
+                                <span class="meta-dot">•</span>
+                                <span>{{ (activeConversation.services || []).length }} Assigned Trade{{
+                                    (activeConversation.services || []).length === 1 ? '' : 's' }}</span>
+                            </div>
                         </div>
-                        <div class="order-meta-subtitle">
-                            <span>Order #{{ activeConversation.order_no }}</span>
-                            <span class="meta-dot">•</span>
-                            <span>{{ (activeConversation.services || []).length }} Assigned Trade{{
-                                (activeConversation.services || []).length === 1 ? '' : 's' }}</span>
+                    </div>
+
+                    <div class="header-right-actions">
+                        <!-- Chat / SOP Top Header Segmented Toggle -->
+                        <div class="header-chat-sop-segmented" title="Switch between Chat and SOP for this order">
+                            <button type="button" class="tab-pill-btn" [class.active]="activeViewTab === 'chat'"
+                                (click)="setViewTab('chat')" title="View Chat Messages">
+                                <span>chat</span>
+                            </button>
+                            <button type="button" class="tab-pill-btn" [class.active]="activeViewTab === 'sop'"
+                                (click)="setViewTab('sop')" title="View Sequence of Operations (SOP)">
+                                <span>sop</span>
+                            </button>
                         </div>
+
+                        <!-- Right Header Close Button -->
+                        <button type="button" class="drawer-close-btn right-close-btn" (click)="close.emit()"
+                            aria-label="Close Chat" title="Close Chat">
+                            <ion-icon name="close"></ion-icon>
+                        </button>
                     </div>
                 </div>
 
-                <div class="header-right-actions">
+                <!-- Secondary Sub-Row: About Dropdown and Mark Work Completed -->
+                <div class="header-sub-row">
                     <!-- About Button with Dropdown (Details of who is in the group chat) -->
                     <div class="about-button-wrapper">
                         <button type="button" class="btn-group-about" (click)="toggleAboutDropdown()"
                             [class.active]="showAboutDropdown" title="Group Details & Members">
                             <ion-icon name="information-circle-outline"></ion-icon>
-                            <span>About</span>
+                            <span>About Order & Trades ({{ (activeConversation.services || []).length }})</span>
                             <ion-icon name="chevron-down-outline" class="chevron-icon"></ion-icon>
                         </button>
 
@@ -248,24 +271,6 @@
                         <ion-icon name="checkmark-done-circle"></ion-icon>
                         <span>Project Completed</span>
                     </span>
-
-                    <!-- Chat / SOP Top Header Segmented Toggle -->
-                    <div class="header-chat-sop-segmented" title="Switch between Chat and SOP for this order">
-                        <button type="button" class="tab-pill-btn" [class.active]="activeViewTab === 'chat'"
-                            (click)="setViewTab('chat')" title="View Chat Messages">
-                            <span>chat</span>
-                        </button>
-                        <button type="button" class="tab-pill-btn" [class.active]="activeViewTab === 'sop'"
-                            (click)="setViewTab('sop')" title="View Sequence of Operations (SOP)">
-                            <span>sop</span>
-                        </button>
-                    </div>
-
-                    <!-- Right Header Close Button -->
-                    <button type="button" class="drawer-close-btn right-close-btn" (click)="close.emit()"
-                        aria-label="Close Chat" title="Close Chat">
-                        <ion-icon name="close"></ion-icon>
-                    </button>
                 </div>
             </div>
 

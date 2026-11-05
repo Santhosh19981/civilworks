@@ -17,6 +17,9 @@ import { environment } from '../../../environments/environment';
     imports: [CommonModule, FormsModule, IonicModule]
 })
 export class ChatPanelComponent implements OnInit, OnDestroy, OnChanges {
+    get isMobileView(): boolean {
+        return typeof window !== 'undefined' && window.innerWidth <= 768;
+    }
     @Input() isOpen = false;
     @Input() initialOrderId?: number | string | null;
     @Input() initialViewTab: 'chat' | 'sop' = 'chat';
@@ -287,6 +290,11 @@ export class ChatPanelComponent implements OnInit, OnDestroy, OnChanges {
                 this.closeAboutDropdown();
                 this.activeViewTab = this.initialViewTab || 'chat';
                 this.chatService.ensureSocketConnected();
+
+                // On mobile, start by showing the list of all order chats like WhatsApp
+                if (this.isMobileView && !this.initialOrderId) {
+                    this.activeConversation = null;
+                }
 
                 // If opening for a specific target order, select it immediately
                 if (this.initialOrderId) {
