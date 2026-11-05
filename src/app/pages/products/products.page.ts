@@ -698,7 +698,9 @@ export class ProductsPage implements OnInit, OnDestroy {
     }
 
     goBack() {
-        if (window.history.length > 1) {
+        if (this.mainCategoryId) {
+            this.router.navigate(['/tabs/home'], { queryParams: { mainCategoryId: this.mainCategoryId } });
+        } else if (window.history.length > 1) {
             this.location.back();
         } else {
             this.router.navigate(['/tabs/home']);

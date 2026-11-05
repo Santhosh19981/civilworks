@@ -1,33 +1,27 @@
 <ion-header class="ion-no-border modern-products-header" [translucent]="true">
     <div class="header-main-row">
-        <div class="header-title-col">
-            <div class="nav-back-breadcrumbs-row">
-                <button type="button" class="page-back-btn" (click)="goBack()" title="Go back to previous page" aria-label="Go back">
-                    <ion-icon name="arrow-back"></ion-icon>
-                </button>
-                <!-- Breadcrumbs -->
-                <div class="breadcrumbs-row" *ngIf="currentMainCategory || currentCategory">
-                    <a routerLink="/tabs/home" class="crumb-link">Home</a>
-                    <span class="crumb-sep">/</span>
-                    <a (click)="navigateToCategorySelection()" class="crumb-link" *ngIf="currentMainCategory">
-                        {{ currentMainCategory.name }}
-                    </a>
-                    <span class="crumb-sep" *ngIf="currentCategory">/</span>
-                    <span class="crumb-current" *ngIf="currentCategory">{{ currentCategory.name }}</span>
-                </div>
-            </div>
+        <div class="header-left-col">
+            <button type="button" class="page-back-btn" (click)="goBack()" title="Go back to previous page" aria-label="Go back">
+                <ion-icon name="arrow-back"></ion-icon>
+            </button>
 
-            <div class="flex-title-wrap clickable-brand" routerLink="/sector-select" title="Switch Sector">
+            <div class="brand-identity-row" (click)="navigateToCategorySelection()" title="Switch Category">
                 <div class="brand-icon-box">
                     <ion-icon [name]="(filterType === 'services' || editOrderId) ? 'people' : 'cube'" class="brand-icon"></ion-icon>
                 </div>
                 <div class="brand-text">
+                    <div class="breadcrumbs-row" *ngIf="currentMainCategory || currentCategory">
+                        <a routerLink="/tabs/home" class="crumb-link">Home</a>
+                        <span class="crumb-sep">/</span>
+                        <a (click)="navigateToCategorySelection(); $event.stopPropagation()" class="crumb-link" *ngIf="currentMainCategory">
+                            {{ currentMainCategory.name }}
+                        </a>
+                        <span class="crumb-sep" *ngIf="currentCategory">/</span>
+                        <span class="crumb-current" *ngIf="currentCategory">{{ currentCategory.name }}</span>
+                    </div>
                     <h1 class="page-main-title">
-                        {{ editOrderId ? 'Add Services to Project' : ((filterType === 'services') ? 'Services & Trade Contractors' : (currentCategory ? currentCategory.name : (currentMainCategory ? currentMainCategory.name + ' Materials' : 'Building Materials'))) }}
+                        {{ editOrderId ? 'Add Services' : ((filterType === 'services') ? 'Services & Trade Contractors' : (currentCategory ? currentCategory.name : (currentMainCategory ? currentMainCategory.name : 'Building Materials'))) }}
                     </h1>
-                    <span class="page-subtitle">
-                        {{ editOrderId ? ('Project #' + (editOrderNo || editOrderId) + ' — Select a service and assign a dedicated vendor') : ((filterType === 'services') ? 'Verified contractors, technicians & specialized execution teams' : (currentMainCategory ? 'Verified ' + currentMainCategory.name + ' Inventory' : 'Direct site dispatch at wholesale rates')) }}
-                    </span>
                 </div>
             </div>
         </div>
