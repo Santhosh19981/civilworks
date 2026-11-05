@@ -1621,7 +1621,15 @@ $rose-bg: #FEF2F2;
 
 @media (max-width: 600px) {
     .profile-header-row {
-        padding: 12px;
+        padding: 10px 12px;
+
+        .nav-back-breadcrumbs-row .breadcrumbs-row {
+            display: none !important;
+        }
+
+        .header-quick-logout-btn {
+            display: none !important;
+        }
     }
 
     .brand-text .profile-subtitle {
@@ -1629,7 +1637,47 @@ $rose-bg: #FEF2F2;
     }
 
     .stats-metric-grid {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 10px !important;
+
+        .metric-card {
+            padding: 12px !important;
+
+            &:nth-child(3),
+            &:nth-child(4) {
+                grid-column: span 2 !important;
+                width: 100% !important;
+            }
+
+            .metric-info {
+                min-width: 0 !important;
+                .metric-label, .metric-sub {
+                    white-space: normal !important;
+                    word-break: break-word !important;
+                }
+            }
+        }
+    }
+
+    .detail-row {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 4px !important;
+        padding: 10px 12px !important;
+
+        .detail-label {
+            font-size: 11px !important;
+            color: #64748B !important;
+        }
+
+        .detail-val,
+        .detail-val-highlight,
+        .detail-val-badge {
+            width: 100% !important;
+            word-break: break-word !important;
+            flex-wrap: wrap !important;
+            font-size: 13px !important;
+        }
     }
 
     .hero-action-col {

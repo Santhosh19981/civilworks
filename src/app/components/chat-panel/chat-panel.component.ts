@@ -163,21 +163,12 @@ export class ChatPanelComponent implements OnInit, OnDestroy, OnChanges {
                     const matchedActive = this.conversations.find(c => c.id === this.activeConversation!.id || c.order_id === this.activeConversation!.order_id);
                     if (matchedActive) {
                         this.activeConversation = matchedActive;
-                    } else if (this.conversations.length > 0) {
-                        this.selectConversation(this.conversations[0]);
                     } else {
                         this.activeConversation = null;
                         this.sopData = null;
                         this.selectedSopService = null;
                         this.selectedSubtask = null;
                     }
-                } else if (this.conversations.length > 0) {
-                    this.selectConversation(this.conversations[0]);
-                } else {
-                    this.activeConversation = null;
-                    this.sopData = null;
-                    this.selectedSopService = null;
-                    this.selectedSubtask = null;
                 }
                 this.cdr.markForCheck();
                 try { this.cdr.detectChanges(); } catch (e) { }
@@ -291,8 +282,8 @@ export class ChatPanelComponent implements OnInit, OnDestroy, OnChanges {
                 this.activeViewTab = this.initialViewTab || 'chat';
                 this.chatService.ensureSocketConnected();
 
-                // On mobile, start by showing the list of all order chats like WhatsApp
-                if (this.isMobileView && !this.initialOrderId) {
+                // Always show the WhatsApp-style order chat list first unless a specific order was requested
+                if (!this.initialOrderId) {
                     this.activeConversation = null;
                 }
 
@@ -325,9 +316,7 @@ export class ChatPanelComponent implements OnInit, OnDestroy, OnChanges {
                                 return;
                             }
                         }
-                        if (convs.length > 0 && !this.activeConversation) {
-                            this.selectConversation(convs[0]);
-                        }
+                        // Keep activeConversation null so order list is displayed first
                     }
                 });
 

@@ -2691,9 +2691,10 @@
     .group-about-dropdown {
         position: absolute;
         top: calc(100% + 8px);
-        right: 0;
+        left: 0;
+        right: auto;
         width: 360px;
-        max-width: 90vw;
+        max-width: calc(100vw - 24px);
         background: #ffffff;
         border: 1px solid #e2e8f0;
         border-radius: 16px;
@@ -4924,6 +4925,123 @@
             .badge-order-closed {
                 font-size: 10.5px;
                 padding: 3px 8px;
+            }
+        }
+    }
+
+    // Mobile Bottom Sheet for About Order & Trades
+    .about-dropdown-backdrop {
+        position: fixed !important;
+        inset: 0 !important;
+        background: rgba(15, 23, 42, 0.55) !important;
+        backdrop-filter: blur(2px) !important;
+        z-index: 99998 !important;
+    }
+
+    .group-about-dropdown {
+        position: fixed !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        top: auto !important;
+        width: 100vw !important;
+        max-width: 100vw !important;
+        border-radius: 20px 20px 0 0 !important;
+        max-height: 82vh !important;
+        margin: 0 !important;
+        z-index: 99999 !important;
+        box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.35) !important;
+        display: flex !important;
+        flex-direction: column !important;
+
+        .about-dropdown-content {
+            max-height: calc(82vh - 65px) !important;
+            overflow-y: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+        }
+    }
+
+    // Embedded SOP Timeline Mobile Stacking & No-Cutoff Fixes
+    .major-service-card {
+        .service-card-main-bar {
+            flex-direction: column !important;
+            align-items: stretch !important;
+            gap: 8px !important;
+
+            .service-heading-wrap {
+                width: 100% !important;
+                min-width: 0 !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+
+                .service-title-text {
+                    font-size: 13.5px !important;
+                    flex: 1 !important;
+                    min-width: 0 !important;
+                    overflow: hidden !important;
+                    text-overflow: ellipsis !important;
+                    white-space: nowrap !important;
+                }
+
+                .service-status-chip {
+                    flex-shrink: 0 !important;
+                    font-size: 10px !important;
+                    padding: 2px 7px !important;
+                }
+            }
+
+            .service-actions-wrap {
+                width: 100% !important;
+                display: flex !important;
+                flex-wrap: wrap !important;
+                align-items: center !important;
+                gap: 6px !important;
+
+                .date-chip-pill {
+                    flex: 1 1 calc(50% - 4px) !important;
+                    min-width: 0 !important;
+                    justify-content: center !important;
+                    padding: 4px 6px !important;
+                    font-size: 10.5px !important;
+                }
+
+                .btn-spine-add-subtask {
+                    flex: 1 1 100% !important;
+                    justify-content: center !important;
+                    padding: 6px 12px !important;
+                    font-size: 11.5px !important;
+                }
+
+                .btn-spine-chevron {
+                    display: none !important;
+                }
+            }
+        }
+    }
+
+    .subtask-stepper-row {
+        .subtask-node-card {
+            .st-card-content {
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 6px !important;
+
+                .st-card-title-row {
+                    width: 100% !important;
+                    display: flex !important;
+                    align-items: center !important;
+                    justify-content: space-between !important;
+                }
+
+                .st-card-bottom-row {
+                    width: 100% !important;
+                    display: flex !important;
+                    flex-wrap: wrap !important;
+                    align-items: center !important;
+                    justify-content: space-between !important;
+                    gap: 6px !important;
+                }
             }
         }
     }

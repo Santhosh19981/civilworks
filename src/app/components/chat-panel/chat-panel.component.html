@@ -1042,6 +1042,17 @@
     </div>
 </div>
 
+<!-- RIGHT PANE EMPTY STATE (If no conversation selected on desktop) -->
+<div class="chat-right-pane empty-right-pane" *ngIf="!activeConversation && !isMobileView">
+    <div class="no-selection-content">
+        <div class="large-icon-circle">
+            <ion-icon name="chatbubbles"></ion-icon>
+        </div>
+        <h3>Project Communications</h3>
+        <p>Select an ongoing project order from the list on the left to coordinate with contractors and track SOP milestones.</p>
+    </div>
+</div>
+
 <!-- MODAL: ADD SUB TASK -->
 <div class="sop-modal-backdrop" *ngIf="showAddSubtaskModal" (click)="closeAddSubtaskModal()">
     <div class="sop-modal-card" (click)="$event.stopPropagation()">

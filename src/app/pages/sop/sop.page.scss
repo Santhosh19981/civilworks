@@ -2326,6 +2326,91 @@
             grid-column: span 1 !important;
         }
     }
+
+    // Responsive SOP Timeline Nodes
+    .major-service-card {
+        .service-card-main-bar {
+            flex-direction: column !important;
+            align-items: stretch !important;
+            gap: 8px !important;
+
+            .service-heading-wrap {
+                width: 100% !important;
+                min-width: 0 !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+
+                .service-title-text {
+                    font-size: 13.5px !important;
+                    flex: 1 !important;
+                    min-width: 0 !important;
+                    overflow: hidden !important;
+                    text-overflow: ellipsis !important;
+                    white-space: nowrap !important;
+                }
+
+                .service-status-chip {
+                    flex-shrink: 0 !important;
+                    font-size: 10px !important;
+                    padding: 2px 7px !important;
+                }
+            }
+
+            .service-actions-wrap {
+                width: 100% !important;
+                display: flex !important;
+                flex-wrap: wrap !important;
+                align-items: center !important;
+                gap: 6px !important;
+
+                .date-chip-pill {
+                    flex: 1 1 calc(50% - 4px) !important;
+                    min-width: 0 !important;
+                    justify-content: center !important;
+                    padding: 4px 6px !important;
+                    font-size: 10.5px !important;
+                }
+
+                .btn-spine-add-subtask {
+                    flex: 1 1 100% !important;
+                    justify-content: center !important;
+                    padding: 6px 12px !important;
+                    font-size: 11.5px !important;
+                }
+
+                .btn-spine-chevron {
+                    display: none !important;
+                }
+            }
+        }
+    }
+
+    .subtask-stepper-row {
+        .subtask-node-card {
+            .st-card-content {
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 6px !important;
+
+                .st-card-title-row {
+                    width: 100% !important;
+                    display: flex !important;
+                    align-items: center !important;
+                    justify-content: space-between !important;
+                }
+
+                .st-card-bottom-row {
+                    width: 100% !important;
+                    display: flex !important;
+                    flex-wrap: wrap !important;
+                    align-items: center !important;
+                    justify-content: space-between !important;
+                    gap: 6px !important;
+                }
+            }
+        }
+    }
 }
 
 .date-field-pill.editable-date-pill {
