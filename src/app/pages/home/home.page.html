@@ -91,13 +91,15 @@
                         <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=1200&q=80')"></div>
                         <div class="slide-gradient-scrim"></div>
                         <div class="slide-content">
-                            <span class="slide-badge">{{ (activeSectorName || 'CivilWorks') | uppercase }} • PLUS MEMBERSHIP</span>
+                            <span class="slide-badge" *ngIf="!isPlusMember">{{ (activeSectorName || 'CivilWorks') | uppercase }} • PLUS MEMBERSHIP</span>
+                            <span class="slide-badge badge-plus-active" *ngIf="isPlusMember">{{ (activeSectorName || 'CivilWorks') | uppercase }} • ⭐ PLUS ACTIVE</span>
                             <h1 class="slide-title">join us to use our services</h1>
-                            <p class="slide-subtitle">Subscribe to CivilWorks Plus membership to unlock verified contractors, direct booking, and end-to-end project management.</p>
+                            <p class="slide-subtitle" *ngIf="!isPlusMember">Subscribe to CivilWorks Plus membership to unlock verified contractors, direct booking, and end-to-end project management.</p>
+                            <p class="slide-subtitle" *ngIf="isPlusMember">You have active CivilWorks Plus access. Manage your ongoing projects, contractor communication, and SOP milestones.</p>
                             <div class="slide-cta-row">
-                                <button type="button" class="slide-cta-btn btn-join-membership" (click)="joinMembership()">
-                                    <ion-icon name="sparkles"></ion-icon>
-                                    <span>join membership</span>
+                                <button type="button" class="slide-cta-btn" [ngClass]="isPlusMember ? 'btn-my-projects' : 'btn-join-membership'" (click)="handleHeroCtaClick()">
+                                    <ion-icon [name]="isPlusMember ? 'folder-open' : 'sparkles'"></ion-icon>
+                                    <span>{{ isPlusMember ? 'My Projects' : 'join membership' }}</span>
                                     <ion-icon name="arrow-forward-outline"></ion-icon>
                                 </button>
                                 <button type="button" class="slide-cta-btn btn-explore-catalog" [routerLink]="'/tabs/products' + (activeSectorId ? '?mainCategoryId=' + activeSectorId : '')">

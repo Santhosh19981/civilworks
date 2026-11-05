@@ -62,6 +62,7 @@ export class HomePage implements OnInit, OnDestroy {
     private cartSub?: Subscription;
     private routeSub?: Subscription;
     private chatSub?: Subscription;
+    private userSub?: Subscription;
 
     constructor(
         private productService: ProductService,
@@ -101,6 +102,7 @@ export class HomePage implements OnInit, OnDestroy {
             this.unreadMessagesCount = count;
         });
         this.chatService.loadConversations().subscribe({ error: () => {} });
+        this.userSub = this.authService.user$.subscribe(() => {});
     }
 
     ngOnDestroy() {
@@ -108,6 +110,7 @@ export class HomePage implements OnInit, OnDestroy {
         if (this.cartSub) this.cartSub.unsubscribe();
         if (this.routeSub) this.routeSub.unsubscribe();
         if (this.chatSub) this.chatSub.unsubscribe();
+        if (this.userSub) this.userSub.unsubscribe();
     }
 
     toggleChatPanel() {
@@ -362,7 +365,16 @@ export class HomePage implements OnInit, OnDestroy {
     }
 
     get isPlusMember(): boolean {
-        return this.authService.isPlusMember();
+        return this.authService.isAuthenticated() && this.authService.isPlusMember();
+    }
+
+    handleHeroCtaClick() {
+        if (this.isPlusMember) {
+            // Direct to chat box page (slide-in WhatsApp-web style project chat drawer)
+            this.showChatPanel = true;
+        } else {
+            this.joinMembership();
+        }
     }
 
     joinMembership() {

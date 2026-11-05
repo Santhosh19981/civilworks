@@ -469,6 +469,24 @@ $text-soft: #94A3B8;
 }
 
 .slide-cta-btn {
+    
+    &.btn-my-projects {
+        background: linear-gradient(135deg, #059669 0%, #10B981 100%) !important;
+        color: #FFFFFF !important;
+        box-shadow: 0 4px 16px rgba(16, 185, 129, 0.45) !important;
+        text-transform: capitalize;
+
+        ion-icon {
+            color: #FFFFFF !important;
+        }
+
+        &:hover {
+            background: linear-gradient(135deg, #047857 0%, #059669 100%) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.55) !important;
+        }
+    }
+
     &.btn-join-membership {
         background: linear-gradient(135deg, #FF6500 0%, #FF882E 100%) !important;
         color: #FFFFFF !important;
@@ -1858,3 +1876,9 @@ $text-soft: #94A3B8;
         }
     }
 }
+
+.badge-plus-active {
+    background: rgba(16, 185, 129, 0.25) !important;
+    color: #34D399 !important;
+    border: 1px solid rgba(16, 185, 129, 0.4) !important;
+}
