@@ -14,6 +14,7 @@
         </div>
 
         <div class="header-right">
+            <app-nav-dropdown></app-nav-dropdown>
             <button routerLink="/cart" class="header-cart-btn" aria-label="View Cart">
                 <ion-icon name="cart-outline"></ion-icon>
                 <span *ngIf="cartCount > 0" class="cart-pill-badge">{{ cartCount }}</span>
@@ -29,47 +30,15 @@
             <!-- Left Column: Product Gallery & Visual Showcase -->
             <div class="gallery-column">
                 <div class="gallery-stage-box">
-                    <img [src]="activeImage" [alt]="product.name" (error)="onImageError($event, product)" class="product-featured-image" />
-                    
+                    <img [src]="activeImage" [alt]="product.name" (error)="onImageError($event, product)"
+                        class="product-featured-image" />
+
                     <!-- Floating Overlay Badges -->
                     <div class="stage-overlay-badges">
-                        <span class="status-dispatch-pill">
+                        <span class="status-dispatch-pill" *ngIf="product.status === 'active'">
                             <span class="pulse-dot"></span>
-                            Ready for Site Dispatch
+                            Active Catalog Item
                         </span>
-                        <span class="discount-pill-glow">{{ discountPercent }}% OFF</span>
-                    </div>
-
-                    <div class="stage-bottom-bar">
-                        <span class="certified-tag">
-                            <ion-icon name="shield-checkmark"></ion-icon>
-                            100% Genuine ISI / BIS Tested
-                        </span>
-                    </div>
-                </div>
-
-                <!-- Guarantee Banner below image -->
-                <div class="gallery-guarantees">
-                    <div class="guarantee-item">
-                        <ion-icon name="flash-outline" class="g-icon orange"></ion-icon>
-                        <div class="g-text">
-                            <strong>4-Hr Mobilization</strong>
-                            <span>Same-day dispatch</span>
-                        </div>
-                    </div>
-                    <div class="guarantee-item">
-                        <ion-icon name="refresh-outline" class="g-icon blue"></ion-icon>
-                        <div class="g-text">
-                            <strong>7-Day Replacement</strong>
-                            <span>Hassle-free site return</span>
-                        </div>
-                    </div>
-                    <div class="guarantee-item">
-                        <ion-icon name="pricetag-outline" class="g-icon green"></ion-icon>
-                        <div class="g-text">
-                            <strong>Wholesale Direct</strong>
-                            <span>Direct mill rates</span>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -78,27 +47,35 @@
             <div class="buybox-column">
                 <div class="product-meta-header">
                     <span class="category-badge">{{ product.category_name || product.category || 'Construction Supply' }}</span>
-                    <span class="sku-badge">SKU: CW-{{ product.id }}</span>
+                    <span class="sku-badge">ID: #{{ product.id }}</span>
                 </div>
 
                 <h1 class="product-title">{{ product.name }}</h1>
 
-                <!-- Rating & Orders Strip -->
+                <!-- Availability Strip (Stock only shown for physical selling goods) -->
                 <div class="rating-strip">
-                    <div class="stars-row">
-                        <span class="star-gold">★</span>
-                        <span class="star-gold">★</span>
-                        <span class="star-gold">★</span>
-                        <span class="star-gold">★</span>
-                        <span class="star-gold">★</span>
-                    </div>
-                    <span class="rating-score">4.8</span>
-                    <span class="rating-divider">•</span>
-                    <span class="reviews-count">120+ verified site deliveries</span>
-                    <span class="stock-indicator">
-                        <ion-icon name="checkmark-circle"></ion-icon>
-                        In Stock (Warehouse Ready)
+                    <ng-container *ngIf="!isRenting && !isService">
+                        <span class="stock-indicator" *ngIf="product.stock > 0">
+                            <ion-icon name="checkmark-circle"></ion-icon>
+                            In Stock ({{ product.stock }} {{ product.unit_name || 'available' }})
+                        </span>
+                        <span class="stock-indicator text-amber" *ngIf="product.stock === 0 || product.stock === null">
+                            <ion-icon name="alert-circle-outline"></ion-icon>
+                            Out of Stock
+                        </span>
+                    </ng-container>
+
+                    <span class="stock-indicator" *ngIf="isRenting" style="color: #f59e0b; background: rgba(245, 158, 11, 0.1);">
+                        <ion-icon name="calendar-outline"></ion-icon>
+                        Available for Rental
                     </span>
+                    <span class="stock-indicator" *ngIf="isService" style="color: #3b82f6; background: rgba(59, 130, 246, 0.1);">
+                        <ion-icon name="checkmark-done-circle-outline"></ion-icon>
+                        Professional Service Available
+                    </span>
+
+                    <span class="rating-divider" *ngIf="product.subcategory_name">•</span>
+                    <span class="reviews-count" *ngIf="product.subcategory_name">{{ product.subcategory_name }}</span>
                 </div>
 
                 <!-- Pricing Card -->
@@ -107,45 +84,57 @@
                         <div class="active-price-box">
                             <span class="currency">₹</span>
                             <span class="amount">{{ unitPrice | number }}</span>
-                            <span class="unit-label" *ngIf="product.unit">/ {{ product.unit }}</span>
-                        </div>
-                        <div class="mrp-box">
-                            <span class="strikethrough-mrp">MRP ₹{{ originalMrp | number }}</span>
-                            <span class="wholesale-pill">Save {{ discountPercent }}% Wholesale</span>
+                            <span class="unit-label" *ngIf="product.unit_name || product.unit">/ {{ product.unit_name || product.unit }}</span>
                         </div>
                     </div>
-                    <div class="tax-freight-sub">Inclusive of all GST taxes • Free site unloading on bulk orders</div>
+                    <div class="tax-freight-sub">Inclusive of all applicable taxes</div>
                 </div>
 
-                <!-- Contractor Bulk Volume Pricing Tiers -->
-                <div class="bulk-tiers-box">
-                    <div class="tiers-header">
-                        <span class="title">Contractor Tier Pricing</span>
-                        <span class="sub">Save more when buying in project quantities</span>
+                <!-- Rental Duration Selector (If Renting) -->
+                <div class="quantity-subtotal-panel" *ngIf="isRenting"
+                    style="margin-bottom: 14px; background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.25);">
+                    <div class="qty-selector-group">
+                        <label class="qty-label" style="color: #d97706; font-weight: 800;">Rental Duration</label>
+                        <div class="stepper-controls">
+                            <button class="step-btn" (click)="decrementDuration()"
+                                [disabled]="rentalDuration <= 1">−</button>
+                            <span class="step-val" style="min-width: 80px;">{{ rentalDuration }} {{ product.unit_name ||
+                                'Days' }}</span>
+                            <button class="step-btn" (click)="incrementDuration()">+</button>
+                        </div>
                     </div>
-                    <div class="tiers-grid">
-                        <div class="tier-card" [class.active]="quantity < 10" (click)="setQuantity(1)">
-                            <span class="tier-qty">1 - 9 Units</span>
-                            <span class="tier-price">₹{{ product.price | number }}</span>
-                            <span class="tier-tag">Standard</span>
-                        </div>
-                        <div class="tier-card" [class.active]="quantity >= 10 && quantity < 50" (click)="setQuantity(10)">
-                            <span class="tier-qty">10 - 49 Units</span>
-                            <span class="tier-price">₹{{ (product.price * 0.95) | number:'1.0-0' }}</span>
-                            <span class="tier-tag save">5% OFF</span>
-                        </div>
-                        <div class="tier-card" [class.active]="quantity >= 50" (click)="setQuantity(50)">
-                            <span class="tier-qty">50+ Units</span>
-                            <span class="tier-price">₹{{ (product.price * 0.90) | number:'1.0-0' }}</span>
-                            <span class="tier-tag save best">10% OFF</span>
-                        </div>
+                    <div class="subtotal-display">
+                        <span class="sub-label">Rental Lease Period</span>
+                        <div class="sub-amount" style="color: #d97706;">{{ rentalDuration }} × {{ product.unit_name ||
+                            'Period' }}</div>
+                    </div>
+                </div>
+
+                <!-- Helper Skills Card (If Helpers with skills) -->
+                <div class="helper-skills-card" *ngIf="isHelper && parsedSkills.length > 0"
+                    style="margin-bottom: 14px; padding: 14px 16px; background: rgba(16, 185, 129, 0.06); border: 1.5px solid rgba(16, 185, 129, 0.25); border-radius: 16px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="font-size: 11px; font-weight: 800; color: #065f46; text-transform: uppercase; letter-spacing: 0.1em; display: flex; align-items: center; gap: 6px;">
+                            <ion-icon name="ribbon-outline" style="font-size: 15px; color: #10b981;"></ion-icon>
+                            Verified Skills & Trades
+                        </span>
+                        <span style="font-size: 10px; font-weight: 700; color: #047857; background: rgba(16, 185, 129, 0.15); padding: 2px 8px; border-radius: 999px;">
+                            {{ parsedSkills.length }} Included
+                        </span>
+                    </div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                        <span *ngFor="let skill of parsedSkills"
+                            style="display: inline-flex; align-items: center; gap: 4px; padding: 5px 10px; background: #ffffff; border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 8px; font-size: 11px; font-weight: 700; color: #0f172a; box-shadow: 0 1px 2px rgba(0,0,0,0.04);">
+                            <ion-icon name="checkmark-circle" style="color: #10b981; font-size: 13px;"></ion-icon>
+                            {{ skill }}
+                        </span>
                     </div>
                 </div>
 
                 <!-- Quantity & Subtotal Row -->
                 <div class="quantity-subtotal-panel">
                     <div class="qty-selector-group">
-                        <label class="qty-label">Quantity</label>
+                        <label class="qty-label">{{ isHelper ? 'Workers / Headcount' : (isRenting ? 'Units / Machines' : 'Quantity') }}</label>
                         <div class="stepper-controls">
                             <button class="step-btn" (click)="decreaseQuantity()" [disabled]="quantity <= 1">−</button>
                             <span class="step-val">{{ quantity }}</span>
@@ -161,12 +150,18 @@
 
                 <!-- Primary Action Buttons -->
                 <div class="action-buttons-container">
-                    <button class="btn-add-cart" (click)="addToCart()" [disabled]="addingToCart">
-                        <ion-icon name="cart-outline"></ion-icon>
-                        <span>{{ addingToCart ? 'Adding...' : 'Add to Cart' }}</span>
+                    <button *ngIf="isService" class="btn-buy-now" (click)="openVendorSelectionModal()" style="width: 100%; justify-content: center; background: #0d1b2a; color: #f59e0b; border: 1.5px solid rgba(245, 158, 11, 0.4);">
+                        <ion-icon name="people-outline"></ion-icon>
+                        <span>Select Vendor for this Service</span>
                     </button>
-                    <button class="btn-buy-now" (click)="buyNow()">
-                        <span>Instant Buy Now</span>
+                    <button *ngIf="!isService" class="btn-add-cart" (click)="addToCart()" [disabled]="addingToCart"
+                        [style.background]="isRenting ? '#f59e0b' : (isHelper ? '#0d1b2a' : '')" [style.color]="isRenting ? '#0f172a' : (isHelper ? '#10b981' : '')">
+                        <ion-icon [name]="isRenting ? 'calendar-outline' : (isHelper ? 'people-outline' : 'cart-outline')"></ion-icon>
+                        <span>{{ addingToCart ? 'Processing...' : (isHelper ? 'Add Crew to Cart' : 'Add to Cart') }}</span>
+                    </button>
+                    <button *ngIf="!isService" class="btn-buy-now" (click)="buyNow()"
+                        [style.background]="isHelper ? '#10b981' : ''" [style.color]="isHelper ? '#ffffff' : ''">
+                        <span>{{ isHelper ? 'Deploy Helpers Now' : (isRenting ? 'Instant Rent Now' : 'Instant Buy Now') }}</span>
                         <ion-icon name="arrow-forward"></ion-icon>
                     </button>
                 </div>
@@ -175,7 +170,8 @@
                 <div class="pincode-checker-box">
                     <div class="pincode-input-row">
                         <ion-icon name="location-outline" class="pin-icon"></ion-icon>
-                        <input type="text" [(ngModel)]="pincodeInput" maxlength="6" placeholder="Enter 6-digit site pincode" />
+                        <input type="text" [(ngModel)]="pincodeInput" maxlength="6"
+                            placeholder="Enter 6-digit site pincode" />
                         <button class="pin-check-btn" (click)="checkPincode()">Check</button>
                     </div>
                     <div class="pincode-result" *ngIf="pincodeMessage">
@@ -186,25 +182,21 @@
             </div>
         </div>
 
-        <!-- In-Depth Specifications & Engineering Tabs Section -->
-        <div class="product-tabs-section">
+        <!-- In-Depth Specifications & Description Tabs Section -->
+        <div class="product-tabs-section" *ngIf="specsList.length > 0 || product.description">
             <div class="tab-headers-row">
-                <button class="tab-nav-btn" [class.active]="activeTab === 'specs'" (click)="activeTab = 'specs'">
+                <button class="tab-nav-btn" [class.active]="activeTab === 'specs'" (click)="activeTab = 'specs'" *ngIf="specsList.length > 0">
                     <ion-icon name="hardware-chip-outline"></ion-icon>
-                    <span>Technical Specifications</span>
+                    <span>Product Specifications</span>
                 </button>
-                <button class="tab-nav-btn" [class.active]="activeTab === 'features'" (click)="activeTab = 'features'">
-                    <ion-icon name="checkmark-done-circle-outline"></ion-icon>
-                    <span>Engineering Highlights</span>
-                </button>
-                <button class="tab-nav-btn" [class.active]="activeTab === 'reviews'" (click)="activeTab = 'reviews'">
-                    <ion-icon name="star-outline"></ion-icon>
-                    <span>Site Reviews (4.8 ★)</span>
+                <button class="tab-nav-btn" [class.active]="activeTab === 'features'" (click)="activeTab = 'features'" *ngIf="product.description">
+                    <ion-icon name="document-text-outline"></ion-icon>
+                    <span>Description & Details</span>
                 </button>
             </div>
 
             <!-- Tab Content: Specifications -->
-            <div class="tab-content-panel" *ngIf="activeTab === 'specs'">
+            <div class="tab-content-panel" *ngIf="activeTab === 'specs' && specsList.length > 0">
                 <div class="specs-table-grid">
                     <div class="spec-cell-row" *ngFor="let spec of specsList">
                         <span class="spec-prop">{{ spec.label }}</span>
@@ -213,32 +205,17 @@
                 </div>
             </div>
 
-            <!-- Tab Content: Highlights -->
-            <div class="tab-content-panel" *ngIf="activeTab === 'features'">
-                <div class="features-list">
+            <!-- Tab Content: Description -->
+            <div class="tab-content-panel" *ngIf="activeTab === 'features' && product.description">
+                <div class="features-list" *ngIf="featureBullets.length > 1">
                     <div class="feature-item" *ngFor="let bullet of featureBullets">
                         <ion-icon name="checkmark-circle" class="feat-icon"></ion-icon>
                         <span class="feat-text">{{ bullet }}</span>
                     </div>
                 </div>
-            </div>
-
-            <!-- Tab Content: Reviews -->
-            <div class="tab-content-panel" *ngIf="activeTab === 'reviews'">
-                <div class="reviews-summary-row">
-                    <div class="review-score-box">
-                        <div class="big-score">4.8</div>
-                        <div class="stars-row">★★★★★</div>
-                        <span class="based-on">Based on 120 verified site deliveries</span>
-                    </div>
-                    <div class="review-comment-card">
-                        <div class="reviewer-meta">
-                            <strong>Rajesh Sharma (Lead Site Contractor)</strong>
-                            <span class="verified-tag">✔ Verified Procurement</span>
-                        </div>
-                        <p class="comment-text">"Delivered directly to our Gachibowli high-rise site within 4 hours. Exact ISI specifications as described, rugged build, no damage in transit. Great wholesale pricing!"</p>
-                    </div>
-                </div>
+                <p class="description-body-text" *ngIf="featureBullets.length <= 1" style="font-size: 14px; line-height: 1.6; color: #334155; margin: 0; padding: 8px 0;">
+                    {{ product.description }}
+                </p>
             </div>
         </div>
 
@@ -270,17 +247,92 @@
     <!-- Skeleton Loading State -->
     <div *ngIf="loading" class="detail-container">
         <div class="product-main-grid">
-            <ion-skeleton-text [animated]="true" style="width: 100%; height: 440px; border-radius: 20px;"></ion-skeleton-text>
+            <ion-skeleton-text [animated]="true"
+                style="width: 100%; height: 440px; border-radius: 20px;"></ion-skeleton-text>
             <div style="padding: 20px 0;">
-                <ion-skeleton-text [animated]="true" style="width: 30%; height: 24px; margin-bottom: 16px;"></ion-skeleton-text>
-                <ion-skeleton-text [animated]="true" style="width: 80%; height: 36px; margin-bottom: 20px;"></ion-skeleton-text>
-                <ion-skeleton-text [animated]="true" style="width: 50%; height: 32px; margin-bottom: 24px;"></ion-skeleton-text>
-                <ion-skeleton-text [animated]="true" style="width: 100%; height: 90px; border-radius: 14px; margin-bottom: 20px;"></ion-skeleton-text>
-                <ion-skeleton-text [animated]="true" style="width: 100%; height: 52px; border-radius: 14px;"></ion-skeleton-text>
+                <ion-skeleton-text [animated]="true"
+                    style="width: 30%; height: 24px; margin-bottom: 16px;"></ion-skeleton-text>
+                <ion-skeleton-text [animated]="true"
+                    style="width: 80%; height: 36px; margin-bottom: 20px;"></ion-skeleton-text>
+                <ion-skeleton-text [animated]="true"
+                    style="width: 50%; height: 32px; margin-bottom: 24px;"></ion-skeleton-text>
+                <ion-skeleton-text [animated]="true"
+                    style="width: 100%; height: 90px; border-radius: 14px; margin-bottom: 20px;"></ion-skeleton-text>
+                <ion-skeleton-text [animated]="true"
+                    style="width: 100%; height: 52px; border-radius: 14px;"></ion-skeleton-text>
+               </div>
+    </div>
+    </div>
+</ion-content>
+
+<!-- Vendor Selection Popup Modal for Service Type Products -->
+<div class="vendor-modal-backdrop" *ngIf="showVendorModal" (click)="closeVendorModal()">
+    <div class="vendor-selection-modal" (click)="$event.stopPropagation()">
+        <!-- Header -->
+        <div class="vmodal-header">
+            <div class="vmodal-title-wrap">
+                <span class="vmodal-pill">VERIFIED SERVICE PROVIDERS</span>
+                <h3 class="vmodal-title">Select Vendor for {{ product?.name }}</h3>
+                <p class="vmodal-subtitle">Choose a verified contractor or artisan to deliver this service</p>
+            </div>
+            <button class="vmodal-close-btn" (click)="closeVendorModal()" aria-label="Close">
+                <ion-icon name="close-outline"></ion-icon>
+            </button>
+        </div>
+
+        <!-- Service Details Strip -->
+        <div class="vmodal-service-strip" *ngIf="product">
+            <div class="vmodal-strip-info">
+                <span class="vmodal-cat-tag">{{ product.subcategory_name || product.category_name }}</span>
+                <span class="vmodal-service-name">{{ product.name }}</span>
+            </div>
+            <div class="vmodal-price-box">
+                <span class="vmodal-price-label">Service Fee</span>
+                <span class="vmodal-price">₹{{ product.price | number }}</span>
+            </div>
+        </div>
+
+        <!-- Body / Vendors List (ONLY NAME & IMAGE AS REQUIRED) -->
+        <div class="vmodal-body">
+            <!-- Loading State -->
+            <div class="vmodal-loading" *ngIf="loadingVendors">
+                <ion-spinner name="crescent"></ion-spinner>
+                <span>Loading verified service providers...</span>
+            </div>
+
+            <!-- Empty State if no vendor mapped -->
+            <div class="vmodal-empty" *ngIf="!loadingVendors && serviceVendors.length === 0">
+                <div class="vmodal-empty-icon" style="color: #ef4444; background: #fee2e2;">
+                    <ion-icon name="alert-circle-outline"></ion-icon>
+                </div>
+                <h4 style="color: #991b1b;">No Vendors Available for this Service</h4>
+                <p style="color: #475569;">There are currently no verified vendors connected to <strong>{{ product?.name || 'this service' }}</strong>. An order cannot be placed without a connected vendor.</p>
+                <button class="vmodal-fallback-btn" (click)="closeVendorModal()" style="background: #475569; color: #fff;">
+                    Close
+                </button>
+            </div>
+
+            <!-- Vendors Grid: ONLY NAME AND IMAGE DISPLAYED -->
+            <div class="vmodal-vendors-grid" *ngIf="!loadingVendors && serviceVendors.length > 0">
+                <div class="vmodal-vendor-card" *ngFor="let vendor of serviceVendors" (click)="selectVendorAndProceed(vendor)">
+                    <div class="vcard-avatar-wrap">
+                        <img *ngIf="vendor.image" [src]="formatImageUrl(vendor.image)" [alt]="vendor.name" class="vcard-avatar-img">
+                        <div *ngIf="!vendor.image" class="vcard-avatar-fallback">
+                            {{ vendor.name ? vendor.name.charAt(0).toUpperCase() : 'V' }}
+                        </div>
+                    </div>
+                    <div class="vcard-meta">
+                        <h4 class="vcard-name">{{ vendor.name }}</h4>
+                    </div>
+                    <button class="vcard-select-btn" type="button">
+                        <span>Select Vendor</span>
+                        <ion-icon name="arrow-forward-outline"></ion-icon>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-</ion-content>
+</div>
 
 <!-- Fixed Sticky Bottom Footer (For Mobile Viewports) -->
 <ion-footer *ngIf="!loading && product" class="mobile-fixed-footer">
@@ -290,13 +342,19 @@
             <div class="footer-total">₹{{ subtotal | number }}</div>
         </div>
         <div class="footer-buttons-row">
-            <button class="btn-m-cart" (click)="addToCart()" [disabled]="addingToCart">
-                <ion-icon name="cart-outline"></ion-icon>
+            <button *ngIf="isService" class="btn-m-buy" (click)="openVendorSelectionModal()" style="width: 100%; background: #0d1b2a; color: #f59e0b;">
+                <span>Select Vendor</span>
+                <ion-icon name="people-outline"></ion-icon>
             </button>
-            <button class="btn-m-buy" (click)="buyNow()">
-                <span>Buy Now</span>
-                <ion-icon name="arrow-forward"></ion-icon>
-            </button>
+            <ng-container *ngIf="!isService">
+                <button class="btn-m-cart" (click)="addToCart()" [disabled]="addingToCart">
+                    <ion-icon name="cart-outline"></ion-icon>
+                </button>
+                <button class="btn-m-buy" (click)="buyNow()">
+                    <span>Buy Now</span>
+                    <ion-icon name="arrow-forward"></ion-icon>
+                </button>
+            </ng-container>
         </div>
     </div>
 </ion-footer>

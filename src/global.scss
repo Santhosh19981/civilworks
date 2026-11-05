@@ -698,3 +698,60 @@ ion-item::part(native) {
     padding-top: 16px;
     padding-bottom: 16px;
 }
+
+/* ==========================================================================
+   Global Universal Back Arrow Navigation Button
+   ========================================================================== */
+.nav-back-row,
+.nav-back-breadcrumbs-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.page-back-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    color: #ffffff;
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+    flex-shrink: 0;
+    outline: none;
+
+    ion-icon {
+        font-size: 20px;
+        color: #ffffff;
+        transition: transform 0.2s ease, color 0.2s ease;
+        pointer-events: none;
+    }
+
+    &:hover {
+        background: rgba(255, 107, 0, 0.22);
+        border-color: #FF6B00;
+        box-shadow: 0 4px 14px rgba(255, 107, 0, 0.3);
+        transform: translateX(-3px);
+
+        ion-icon {
+            color: #FFA366;
+            transform: translateX(-2px);
+        }
+    }
+
+    &:active {
+        transform: scale(0.94);
+    }
+
+    &:focus-visible {
+        box-shadow: 0 0 0 2px rgba(255, 107, 0, 0.5);
+    }
+}

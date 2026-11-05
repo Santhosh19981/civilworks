@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
+import { Subscription } from 'rxjs';
 import { RentalService } from '../../services/rental.service';
 import { Rental } from '../../models/rental.model';
 
@@ -8,30 +10,70 @@ import { Rental } from '../../models/rental.model';
     templateUrl: './rentals.page.html',
     styleUrls: ['./rentals.page.scss'],
 })
-export class RentalsPage implements OnInit {
+export class RentalsPage implements OnInit, OnDestroy {
     rentals: any[] = [];
     filteredRentals: any[] = [];
     searchQuery = '';
     selectedCategory = 'All';
-    categories = ['All', 'Heavy Machinery', 'Power Tools', 'Concrete Equipment', 'Scaffolding & Formwork'];
+    categories = ['All'];
     sortBy = 'popular';
     loading = true;
+    mainCategoryId: number | null = null;
+    categoryId: number | null = null;
+    private routeSub?: Subscription;
 
     constructor(
         private rentalService: RentalService,
-        private router: Router
+        private router: Router,
+        private route: ActivatedRoute,
+        private location: Location
     ) { }
 
     ngOnInit() {
-        this.loadRentals();
+        this.routeSub = this.route.queryParams.subscribe(params => {
+            const savedSector = localStorage.getItem('selectedSectorId');
+            this.mainCategoryId = params['mainCategoryId'] ? Number(params['mainCategoryId']) : (params['main_category_id'] ? Number(params['main_category_id']) : (savedSector ? Number(savedSector) : null));
+            this.categoryId = params['categoryId'] ? Number(params['categoryId']) : (params['category_id'] ? Number(params['category_id']) : null);
+            if (params['search']) {
+                this.searchQuery = params['search'];
+            }
+            this.loadRentals();
+        });
+    }
+
+    ngOnDestroy() {
+        if (this.routeSub) {
+            this.routeSub.unsubscribe();
+        }
     }
 
     loadRentals() {
         this.loading = true;
-        this.rentalService.getRentals().subscribe({
+        this.rentals = [];
+        this.filteredRentals = [];
+
+        const params: any = {};
+        if (this.mainCategoryId) {
+            params.main_category_id = this.mainCategoryId;
+        }
+        if (this.categoryId) {
+            params.category_id = this.categoryId;
+        }
+        params.limit = 50;
+
+        this.rentalService.getRentals(params).subscribe({
             next: (rentals: any[]) => {
                 const list = Array.isArray(rentals) ? rentals : [];
                 this.rentals = list.map(r => this.normalizeRental(r));
+                const extractedCats = Array.from(new Set(this.rentals.map(r => r.category).filter(Boolean)));
+                if (extractedCats.length > 0) {
+                    this.categories = ['All', ...extractedCats];
+                } else {
+                    this.categories = ['All'];
+                }
+                if (this.selectedCategory && this.selectedCategory !== 'All' && !this.categories.includes(this.selectedCategory)) {
+                    this.selectedCategory = 'All';
+                }
                 this.filterRentals();
                 this.loading = false;
             },
@@ -45,28 +87,30 @@ export class RentalsPage implements OnInit {
     normalizeRental(r: any): any {
         const id = String(r.id);
         const name = r.name || 'Machinery';
-        const category = r.category_name || r.category || 'Heavy Machinery';
+        const category = r.subcategory_name || r.display_category_name || r.category_name || r.category || 'Heavy Machinery';
         const pricePerDay = Number(r.price_per_day || r.pricePerDay || 0);
         const mobile = r.mobile || '+91 98765 43210';
         const description = r.description || 'Reliable construction equipment inspected and ready for heavy-duty site work.';
 
         let localImage = 'assets/rentals/jcb_3dx.jpg';
-        const lower = name.toLowerCase();
-        if (lower.includes('jcb') || lower.includes('backhoe') || lower.includes('loader')) {
-            localImage = 'assets/rentals/jcb_3dx.jpg';
-        } else if (lower.includes('caterpillar') || lower.includes('excavat') || lower.includes('cat')) {
-            localImage = 'assets/rentals/excavator.jpg';
-        } else if (lower.includes('jackhammer') || lower.includes('bosch') || lower.includes('breaker')) {
-            localImage = 'assets/rentals/jackhammer.jpg';
-        } else if (lower.includes('mixer') || lower.includes('concrete')) {
-            localImage = 'assets/rentals/concrete_mixer.jpg';
-        } else if (lower.includes('scaffold') || lower.includes('frame')) {
-            localImage = 'assets/rentals/scaffolding.jpg';
-        } else if (r.image && typeof r.image === 'string' && r.image.trim() !== '') {
+        if (r.image && typeof r.image === 'string' && r.image.trim() !== '') {
             localImage = r.image;
+        } else {
+            const lower = name.toLowerCase();
+            if (lower.includes('jcb') || lower.includes('backhoe') || lower.includes('loader')) {
+                localImage = 'assets/rentals/jcb_3dx.jpg';
+            } else if (lower.includes('caterpillar') || lower.includes('excavat') || lower.includes('cat')) {
+                localImage = 'assets/rentals/excavator.jpg';
+            } else if (lower.includes('jackhammer') || lower.includes('bosch') || lower.includes('breaker')) {
+                localImage = 'assets/rentals/jackhammer.jpg';
+            } else if (lower.includes('mixer') || lower.includes('concrete')) {
+                localImage = 'assets/rentals/concrete_mixer.jpg';
+            } else if (lower.includes('scaffold') || lower.includes('frame')) {
+                localImage = 'assets/rentals/scaffolding.jpg';
+            }
         }
 
-        const specs = this.getMachineSpecs(name);
+        const unitName = r.unit_name || 'Day';
 
         return {
             ...r,
@@ -74,36 +118,12 @@ export class RentalsPage implements OnInit {
             name,
             category,
             pricePerDay,
+            unitName,
             image: localImage,
             description,
             mobile,
-            rating: 4.9,
-            reviewCount: 24 + (Number(r.id) * 7),
-            specs,
-            badge: lower.includes('scaffold') || lower.includes('jackhammer') ? 'Direct Dispatch' : 'Certified Operator',
-            fuelType: lower.includes('jackhammer') ? 'Electric' : (lower.includes('scaffold') ? 'Q235 Steel' : 'Diesel'),
-            availability: 'Available Today'
+            available: r.available !== undefined ? Boolean(r.available) : true
         };
-    }
-
-    getMachineSpecs(name: string): string[] {
-        const lower = name.toLowerCase();
-        if (lower.includes('jcb') || lower.includes('backhoe')) {
-            return ['76 HP Turbo Engine', '0.24 m³ Bucket', 'Max Dig 4.77m', 'Operator Included'];
-        }
-        if (lower.includes('caterpillar') || lower.includes('excavat')) {
-            return ['146 HP Cat Engine', '1.0 m³ Bucket', '20.5 Ton Capacity', 'AC Cabin Included'];
-        }
-        if (lower.includes('jackhammer') || lower.includes('breaker')) {
-            return ['1750W Motor', '41J Impact Energy', 'Vibration Damped', '2 Chisels Included'];
-        }
-        if (lower.includes('mixer') || lower.includes('concrete')) {
-            return ['6 HP Diesel Engine', '200L Batch Capacity', 'Cast Iron Drum', 'Tow Hitch Wheel'];
-        }
-        if (lower.includes('scaffold')) {
-            return ['Galvanized Q235 Steel', '2.0m x 1.2m Frame', 'Anti-Slip Walkways', 'Safety Guardrails'];
-        }
-        return ['50-Point Site Tested', 'Transit Insurance', '24/7 Field Tech', 'Instant Dispatch'];
     }
 
     handleRefresh(event: any) {
@@ -160,6 +180,14 @@ export class RentalsPage implements OnInit {
 
     viewRental(rentalId: string) {
         this.router.navigate(['/rental-detail', rentalId]);
+    }
+
+    goBack() {
+        if (window.history.length > 1) {
+            this.location.back();
+        } else {
+            this.router.navigate(['/tabs/home']);
+        }
     }
 
     onImageError(event: any) {

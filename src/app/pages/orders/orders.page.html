@@ -1,108 +1,743 @@
-<ion-header [translucent]="true">
-    <ion-toolbar>
-        <ion-title>My Orders</ion-title>
-    </ion-toolbar>
+<ion-header class="ion-no-border modern-orders-header" [translucent]="true">
+    <div class="orders-header-row">
+        <div class="header-title-col">
+            <div class="nav-back-breadcrumbs-row">
+                <button type="button" class="page-back-btn" (click)="goBack()" title="Go back to previous page"
+                    aria-label="Go back">
+                    <ion-icon name="arrow-back"></ion-icon>
+                </button>
+                <div class="breadcrumbs-row">
+                    <a routerLink="/tabs/home" class="crumb-link">Home</a>
+                    <span class="crumb-sep">/</span>
+                    <span class="crumb-current">My Orders & Projects</span>
+                </div>
+            </div>
+            <div class="flex-title-wrap clickable-brand" routerLink="/sector-select" title="Switch Sector">
+                <div class="brand-icon-box">
+                    <ion-icon name="receipt" class="brand-icon"></ion-icon>
+                </div>
+                <div class="brand-text">
+                    <h1 class="orders-main-title">My Orders</h1>
+                    <span class="orders-subtitle">Track and manage your ongoing service orders and execution</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <app-nav-dropdown></app-nav-dropdown>
+
+            <ion-button routerLink="/cart" fill="clear" class="cart-btn" aria-label="Cart">
+                <div class="cart-icon-wrapper">
+                    <ion-icon name="cart-outline"></ion-icon>
+                </div>
+            </ion-button>
+        </div>
+    </div>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="orders-content">
     <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
         <ion-refresher-content></ion-refresher-content>
     </ion-refresher>
 
-    <!-- Filters -->
-    <div class="filters-container">
-        <ion-chip [outline]="selectedFilter !== 'All'" color="primary" (click)="selectedFilter = 'All'; applyFilter()">
-            <ion-label>All</ion-label>
-        </ion-chip>
-        <ion-chip [outline]="selectedFilter !== 'Products'" color="primary"
-            (click)="selectedFilter = 'Products'; applyFilter()">
-            <ion-label>Products</ion-label>
-        </ion-chip>
-        <ion-chip [outline]="selectedFilter !== 'Rentals'" color="primary"
-            (click)="selectedFilter = 'Rentals'; applyFilter()">
-            <ion-label>Rentals</ion-label>
-        </ion-chip>
-        <ion-chip [outline]="selectedFilter !== 'Helpers'" color="primary"
-            (click)="selectedFilter = 'Helpers'; applyFilter()">
-            <ion-label>Helpers</ion-label>
-        </ion-chip>
-    </div>
+    <div class="orders-page-wrapper">
+        <!-- Segregated Order Tabs: Products and Rentals hidden for service-based launch -->
+        <div class="orders-segregated-nav" style="display: none;">
+            <button *ngIf="false" type="button" class="segregated-tab-btn" [class.active]="activeTab === 'products'"
+                (click)="switchTab('products')">
+                <div class="tab-icon-wrap bg-blue-tint">
+                    <ion-icon name="cube-outline"></ion-icon>
+                </div>
+                <div class="tab-text-wrap">
+                    <span class="tab-label">Products</span>
+                    <span class="tab-count">{{ productOrders.length }} Orders</span>
+                </div>
+            </button>
 
-    <!-- Orders List -->
-    <div *ngIf="!loading && filteredOrders.length > 0">
-        <ion-card *ngFor="let order of filteredOrders" class="order-card"
-            [class.helper-border]="order.type === 'helper'" [class.rental-border]="order.type === 'rental'">
-            <ion-card-header>
-                <div class="order-header">
-                    <div>
-                        <ion-card-subtitle>{{ (order.type === 'helper' || order.type === 'rental') ? 'Booking ID' :
-                            'Order ID' }}</ion-card-subtitle>
-                        <ion-card-title class="order-id">{{ order.id }}</ion-card-title>
+            <button type="button" class="segregated-tab-btn" [class.active]="activeTab === 'services'"
+                (click)="switchTab('services')">
+                <div class="tab-icon-wrap bg-purple-tint">
+                    <ion-icon name="people-outline"></ion-icon>
+                </div>
+                <div class="tab-text-wrap">
+                    <span class="tab-label">Services</span>
+                    <span class="tab-count">{{ serviceOrders.length }} Projects</span>
+                </div>
+            </button>
+
+            <button *ngIf="false" type="button" class="segregated-tab-btn" [class.active]="activeTab === 'rentals'"
+                (click)="switchTab('rentals')">
+                <div class="tab-icon-wrap bg-amber-tint">
+                    <ion-icon name="construct-outline"></ion-icon>
+                </div>
+                <div class="tab-text-wrap">
+                    <span class="tab-label">Rentals</span>
+                    <span class="tab-count">{{ rentalOrders.length }} Bookings</span>
+                </div>
+            </button>
+        </div>
+
+        <!-- TAB 1: PRODUCTS (Strictly Read-Only: No edit, no chat) -->
+        <div class="tab-page-container" *ngIf="activeTab === 'products'">
+            <div class="tab-banner products-banner">
+                <div class="banner-icon"><ion-icon name="cube"></ion-icon></div>
+                <div class="banner-info">
+                    <h3>Direct Materials & Products</h3>
+                    <p>Track delivery, invoices, and shipment tracking. Direct purchases are strictly finalized orders.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-orders-view" *ngIf="!loading && productOrders.length === 0">
+                <ion-icon name="cube-outline"></ion-icon>
+                <h3>No Product Orders Found</h3>
+                <p>You haven't purchased materials yet. Browse construction supplies, tools, and hardware.</p>
+                <ion-button routerLink="/products" class="explore-btn">Shop Products</ion-button>
+            </div>
+
+            <!-- Products List (Ultra-Premium E-Commerce Order Cards) -->
+            <div class="orders-cards-list" *ngIf="!loading && productOrders.length > 0">
+                <div class="order-ecom-card premium-product-order-card" *ngFor="let order of productOrders">
+                    <!-- Top Ribbon -->
+                    <div class="card-top-ribbon">
+                        <div class="sector-badge-wrap">
+                            <span class="sector-dot" [ngClass]="getSectorDotClass(order.main_category_name)"></span>
+                            <span class="sector-title">{{ (order.main_category_name || 'Construction').toUpperCase()
+                                }}</span>
+                            <span class="procurement-type-tag tag-product">DIRECT PURCHASE</span>
+                        </div>
+                        <div class="order-status-badge" [ngClass]="getStatusClass(order.status)">
+                            <ion-icon [name]="getStatusIcon(order.status)"></ion-icon>
+                            <span>{{ (order.status || 'Confirmed') | uppercase }}</span>
+                        </div>
                     </div>
-                    <div class="order-status"
-                        [ngClass]="{'status-helper': order.type === 'helper', 'status-rental': order.type === 'rental', 'status-packing': order.type === 'product' && order.status === 'Packing', 'status-shipping': order.type === 'product' && order.status === 'Shipping', 'status-delivered': order.type === 'product' && order.status === 'Delivered'}">
-                        <ion-icon
-                            [name]="order.type === 'helper' ? 'people' : (order.type === 'rental' ? 'construct' : getStatusIcon(order.status))"></ion-icon>
-                        {{ order.status }}
+
+                    <div class="card-content-body">
+                        <!-- Order Meta Summary Bar -->
+                        <div class="order-meta-header">
+                            <div class="order-id-group">
+                                <span class="id-label">ORDER ID</span>
+                                <span class="id-val">#{{ order.orderNo || order.id }}</span>
+                            </div>
+                            <div class="order-meta-info-strip">
+                                <div class="meta-item">
+                                    <ion-icon name="calendar-outline"></ion-icon>
+                                    <span>Placed on {{ order.date | date:'mediumDate' }}</span>
+                                </div>
+                                <div class="meta-item" *ngIf="order.paymentMethod">
+                                    <ion-icon name="card-outline"></ion-icon>
+                                    <span>{{ order.paymentMethod }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- E-Commerce Fulfillment Stepper Tracker -->
+                        <div class="order-stepper-tracker">
+                            <div class="stepper-step" [class.step-active]="isStepCompleted(order.status, 'placed')"
+                                [class.step-current]="isCurrentStep(order.status, 'placed')">
+                                <div class="step-bullet"><ion-icon name="checkmark"></ion-icon></div>
+                                <span class="step-label">Order Placed</span>
+                            </div>
+                            <div class="stepper-line" [class.line-active]="isStepCompleted(order.status, 'confirmed')">
+                            </div>
+                            <div class="stepper-step" [class.step-active]="isStepCompleted(order.status, 'confirmed')"
+                                [class.step-current]="isCurrentStep(order.status, 'confirmed')">
+                                <div class="step-bullet"><ion-icon name="checkmark"></ion-icon></div>
+                                <span class="step-label">Confirmed</span>
+                            </div>
+                            <div class="stepper-line" [class.line-active]="isStepCompleted(order.status, 'shipped')">
+                            </div>
+                            <div class="stepper-step" [class.step-active]="isStepCompleted(order.status, 'shipped')"
+                                [class.step-current]="isCurrentStep(order.status, 'shipped')">
+                                <div class="step-bullet"><ion-icon name="cube-outline"></ion-icon></div>
+                                <span class="step-label">Dispatched</span>
+                            </div>
+                            <div class="stepper-line" [class.line-active]="isStepCompleted(order.status, 'delivered')">
+                            </div>
+                            <div class="stepper-step" [class.step-active]="isStepCompleted(order.status, 'delivered')"
+                                [class.step-current]="isCurrentStep(order.status, 'delivered')">
+                                <div class="step-bullet"><ion-icon name="location-outline"></ion-icon></div>
+                                <span class="step-label">Delivered</span>
+                            </div>
+                        </div>
+
+                        <!-- E-Commerce Items Container -->
+                        <div class="ecom-items-container">
+                            <div class="ecom-item-row" *ngFor="let item of order.items">
+                                <!-- Thumbnail with Qty Badge -->
+                                <div class="ecom-thumbnail-wrap">
+                                    <img [src]="getItemImage(item)"
+                                        [alt]="item.product_name || item.product?.name || item.name"
+                                        class="ecom-thumb-img" (error)="onThumbError($event)" />
+                                    <span class="ecom-qty-badge" *ngIf="(item.quantity || 1) > 1">×{{ item.quantity
+                                        }}</span>
+                                </div>
+
+                                <!-- Product Details -->
+                                <div class="ecom-item-info">
+                                    <div class="ecom-item-top">
+                                        <h4 class="ecom-product-title">{{ item.product_name || item.product?.name ||
+                                            item.name || order.serviceName || 'Direct Material / Product' }}</h4>
+                                        <span class="ecom-item-subtotal">₹{{ getItemTotal(item, order) | number:'1.2-2'
+                                            }}</span>
+                                    </div>
+
+                                    <div class="ecom-item-meta-tags">
+                                        <span class="ecom-tag unit-tag"
+                                            *ngIf="item.current_unit_name || item.unit_name || item.unit">
+                                            <ion-icon name="scale-outline"></ion-icon>
+                                            <span>{{ item.current_unit_name || item.unit_name || item.unit }}</span>
+                                        </span>
+                                        <span class="ecom-tag sector-tag"
+                                            *ngIf="item.main_category_name || order.main_category_name">
+                                            {{ item.main_category_name || order.main_category_name }}
+                                        </span>
+                                    </div>
+
+                                    <div class="ecom-price-qty-row">
+                                        <span class="ecom-unit-price" *ngIf="item.price">
+                                            ₹{{ item.price | number:'1.2-2' }} <span class="per-unit"
+                                                *ngIf="item.current_unit_name || item.unit_name">/ {{
+                                                item.current_unit_name || item.unit_name }}</span>
+                                        </span>
+                                        <span class="ecom-qty-pill">
+                                            Qty: <strong>{{ item.quantity || 1 }}</strong>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Delivery Destination Snippet if available -->
+                        <div class="ecom-delivery-snippet" *ngIf="order.address">
+                            <div class="delivery-icon-box">
+                                <ion-icon name="location-sharp"></ion-icon>
+                            </div>
+                            <div class="delivery-info-text">
+                                <span class="delivery-to-lbl">Delivery Destination</span>
+                                <span class="delivery-address-val">
+                                    {{ order.address.full_name ? order.address.full_name + ' • ' : '' }}
+                                    {{ order.address.address_line_1 || order.address.address || order.address.city }}
+                                    {{ order.address.pincode ? ' - ' + order.address.pincode : '' }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Card Footer Action Bar -->
+                        <div class="card-footer-action-bar">
+                            <div class="total-price-wrap">
+                                <span class="total-lbl">Order Total (Incl. Taxes)</span>
+                                <span class="total-val">₹{{ order.total | number:'1.2-2' }}</span>
+                            </div>
+
+                            <div class="card-btn-group">
+                                <!-- Buy Again / Reorder -->
+                                <button type="button" class="btn-action btn-reorder" (click)="reorderItems(order)"
+                                    title="Add items from this order back to your cart">
+                                    <ion-icon name="repeat-outline"></ion-icon>
+                                    <span>Buy Again</span>
+                                </button>
+
+                                <!-- Track Shipment / Order -->
+                                <button type="button" class="btn-action btn-track-order"
+                                    (click)="openOrderDetails(order)" title="Track delivery status and timeline">
+                                    <ion-icon name="navigate-circle-outline"></ion-icon>
+                                    <span>Track Order</span>
+                                </button>
+
+                                <!-- Invoice / View Details -->
+                                <button type="button" class="btn-action btn-inspect" (click)="openOrderDetails(order)"
+                                    title="View Order Receipt & Tax Invoice">
+                                    <ion-icon name="receipt-outline"></ion-icon>
+                                    <span>Invoice</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </ion-card-header>
+            </div>
+        </div>
 
-            <ion-card-content>
-                <div class="order-info">
-                    <div class="info-row">
-                        <ion-icon name="calendar"></ion-icon>
-                        <span>{{ order.date | date:'medium' }}</span>
+        <!-- TAB 2: SERVICES (Vendor allocation, Acceptance status, Gated Edit & Chat) -->
+        <div class="tab-page-container" *ngIf="activeTab === 'services'">
+            <div class="tab-banner services-banner">
+                <div class="banner-icon"><ion-icon name="people"></ion-icon></div>
+                <div class="banner-info">
+                    <h3>Service Projects & Multi-Vendor Execution</h3>
+                    <p>Orders with editable subcategories unlock live WhatsApp-style project groups and multi-service
+                        management.</p>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-orders-view" *ngIf="!loading && serviceOrders.length === 0">
+                <ion-icon name="people-outline"></ion-icon>
+                <h3>No Service Projects Booked</h3>
+                <p>Hire skilled professionals for interior design, electrical, plumbing, masonry, or site helpers.</p>
+                <ion-button routerLink="/helpers" class="explore-btn">Book Services</ion-button>
+            </div>
+
+            <!-- Services List -->
+            <div class="orders-cards-list" *ngIf="!loading && serviceOrders.length > 0">
+                <div class="order-ecom-card service-project-card" *ngFor="let order of serviceOrders">
+                    <div class="card-top-ribbon">
+                        <div class="sector-badge-wrap">
+                            <span class="sector-dot dot-service"></span>
+                            <span class="sector-title">{{ (order.main_category_name || 'Services').toUpperCase()
+                                }}</span>
+                            <span class="procurement-type-tag tag-service">PROJECT</span>
+                        </div>
+
+                        <!-- Conditional Gating Badge: Editable vs Standard vs Completed -->
+                        <div class="eligibility-badge"
+                            [class.editable-completed]="isOrderCompleted(order)"
+                            [class.editable-enabled]="order.is_editable_order && !isOrderCompleted(order)"
+                            [class.editable-disabled]="!order.is_editable_order && !isOrderCompleted(order)">
+                            <ion-icon
+                                [name]="isOrderCompleted(order) ? 'checkmark-done-circle' : (order.is_editable_order ? (order.isEditing ? 'create' : 'checkmark-circle') : 'lock-closed')"></ion-icon>
+                            <span>{{ isOrderCompleted(order) ? 'PROJECT COMPLETED' : (order.is_editable_order ? (order.isEditing ? 'EDITING MODE ACTIVE' : 'EDITABLE &
+                                CHAT ENABLED') : 'FIXED PROJECT') }}</span>
+                        </div>
                     </div>
 
-                    <ng-container *ngIf="order.type === 'helper'">
-                        <div class="info-row">
-                            <ion-icon name="construct" color="warning"></ion-icon>
-                            <span class="text-bold">{{ order.serviceName }}</span>
+                    <div class="card-content-body">
+                        <div class="order-meta-header">
+                            <div class="order-id-group">
+                                <span class="id-label">PROJECT ORDER ID</span>
+                                <span class="id-val">#{{ order.orderNo || order.id }}</span>
+                            </div>
+                            <div class="order-date-group">
+                                <ion-icon name="calendar-outline"></ion-icon>
+                                <span>Placed on {{ order.date | date:'mediumDate' }}</span>
+                            </div>
                         </div>
-                        <div class="info-row">
-                            <ion-icon name="people"></ion-icon>
-                            <span>{{ order.members }} Member(s) hired</span>
-                        </div>
-                    </ng-container>
 
-                    <ng-container *ngIf="order.type === 'rental'">
-                        <div class="info-row">
-                            <ion-icon name="construct" color="primary"></ion-icon>
-                            <span class="text-bold">{{ order.serviceName }}</span>
-                        </div>
-                        <div class="info-row">
-                            <ion-icon name="time"></ion-icon>
-                            <span>{{ order.days }} Day(s) rental</span>
-                        </div>
-                    </ng-container>
+                        <!-- Multi-Service Vendors List & Status -->
+                        <div class="project-services-section">
+                            <!-- Edit Mode Notice Bar (Only visible when customer clicked Edit Order and order not completed) -->
+                            <div class="edit-mode-active-bar" *ngIf="order.is_editable_order && order.isEditing && !isOrderCompleted(order)">
+                                <div class="edit-mode-text">
+                                    <ion-icon name="create-outline"></ion-icon>
+                                    <span><strong>Editing Project Order:</strong> You can delete services, change
+                                        assigned vendors, or add new services.</span>
+                                </div>
+                                <button type="button" class="btn-done-editing-pill" (click)="toggleEditOrder(order)"
+                                    title="Finish editing">
+                                    <ion-icon name="checkmark-outline"></ion-icon>
+                                    <span>Done</span>
+                                </button>
+                            </div>
 
-                    <ng-container *ngIf="order.type === 'product'">
-                        <div class="info-row">
-                            <ion-icon name="cube"></ion-icon>
-                            <span>{{ order.items.length }} item(s)</span>
+                            <div class="services-header-flex">
+                                <span class="section-title">{{ order.type === 'helper' ? 'Deployed Helpers & Skills' :
+                                    'Assigned Services & Dedicated Vendors' }}</span>
+                                <button *ngIf="order.is_editable_order && order.type !== 'helper' && !isOrderCompleted(order)" type="button"
+                                    class="btn-add-service-inline" (click)="openEditOrderModal(order)"
+                                    title="Add another service to this project">
+                                    <ion-icon name="add-circle-outline"></ion-icon>
+                                    <span>+ Add Service</span>
+                                </button>
+                            </div>
+
+                            <!-- If services list present -->
+                            <div class="service-item-row" *ngFor="let s of order.services">
+                                <div class="service-detail">
+                                    <div class="service-title-row">
+                                        <span class="s-name">{{ s.service_name || s.subcategory_name || 'Service'
+                                            }}</span>
+                                        <span class="s-subcat-tag"
+                                            *ngIf="s.subcategory_name && s.service_name && s.subcategory_name.toLowerCase() !== s.service_name.toLowerCase()">
+                                            {{ s.subcategory_name }}
+                                        </span>
+                                    </div>
+                                    <div class="s-vendor-info">
+                                        <ion-icon
+                                            [name]="order.type === 'helper' ? 'shield-checkmark-outline' : 'person-circle-outline'"></ion-icon>
+                                        <span class="s-vendor-label">{{ order.type === 'helper' ? 'Allocation:' :
+                                            'Vendor:' }}</span>
+                                        <span class="s-vendor-name">{{ s.vendor_name || (order.type === 'helper' ?
+                                            'Direct Workforce Allocation' : 'Dedicated Vendor') }}</span>
+                                        <span class="s-vendor-phone"
+                                            *ngIf="s.vendor_mobile && order.type !== 'helper'">({{ s.vendor_mobile
+                                            }})</span>
+                                    </div>
+                                </div>
+
+                                <div class="service-status-col">
+                                    <span class="vendor-status-pill"
+                                        [class]="'v-status-' + (s.vendor_status || 'pending')">
+                                        {{ (s.vendor_status || 'confirmed') | uppercase }}
+                                    </span>
+
+                                    <!-- Delete / Remove Vendor & Service Button (when in Quick-Edit Mode) -->
+                                    <button
+                                        *ngIf="order.is_editable_order && order.type !== 'helper' && order.isEditing && !isOrderCompleted(order)"
+                                        type="button" class="btn-srv-action btn-delete-srv"
+                                        (click)="removeService(order, s, $event)"
+                                        title="Delete / Remove this vendor & service">
+                                        <ion-icon name="trash-outline"></ion-icon>
+                                        <span>Delete</span>
+                                    </button>
+
+                                    <!-- Change / Replace Vendor Button (when in Quick-Edit Mode) -->
+                                    <button
+                                        *ngIf="order.is_editable_order && order.type !== 'helper' && order.isEditing && !isOrderCompleted(order)"
+                                        type="button" class="btn-srv-action btn-replace-srv"
+                                        (click)="openReplaceVendorModal(order, s, $event)"
+                                        title="Choose a new vendor for this service">
+                                        <ion-icon name="swap-horizontal-outline"></ion-icon>
+                                        <span>Change</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Fallback preview if no services array -->
+                            <div class="service-item-row" *ngIf="!order.services || order.services.length === 0">
+                                <div class="service-detail">
+                                    <div class="service-title-row">
+                                        <span class="s-name">{{ order.serviceName || (order.items &&
+                                            order.items[0]?.name) || 'Service Project' }}</span>
+                                    </div>
+                                    <div class="s-vendor-info" *ngIf="order.type !== 'helper'">
+                                        <ion-icon name="information-circle-outline"></ion-icon>
+                                        <span class="s-vendor-label">Notice:</span>
+                                        <span class="s-vendor-name">Click "Edit Order" or "+ Add Service" to assign
+                                            contractors</span>
+                                    </div>
+                                    <div class="s-vendor-info" *ngIf="order.type === 'helper'">
+                                        <ion-icon name="people-outline"></ion-icon>
+                                        <span class="s-vendor-label">Helper Service:</span>
+                                        <span class="s-vendor-name">Direct Workforce Allocation • Confirmed
+                                            Deployment</span>
+                                    </div>
+                                </div>
+                                <div class="service-status-col"
+                                    *ngIf="order.is_editable_order && order.type !== 'helper' && !isOrderCompleted(order)">
+                                    <button type="button" class="btn-action btn-add-more-srv"
+                                        (click)="openEditOrderModal(order)">
+                                        <ion-icon name="add-circle-outline"></ion-icon>
+                                        <span>+ Add Service</span>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                        <div class="info-row">
-                            <ion-icon name="card"></ion-icon>
-                            <span>{{ order.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online Payment' }}</span>
+
+                        <!-- Bottom Card Actions with Conditional Gating -->
+                        <div class="card-footer-action-bar">
+                            <div class="total-price-wrap">
+                                <span class="total-lbl">{{ order.type === 'helper' ? 'Order Total' : 'Project Total'
+                                    }}</span>
+                                <span class="total-val">₹{{ order.total | number:'1.2-2' }}</span>
+                            </div>
+
+                            <div class="card-btn-group">
+                                <!-- Completed Indicator Pill -->
+                                <div *ngIf="isOrderCompleted(order)" class="order-completed-indicator-pill" title="This project order is completed">
+                                    <ion-icon name="checkmark-done-circle"></ion-icon>
+                                    <span>Work Completed</span>
+                                </div>
+
+                                <!-- Edit Order Button: strictly hidden for helper orders and completed orders -->
+                                <button *ngIf="order.is_editable_order && order.type !== 'helper' && !isOrderCompleted(order)" type="button"
+                                    class="btn-action btn-edit-order" (click)="openEditOrderModal(order)"
+                                    title="Edit services and vendors in this project">
+                                    <ion-icon name="create-outline"></ion-icon>
+                                    <span>Edit Order</span>
+                                </button>
+
+                                <!-- Quick Inline Management Toggle: hidden for helper orders and completed orders -->
+                                <button
+                                    *ngIf="order.is_editable_order && order.type !== 'helper' && order.services && order.services.length > 0 && !order.isEditing && !isOrderCompleted(order)"
+                                    type="button" class="btn-action btn-manage-srv" (click)="toggleEditOrder(order)"
+                                    title="Quick-manage services on card">
+                                    <ion-icon name="options-outline"></ion-icon>
+                                    <span>Manage</span>
+                                </button>
+
+                                <button *ngIf="order.is_editable_order && order.type !== 'helper' && order.isEditing && !isOrderCompleted(order)"
+                                    type="button" class="btn-action btn-done-editing" (click)="toggleEditOrder(order)"
+                                    title="Finish quick editing">
+                                    <ion-icon name="checkmark-circle-outline"></ion-icon>
+                                    <span>Done</span>
+                                </button>
+
+                                <!-- Open Project Chat Button: hidden for helper orders -->
+                                <button *ngIf="order.is_editable_order && order.type !== 'helper'" type="button"
+                                    class="btn-action btn-chat-group" (click)="openProjectChat(order)"
+                                    title="Open Project Communication Group">
+                                    <ion-icon name="chatbubbles-outline"></ion-icon>
+                                    <span>Chat with Vendors</span>
+                                </button>
+
+                                <!-- SOP Button: Link to Sequence of Operations -->
+
+
+                                <!-- View Details receipt inspection (only button shown for helpers) -->
+                                <button type="button" class="btn-action btn-inspect" (click)="openOrderDetails(order)"
+                                    title="View Project Receipt & Invoices">
+                                    <ion-icon name="receipt-outline"></ion-icon>
+                                    <span>Details</span>
+                                </button>
+                            </div>
                         </div>
-                    </ng-container>
+                    </div>
                 </div>
+            </div>
+        </div>
 
-                <div class="order-total" [class.helper-total]="order.type === 'helper'"
-                    [class.rental-total]="order.type === 'rental'">
-                    <span>{{ (order.type === 'helper' || order.type === 'rental') ? 'Total Payable' : 'Total Amount'
-                        }}</span>
-                    <span class="total-amount">₹{{ order.total }}</span>
+        <!-- TAB 3: RENTALS (Heavy Machinery, Duration, Strictly Read-Only) -->
+        <div class="tab-page-container" *ngIf="activeTab === 'rentals'">
+            <div class="tab-banner rentals-banner">
+                <div class="banner-icon"><ion-icon name="construct"></ion-icon></div>
+                <div class="banner-info">
+                    <h3>Heavy Machinery & Equipment Rentals</h3>
+                    <p>Active machine deployments, operator logs, and shift schedules. Rental contracts are finalized
+                        agreements.</p>
                 </div>
-            </ion-card-content>
-        </ion-card>
-    </div>
+            </div>
 
-    <!-- Empty State -->
-    <div class="empty-state" *ngIf="!loading && filteredOrders.length === 0">
-        <div class="empty-state-icon">📦</div>
-        <div class="empty-state-title">No Bookings Found</div>
-        <div class="empty-state-text">You don't have any {{selectedFilter.toLowerCase()}} yet.</div>
+            <!-- Empty State -->
+            <div class="empty-orders-view" *ngIf="!loading && rentalOrders.length === 0">
+                <ion-icon name="construct-outline"></ion-icon>
+                <h3>No Equipment Rentals Booked</h3>
+                <p>Rent excavators, JCBs, cranes, transit mixers, and earthmovers on daily or shift basis.</p>
+                <ion-button routerLink="/rentals" class="explore-btn">Browse Rentals</ion-button>
+            </div>
+
+            <!-- Rentals List -->
+            <div class="orders-cards-list" *ngIf="!loading && rentalOrders.length > 0">
+                <div class="order-ecom-card" *ngFor="let order of rentalOrders">
+                    <div class="card-top-ribbon">
+                        <div class="sector-badge-wrap">
+                            <span class="sector-dot dot-rental"></span>
+                            <span class="sector-title">{{ (order.main_category_name || 'Construction').toUpperCase()
+                                }}</span>
+                            <span class="procurement-type-tag tag-rental">RENTAL</span>
+                        </div>
+                        <div class="order-status-badge" [ngClass]="getStatusClass(order.status)">
+                            <ion-icon [name]="getStatusIcon(order.status)"></ion-icon>
+                            <span>{{ order.status || 'Active' }}</span>
+                        </div>
+                    </div>
+
+                    <div class="card-content-body">
+                        <div class="order-meta-header">
+                            <div class="order-id-group">
+                                <span class="id-label">RENTAL BOOKING ID</span>
+                                <span class="id-val">#{{ order.orderNo || order.id }}</span>
+                            </div>
+                            <div class="order-date-group">
+                                <ion-icon name="calendar-outline"></ion-icon>
+                                <span>Placed on {{ order.date | date:'mediumDate' }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Equipment Items & Duration -->
+                        <div class="order-items-preview">
+                            <div class="item-preview-row" *ngFor="let item of order.items">
+                                <div class="item-img-box">
+                                    <img [src]="getProductImage(item.product)"
+                                        [alt]="item.product?.name || item.name" />
+                                </div>
+                                <div class="item-details-meta">
+                                    <span class="item-name">{{ item.product?.name || item.name || order.serviceName
+                                        }}</span>
+                                    <div class="rental-specs-row">
+                                        <span class="duration-badge">
+                                            <ion-icon name="time-outline"></ion-icon>
+                                            <span>Duration: {{ item.rental_duration || order.days || 1 }} Days /
+                                                Shifts</span>
+                                        </span>
+                                        <span class="rate-val">₹{{ item.price }} / Day</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-footer-action-bar">
+                            <div class="total-price-wrap">
+                                <span class="total-lbl">Total Rental Cost</span>
+                                <span class="total-val">₹{{ order.total | number:'1.2-2' }}</span>
+                            </div>
+
+                            <div class="card-btn-group">
+                                <button type="button" class="btn-action btn-inspect" (click)="openOrderDetails(order)">
+                                    <ion-icon name="eye-outline"></ion-icon>
+                                    <span>Contract Details</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </ion-content>
+
+<!-- Standard Receipt / Order Details Inspection Modal Overlay -->
+<div class="order-details-modal-backdrop" *ngIf="showDetailsModal" (click)="closeOrderDetails()">
+    <div class="order-details-modal-card" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <div class="modal-title-wrap">
+                <div class="modal-tags-row">
+                    <span class="modal-sector-tag">{{ selectedOrder?.main_category_name || 'Construction' }}</span>
+                    <span class="modal-status-pill" [ngClass]="getStatusClass(selectedOrder?.status)">
+                        {{ selectedOrder?.status || 'Confirmed' }}
+                    </span>
+                </div>
+                <h3 class="modal-order-number">Order #{{ selectedOrder?.orderNo || selectedOrder?.id }}</h3>
+                <span class="modal-order-date">Placed on {{ selectedOrder?.date | date:'medium' }}</span>
+            </div>
+            <button type="button" class="modal-close-btn" (click)="closeOrderDetails()" aria-label="Close modal">
+                <ion-icon name="close"></ion-icon>
+            </button>
+        </div>
+
+        <div class="modal-body-scroll">
+            <div class="summary-details-grid">
+                <div class="detail-box">
+                    <span class="box-label">Order Type</span>
+                    <strong>{{ (selectedOrder?.type || 'Service') | uppercase }}</strong>
+                </div>
+                <div class="detail-box">
+                    <span class="box-label">Payment Method</span>
+                    <strong>{{ selectedOrder?.paymentMethod || 'Online / Pay on Site' }}</strong>
+                </div>
+                <div class="detail-box" *ngIf="selectedOrder?.address">
+                    <span class="box-label">Delivery Destination</span>
+                    <strong>{{ selectedOrder.address.full_name || selectedOrder.address.address_line_1 ||
+                        selectedOrder.address.city }}</strong>
+                </div>
+                <div class="detail-box">
+                    <span class="box-label">Status</span>
+                    <strong [ngClass]="getStatusClass(selectedOrder?.status)">{{ selectedOrder?.status || 'Confirmed'
+                        }}</strong>
+                </div>
+            </div>
+
+            <!-- Purchased items list if product/rental -->
+            <div class="summary-section" *ngIf="selectedOrder?.items && selectedOrder.items.length > 0">
+                <h4 class="section-title">Purchased Items ({{ selectedOrder.items.length }})</h4>
+                <div class="modal-items-list">
+                    <div class="modal-item-row" *ngFor="let item of selectedOrder.items">
+                        <div class="modal-thumb-box">
+                            <ion-icon name="cube-outline"></ion-icon>
+                        </div>
+                        <div class="modal-item-info">
+                            <h5 class="item-name">{{ item.product_name || item.name }}</h5>
+                            <span class="item-meta">Qty: {{ item.quantity || 1 }} • ₹{{ item.price | number:'1.2-2'
+                                }}</span>
+                        </div>
+                        <span class="modal-item-total">₹{{ getItemTotal(item, selectedOrder) | number:'1.2-2' }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Assigned Services list if service project -->
+            <div class="summary-section" *ngIf="selectedOrder?.services && selectedOrder.services.length > 0">
+                <h4 class="section-title">Assigned Services & Dedicated Vendors ({{ selectedOrder.services.length }})
+                </h4>
+                <div class="modal-items-list">
+                    <div class="modal-item-row" *ngFor="let s of selectedOrder.services">
+                        <div class="modal-thumb-box">
+                            <ion-icon name="construct-outline"></ion-icon>
+                        </div>
+                        <div class="modal-item-info">
+                            <h5 class="item-name">{{ s.service_name || s.subcategory_name }}</h5>
+                            <span class="item-meta">Vendor: {{ s.vendor_name || 'Dedicated Vendor' }} • {{
+                                (s.vendor_status || 'pending') | uppercase }}</span>
+                        </div>
+                        <span class="modal-item-total" *ngIf="s.price">₹{{ s.price | number:'1.2-2' }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pricing-breakdown-card">
+                <div class="p-row">
+                    <span>Subtotal</span>
+                    <span>₹{{ selectedOrder?.total | number:'1.2-2' }}</span>
+                </div>
+                <div class="p-row">
+                    <span>Taxes & Handling</span>
+                    <span class="free-text">INCLUDED</span>
+                </div>
+                <div class="p-divider"></div>
+                <div class="p-row grand-total-row">
+                    <strong>Total Amount</strong>
+                    <strong class="highlight-total">₹{{ selectedOrder?.total | number:'1.2-2' }}</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn-modal-done" (click)="closeOrderDetails()">Done</button>
+        </div>
+    </div>
+</div>
+
+<!-- Replace Vendor Modal Popup -->
+<div class="order-details-modal-backdrop" *ngIf="showVendorPickerModal" (click)="closeReplaceVendorModal()">
+    <div class="vendor-picker-modal-card" (click)="$event.stopPropagation()">
+        <div class="picker-header">
+            <div class="header-titles">
+                <span class="picker-tag">REPLACE DEDICATED VENDOR</span>
+                <h3 class="picker-title">Select New Vendor for {{ replacingService?.subcategory_name }}</h3>
+                <p class="picker-sub">Choose a verified contractor to take over this service on Project #{{
+                    replacingOrder?.orderNo || replacingOrder?.id }}</p>
+            </div>
+            <button type="button" class="close-details-btn" (click)="closeReplaceVendorModal()"
+                aria-label="Close modal">
+                <ion-icon name="close"></ion-icon>
+            </button>
+        </div>
+
+        <div class="picker-body">
+            <div class="picker-loading" *ngIf="loadingReplaceVendors">
+                <ion-spinner name="crescent"></ion-spinner>
+                <span>Loading available verified vendors...</span>
+            </div>
+
+            <div class="picker-vendor-list" *ngIf="!loadingReplaceVendors && replaceVendorsList.length > 0">
+                <div class="vendor-selection-card" *ngFor="let vendor of replaceVendorsList"
+                    (click)="selectNewVendorForService(vendor)">
+                    <div class="v-avatar">
+                        <img *ngIf="vendor.image" [src]="formatImageUrl(vendor.image)" [alt]="vendor.name" />
+                        <span *ngIf="!vendor.image">{{ (vendor.name || 'V').charAt(0).toUpperCase() }}</span>
+                    </div>
+                    <div class="v-details">
+                        <div class="v-top-row">
+                            <h4 class="v-name">{{ vendor.name }}</h4>
+                            <span class="v-badge">✔ Verified</span>
+                        </div>
+                        <span class="v-contact" *ngIf="vendor.mobile">📞 {{ vendor.mobile }}</span>
+                    </div>
+                    <button type="button" class="btn-choose-vendor">
+                        <span>Assign</span>
+                        <ion-icon name="arrow-forward"></ion-icon>
+                    </button>
+                </div>
+            </div>
+
+            <div class="picker-empty" *ngIf="!loadingReplaceVendors && replaceVendorsList.length === 0">
+                <ion-icon name="alert-circle-outline"></ion-icon>
+                <p>No other vendors are currently registered or connected to {{ replacingService?.subcategory_name }}.
+                </p>
+                <button type="button" class="btn-fallback-contractor" (click)="closeReplaceVendorModal()"
+                    style="background: #475569; color: #fff;">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Multi-Service Order Editing Modal -->
+<app-edit-order-modal *ngIf="showEditModal" [order]="editingOrder" (close)="showEditModal = false"
+    (orderUpdated)="onOrderUpdatedFromModal($event)">
+</app-edit-order-modal>
+
+<!-- WhatsApp-Web-Style Chat Drawer Slide-in -->
+<app-chat-panel [isOpen]="showChatPanel" [initialOrderId]="chatInitialOrderId" (close)="closeChatPanel()"
+    (editOrderRequested)="openEditOrder($event)">
+</app-chat-panel>

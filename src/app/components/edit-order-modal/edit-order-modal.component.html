@@ -1,0 +1,158 @@
+<div class="edit-modal-backdrop" (click)="close.emit()">
+    <div class="edit-modal-container" (click)="$event.stopPropagation()">
+        <!-- Header -->
+        <div class="modal-header">
+            <div class="header-titles">
+                <span class="badge-tag">Service Project</span>
+                <h2 class="modal-title">Edit Order #{{ order?.orderNo || order?.order_no || order?.id }}</h2>
+                <p class="modal-sub">Add or remove vendor services dynamically for this project</p>
+            </div>
+            <button type="button" class="close-btn" (click)="close.emit()" aria-label="Close">
+                <ion-icon name="close"></ion-icon>
+            </button>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="modal-tab-bar">
+            <button type="button" class="tab-btn" [class.active]="activeTab === 'current'" (click)="activeTab = 'current'">
+                <ion-icon name="list-outline"></ion-icon>
+                <span>Active Services ({{ order?.services?.length || 0 }})</span>
+            </button>
+            <button type="button" class="tab-btn" [class.active]="activeTab === 'add'" (click)="activeTab = 'add'">
+                <ion-icon name="add-circle-outline"></ion-icon>
+                <span>+ Add Service</span>
+            </button>
+        </div>
+
+        <!-- Content Area -->
+        <div class="modal-body">
+            <!-- TAB 1: Current Services -->
+            <div class="tab-content" *ngIf="activeTab === 'current'">
+                <div *ngIf="!order?.services || order.services.length === 0" class="empty-state">
+                    <ion-icon name="briefcase-outline"></ion-icon>
+                    <p>No active services in this project.</p>
+                </div>
+
+                <div class="service-cards-list" *ngIf="order?.services && order.services.length > 0">
+                    <div class="service-card" *ngFor="let s of order.services" [class.rejected]="s.vendor_status === 'rejected'">
+                        <div class="service-info">
+                            <div class="service-meta-top">
+                                <span class="service-category-name">{{ s.service_name || s.subcategory_name || 'Service' }}</span>
+                                <span class="service-subcat-pill" *ngIf="s.subcategory_name && s.service_name && s.subcategory_name.toLowerCase() !== s.service_name.toLowerCase()">
+                                    {{ s.subcategory_name }}
+                                </span>
+                                <span class="vendor-status-pill" [class]="'status-' + (s.vendor_status || 'pending')">
+                                    {{ (s.vendor_status || 'pending') | uppercase }}
+                                </span>
+                            </div>
+
+                            <div class="vendor-detail-row">
+                                <ion-icon name="person-outline"></ion-icon>
+                                <span class="vendor-name">{{ s.vendor_name || 'Assigned Vendor' }}</span>
+                                <span class="vendor-phone" *ngIf="s.vendor_mobile">({{ s.vendor_mobile }})</span>
+                            </div>
+
+                            <div class="service-rate-row" *ngIf="s.price">
+                                <span class="rate-label">Rate:</span>
+                                <span class="rate-amount">₹{{ s.price }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Actions for this service -->
+                        <div class="service-actions">
+                            <!-- If vendor rejected, show reselect button -->
+                            <button *ngIf="s.vendor_status === 'rejected'" type="button" class="action-btn reselect-btn" (click)="openReselectVendor(s)">
+                                <ion-icon name="refresh-outline"></ion-icon>
+                                <span>Reselect Vendor</span>
+                            </button>
+
+                            <!-- Remove service button -->
+                            <button type="button" class="action-btn remove-btn" (click)="confirmRemoveService(s)" title="Remove Service">
+                                <ion-icon name="trash-outline"></ion-icon>
+                                <span>Remove</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reselect Vendor Panel if open -->
+                <div class="reselect-panel" *ngIf="reselectService">
+                    <div class="panel-header">
+                        <h4>Select Replacement Vendor for {{ reselectService.subcategory_name }}</h4>
+                        <button type="button" class="panel-close" (click)="cancelReselect()">
+                            <ion-icon name="close"></ion-icon>
+                        </button>
+                    </div>
+
+                    <div class="panel-body">
+                        <label class="field-label">Available Vendors</label>
+                        <select [(ngModel)]="selectedReselectVendorId" class="select-field">
+                            <option [ngValue]="null">Select Replacement Vendor</option>
+                            <option *ngFor="let v of reselectVendors" [value]="v.id">
+                                {{ v.name }} ({{ v.mobile || 'Available' }})
+                            </option>
+                        </select>
+
+                        <div class="panel-actions">
+                            <button type="button" class="cancel-btn" (click)="cancelReselect()">Cancel</button>
+                            <button type="button" class="submit-btn" [disabled]="!selectedReselectVendorId" (click)="submitReselectVendor()">
+                                Confirm Reselect
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: Add New Service -->
+            <div class="tab-content add-service-form" *ngIf="activeTab === 'add'">
+                <div class="form-group">
+                    <label class="field-label">Select Service Subcategory *</label>
+                    <select [(ngModel)]="selectedSubcategoryId" (change)="onSubcategorySelect()" class="select-field">
+                        <option [ngValue]="null">Choose Service (e.g. Electrical, Interior Design)</option>
+                        <option *ngFor="let sub of serviceSubcategories" [value]="sub.id">
+                            {{ sub.name }}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="field-label">Select Dedicated Vendor *</label>
+                    <div *ngIf="loadingVendors" class="loading-hint">
+                        <ion-spinner name="crescent"></ion-spinner>
+                        <span>Loading verified vendors...</span>
+                    </div>
+
+                    <select *ngIf="!loadingVendors" [(ngModel)]="selectedVendorId" [disabled]="!selectedSubcategoryId || availableVendors.length === 0" class="select-field">
+                        <option [ngValue]="null">
+                            {{ availableVendors.length === 0 && selectedSubcategoryId ? 'No vendors currently mapped' : 'Choose Available Vendor' }}
+                        </option>
+                        <option *ngFor="let v of availableVendors" [value]="v.id">
+                            {{ v.name }} ({{ v.mobile || 'Verified Vendor' }})
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="field-label">Estimated Service Budget / Price (₹)</label>
+                    <input type="number" [(ngModel)]="estimatedPrice" class="input-field" placeholder="e.g. 5000">
+                </div>
+
+                <div class="form-group">
+                    <label class="field-label">Project Instructions / Requirements (Optional)</label>
+                    <textarea [(ngModel)]="serviceNotes" rows="3" class="textarea-field" placeholder="Provide details, scope, or site specifications..."></textarea>
+                </div>
+
+                <div class="submit-wrap">
+                    <button type="button" class="submit-add-btn" [disabled]="!selectedSubcategoryId || !selectedVendorId || submitting" (click)="submitAddService()">
+                        <ion-spinner name="crescent" *ngIf="submitting"></ion-spinner>
+                        <span *ngIf="!submitting">+ Add Service & Send Request</span>
+                    </button>
+                    <button type="button" class="browse-catalog-link-btn" (click)="goToServicesCatalog()">
+                        <ion-icon name="open-outline"></ion-icon>
+                        <span>Browse Full Services Page to Pick Services & Place Order</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

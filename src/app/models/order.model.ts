@@ -17,6 +17,9 @@ export interface Address {
     phone: string;
     addressLine1: string;
     addressLine2?: string;
+    landmark?: string;
+    flatNo?: string;
+    areaLocality?: string;
     city: string;
     state: string;
     pincode: string;

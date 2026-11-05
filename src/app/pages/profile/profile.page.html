@@ -1,63 +1,566 @@
-<ion-header [translucent]="true">
-    <ion-toolbar>
-        <ion-title>Profile</ion-title>
-    </ion-toolbar>
+<ion-header class="ion-no-border modern-profile-header" [translucent]="true">
+    <div class="profile-header-row">
+        <div class="header-title-col">
+            <div class="nav-back-breadcrumbs-row">
+                <button type="button" class="page-back-btn" (click)="goBack()" title="Go back to previous page"
+                    aria-label="Go back">
+                    <ion-icon name="arrow-back"></ion-icon>
+                </button>
+                <div class="breadcrumbs-row">
+                    <a routerLink="/tabs/home" class="crumb-link">Home</a>
+                    <span class="crumb-sep">/</span>
+                    <span class="crumb-current">My Account</span>
+                </div>
+            </div>
+            <div class="flex-title-wrap clickable-brand" routerLink="/tabs/home" title="CivilWorks E-Commerce">
+                <div class="brand-icon-box">
+                    <ion-icon name="person-circle" class="brand-icon"></ion-icon>
+                </div>
+                <div class="brand-text">
+                    <h1 class="profile-main-title">My Account</h1>
+                    <span class="profile-subtitle">Personal info, orders & delivery preferences</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <button class="sector-badge-btn" routerLink="/sector-select" title="Switch Industry Sector">
+                <span class="sector-pulse-dot"></span>
+                <span class="sector-name">{{ activeSectorName }}</span>
+                <ion-icon name="swap-horizontal-outline" class="swap-icon"></ion-icon>
+            </button>
+
+            <app-nav-dropdown></app-nav-dropdown>
+
+            <ion-button routerLink="/cart" fill="clear" class="cart-btn" aria-label="Shopping Cart">
+                <div class="cart-icon-wrapper">
+                    <ion-icon name="cart-outline"></ion-icon>
+                    <span *ngIf="cartCount > 0" class="cart-badge">{{ cartCount }}</span>
+                </div>
+            </ion-button>
+
+            <!-- Quick Logout in Header if logged in -->
+            <button *ngIf="user" type="button" class="header-quick-logout-btn" (click)="logout()"
+                title="Sign Out of Account">
+                <ion-icon name="log-out-outline"></ion-icon>
+                <span class="btn-text-sm">Logout</span>
+            </button>
+
+            <!-- Quick Sign In in Header if logged out -->
+            <button *ngIf="!user" type="button" class="header-quick-login-btn" routerLink="/login"
+                [queryParams]="{ returnUrl: '/tabs/profile' }" title="Sign In">
+                <ion-icon name="log-in-outline"></ion-icon>
+                <span>Login</span>
+            </button>
+        </div>
+    </div>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-    <div *ngIf="user" class="profile-container">
-        <!-- Profile Header -->
-        <div class="profile-header">
-            <div class="avatar">
-                <ion-icon name="person"></ion-icon>
+<ion-content [fullscreen]="true" class="profile-content">
+    <div *ngIf="user" class="profile-page-wrapper">
+
+        <!-- 1. Modern E-Commerce Customer Hero Banner -->
+        <section class="hero-cover-banner">
+            <div class="blueprint-overlay"></div>
+            <div class="ambient-orb orb-1"></div>
+            <div class="ambient-orb orb-2"></div>
+
+            <div class="hero-inner-content">
+                <div class="avatar-section">
+                    <div class="avatar-frame">
+                        <div class="avatar-initials">{{ getInitials(user.name) }}</div>
+                        <div class="online-indicator" title="Active Customer"></div>
+                    </div>
+
+                    <div class="user-identity-col">
+                        <div class="badge-row">
+                            <span class="verified-pill">
+                                <ion-icon name="shield-checkmark"></ion-icon>
+                                <span>Verified Customer</span>
+                            </span>
+                            <span class="member-pill">
+                                <ion-icon name="sparkles"></ion-icon>
+                                <span>CivilWorks Member</span>
+                            </span>
+                        </div>
+
+                        <h2 class="user-display-name">{{ user.name || (user.mobile || user.phone ? ('Customer ' +
+                            (user.mobile || user.phone)) : 'Customer') }}</h2>
+
+                        <div class="credential-chips">
+                            <button type="button" class="chip-item"
+                                (click)="copyToClipboard((user.mobile || user.phone) || '', 'Mobile')"
+                                *ngIf="user.mobile || user.phone" title="Click to copy mobile number">
+                                <ion-icon name="call-outline"></ion-icon>
+                                <span>{{ user.mobile || user.phone }}</span>
+                                <ion-icon name="checkmark-circle"
+                                    style="color: #10B981; font-size: 13px; margin-left: 2px;"></ion-icon>
+                            </button>
+
+                            <button type="button" class="chip-item" (click)="copyToClipboard(user.email || '', 'Email')"
+                                *ngIf="user.email" title="Click to copy email">
+                                <ion-icon name="mail-outline"></ion-icon>
+                                <span>{{ user.email }}</span>
+                                <ion-icon name="copy-outline" class="copy-icon"></ion-icon>
+                            </button>
+
+                            <button type="button" class="chip-item license-chip"
+                                (click)="copyToClipboard('CW-' + user.id, 'Customer ID')"
+                                title="Click to copy customer ID">
+                                <ion-icon name="finger-print-outline"></ion-icon>
+                                <span>ID: #{{ user.id }}</span>
+                                <ion-icon name="copy-outline" class="copy-icon"></ion-icon>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-action-col">
+                    <button type="button" class="edit-profile-btn" (click)="openEditModal()"
+                        title="Edit profile & delivery address">
+                        <ion-icon name="create-outline"></ion-icon>
+                        <span>Edit Profile</span>
+                    </button>
+                    <button type="button" class="logout-hero-btn" (click)="logout()" title="Sign out of account">
+                        <ion-icon name="log-out-outline"></ion-icon>
+                        <span>Sign Out</span>
+                    </button>
+                </div>
             </div>
-            <h2>{{ user.name }}</h2>
-            <p>{{ user.email || user.phone }}</p>
+        </section>
+
+        <!-- 2. E-Commerce Overview & Quick Metric Bar -->
+        <section class="stats-metric-grid">
+            <!-- Metric 1: Total Orders & Purchases -->
+            <div class="metric-card clickable" routerLink="/tabs/orders" title="View all orders and service bookings">
+                <div class="metric-icon-box orange">
+                    <ion-icon name="receipt-outline"></ion-icon>
+                </div>
+                <div class="metric-info">
+                    <span class="metric-num">{{ totalOrdersCount }}</span>
+                    <span class="metric-label">My Orders & Invoices</span>
+                </div>
+                <div class="metric-action-icon">
+                    <ion-icon name="arrow-forward-outline"></ion-icon>
+                </div>
+            </div>
+
+            <!-- Metric 2: Shopping Cart -->
+            <div class="metric-card clickable" routerLink="/cart" title="View shopping cart">
+                <div class="metric-icon-box green">
+                    <ion-icon name="cart-outline"></ion-icon>
+                </div>
+                <div class="metric-info">
+                    <span class="metric-num">{{ cartCount }}</span>
+                    <span class="metric-label">Shopping Cart Items</span>
+                </div>
+                <div class="metric-action-icon">
+                    <ion-icon name="arrow-forward-outline"></ion-icon>
+                </div>
+            </div>
+
+            <!-- Metric 3: Delivery Address / Location -->
+            <div class="metric-card clickable" title="Click to update delivery address">
+                <div class="metric-icon-box blue">
+                    <ion-icon name="location-outline"></ion-icon>
+                </div>
+                <div class="metric-info">
+                    <span class="metric-num-text">{{ user.site_location || 'Not Set' }}</span>
+                    <span class="metric-label">Default Delivery Location</span>
+                </div>
+                <div class="metric-tag">{{ user.site_location ? 'SET' : 'ADD' }}</div>
+            </div>
+
+            <!-- Metric 4: Customer Care -->
+            <a href="tel:1800248457" class="metric-card clickable" title="Call Toll Free Customer Care">
+                <div class="metric-icon-box purple">
+                    <ion-icon name="headset-outline"></ion-icon>
+                </div>
+                <div class="metric-info">
+                    <span class="metric-num-text">1800-CIVIL-PRO</span>
+                    <span class="metric-label">24/7 Customer Care</span>
+                </div>
+                <div class="metric-tag" style="background: #ECFDF5; color: #059669;">ONLINE</div>
+            </a>
+        </section>
+
+        <!-- 3. Two-Column Dashboard Content Layout -->
+        <div class="profile-dashboard-layout">
+
+            <!-- LEFT COLUMN: Personal Info & Preferences -->
+            <div class="dashboard-col">
+
+                <!-- Card 1: Personal Information -->
+                <div class="dashboard-card">
+                    <div class="card-header-bar">
+                        <div class="card-title-group">
+                            <div class="icon-circle">
+                                <ion-icon name="person-outline"></ion-icon>
+                            </div>
+                            <div>
+                                <h3 class="card-title">Personal Information</h3>
+                                <span class="card-sub">Your primary account identity and contact details</span>
+                            </div>
+                        </div>
+                        <button type="button" class="header-action-text-btn" (click)="openEditModal()">
+                            <ion-icon name="pencil-outline"></ion-icon>
+                            <span>Edit</span>
+                        </button>
+                    </div>
+
+                    <div class="detail-rows-list">
+                        <div class="detail-row">
+                            <span class="detail-label">Full Name</span>
+                            <span class="detail-val-highlight">{{ user.name || 'Not provided' }}</span>
+                        </div>
+
+                        <div class="detail-row">
+                            <span class="detail-label">Mobile Number</span>
+                            <div class="detail-val-badge">
+                                <span>{{ user.mobile || user.phone || 'Not provided' }}</span>
+                                <span class="badge-mini success" *ngIf="user.mobile || user.phone">Verified via
+                                    OTP</span>
+                            </div>
+                        </div>
+
+                        <div class="detail-row">
+                            <span class="detail-label">Email Address</span>
+                            <div class="detail-val-badge">
+                                <span>{{ user.email || 'Not provided' }}</span>
+                                <span class="badge-mini info" *ngIf="user.email">Primary</span>
+                            </div>
+                        </div>
+
+                        <div class="detail-row">
+                            <span class="detail-label">Delivery Address</span>
+                            <span class="detail-val">{{ user.site_location || 'Not specified' }}</span>
+                        </div>
+
+                        <div class="detail-row">
+                            <span class="detail-label">Account Status</span>
+                            <div class="detail-val-badge">
+                                <span style="color: #059669; font-weight: 800;">Active Customer</span>
+                                <span class="badge-mini success">VERIFIED</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2: Notification & Order Preferences -->
+                <div class="dashboard-card">
+                    <div class="card-header-bar">
+                        <div class="card-title-group">
+                            <div class="icon-circle icon-alert">
+                                <ion-icon name="notifications-outline"></ion-icon>
+                            </div>
+                            <div>
+                                <h3 class="card-title">Order Updates & Notifications</h3>
+                                <span class="card-sub">Manage real-time alerts for your purchases</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="toggle-options-list">
+                        <div class="toggle-option-row" (click)="togglePreference('whatsappAlerts')">
+                            <div class="toggle-text-wrap">
+                                <div class="toggle-main">
+                                    <ion-icon name="logo-whatsapp" class="whatsapp-icon"></ion-icon>
+                                    <span class="toggle-title">WhatsApp Order Tracking</span>
+                                </div>
+                                <span class="toggle-desc">Instant vehicle dispatch numbers, tracking links, and delivery
+                                    receipts</span>
+                            </div>
+                            <div class="custom-switch" [class.checked]="preferences.whatsappAlerts">
+                                <div class="switch-handle"></div>
+                            </div>
+                        </div>
+
+                        <div class="toggle-option-row" (click)="togglePreference('smsGatePass')">
+                            <div class="toggle-text-wrap">
+                                <div class="toggle-main">
+                                    <ion-icon name="chatbox-ellipses-outline" class="sms-icon"></ion-icon>
+                                    <span class="toggle-title">SMS Delivery Notifications</span>
+                                </div>
+                                <span class="toggle-desc">Direct SMS delivery confirmation and OTP codes on courier
+                                    arrival</span>
+                            </div>
+                            <div class="custom-switch" [class.checked]="preferences.smsGatePass">
+                                <div class="switch-handle"></div>
+                            </div>
+                        </div>
+
+                        <div class="toggle-option-row" (click)="togglePreference('materialPriceUpdates')">
+                            <div class="toggle-text-wrap">
+                                <div class="toggle-main">
+                                    <ion-icon name="pricetag-outline" class="price-icon"></ion-icon>
+                                    <span class="toggle-title">Promotions & Material Price Alerts</span>
+                                </div>
+                                <span class="toggle-desc">Receive notifications on exclusive deals, discounts, and
+                                    market price changes</span>
+                            </div>
+                            <div class="custom-switch" [class.checked]="preferences.materialPriceUpdates">
+                                <div class="switch-handle"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT COLUMN: Orders, Purchases & Customer Care -->
+            <div class="dashboard-col">
+
+                <!-- Card 3: Orders, Rentals & Services -->
+                <div class="dashboard-card">
+                    <div class="card-header-bar">
+                        <div class="card-title-group">
+                            <div class="icon-circle icon-grid">
+                                <ion-icon name="bag-handle-outline"></ion-icon>
+                            </div>
+                            <div>
+                                <h3 class="card-title">Orders & Purchases</h3>
+                                <span class="card-sub">Direct access to orders, rentals, and services</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="shortcuts-tile-grid">
+                        <a routerLink="/tabs/orders" class="shortcut-tile">
+                            <div class="tile-icon-box orange">
+                                <ion-icon name="receipt"></ion-icon>
+                            </div>
+                            <div class="tile-content">
+                                <div class="tile-top">
+                                    <h4 class="tile-title">My Orders & Invoices</h4>
+                                    <span class="tile-badge">{{ totalOrdersCount }} Total</span>
+                                </div>
+                                <p class="tile-desc">Track active dispatches, view invoice PDFs, and monitor delivery
+                                    history</p>
+                            </div>
+                            <ion-icon name="chevron-forward" class="tile-arrow"></ion-icon>
+                        </a>
+
+                        <a routerLink="/cart" class="shortcut-tile">
+                            <div class="tile-icon-box green">
+                                <ion-icon name="cart"></ion-icon>
+                            </div>
+                            <div class="tile-content">
+                                <div class="tile-top">
+                                    <h4 class="tile-title">Shopping Cart</h4>
+                                    <span class="tile-badge-green" *ngIf="cartCount > 0">{{ cartCount }} Items</span>
+                                    <span class="tile-badge-muted" *ngIf="cartCount === 0">Empty</span>
+                                </div>
+                                <p class="tile-desc">Review pending items and proceed to secure checkout</p>
+                            </div>
+                            <ion-icon name="chevron-forward" class="tile-arrow"></ion-icon>
+                        </a>
+
+                        <a routerLink="/tabs/rentals" class="shortcut-tile">
+                            <div class="tile-icon-box purple">
+                                <ion-icon name="construct"></ion-icon>
+                            </div>
+                            <div class="tile-content">
+                                <div class="tile-top">
+                                    <h4 class="tile-title">Machinery & Equipment Hire</h4>
+                                    <span class="tile-badge-purple">Heavy Fleet</span>
+                                </div>
+                                <p class="tile-desc">JCB Backhoes, Excavators, Concrete Mixers, and Certified Fleet</p>
+                            </div>
+                            <ion-icon name="chevron-forward" class="tile-arrow"></ion-icon>
+                        </a>
+
+                        <a routerLink="/tabs/products" class="shortcut-tile">
+                            <div class="tile-icon-box blue">
+                                <ion-icon name="grid"></ion-icon>
+                            </div>
+                            <div class="tile-content">
+                                <div class="tile-top">
+                                    <h4 class="tile-title">Explore Store Catalog</h4>
+                                    <span class="tile-badge-blue">All Products</span>
+                                </div>
+                                <p class="tile-desc">Browse cement, steel, bricks, electrical, and construction supplies
+                                </p>
+                            </div>
+                            <ion-icon name="chevron-forward" class="tile-arrow"></ion-icon>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Card 4: Customer Care & Account Controls -->
+                <div class="dashboard-card security-card">
+                    <div class="card-header-bar">
+                        <div class="card-title-group">
+                            <div class="icon-circle icon-support">
+                                <ion-icon name="headset-outline"></ion-icon>
+                            </div>
+                            <div>
+                                <h3 class="card-title">Customer Care & Support</h3>
+                                <span class="card-sub">24/7 dedicated assistance and account security</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hotline Box -->
+                    <div class="support-hotline-box">
+                        <div class="hotline-text">
+                            <span class="hotline-badge">TOLL FREE CUSTOMER CARE</span>
+                            <h4 class="hotline-num">1800-CIVIL-PRO</h4>
+                            <p class="hotline-sub">Need help with orders, delivery, or refunds? Contact us anytime</p>
+                        </div>
+                        <a href="tel:1800248457" class="hotline-call-btn">
+                            <ion-icon name="call"></ion-icon>
+                            <span>Call Support</span>
+                        </a>
+                    </div>
+
+                    <!-- Session Details -->
+                    <div class="session-info-strip">
+                        <ion-icon name="lock-closed-outline" class="lock-icon"></ion-icon>
+                        <span>Encrypted E-Commerce Session • 256-Bit SSL Protection</span>
+                    </div>
+
+                    <!-- Logout Button -->
+                    <div class="logout-action-box">
+                        <button type="button" class="btn-logout" (click)="logout()">
+                            <ion-icon name="log-out-outline"></ion-icon>
+                            <span>Sign Out of Account</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
         </div>
 
-        <!-- Profile Info -->
-        <ion-list>
-            <ion-item>
-                <ion-icon name="person" slot="start" color="primary"></ion-icon>
-                <ion-label>
-                    <h3>Name</h3>
-                    <p>{{ user.name }}</p>
-                </ion-label>
-            </ion-item>
+        <!-- Bottom spacing buffer for flawless scrolling on all screens -->
+        <div class="profile-bottom-spacer"></div>
 
-            <ion-item *ngIf="user.email">
-                <ion-icon name="mail" slot="start" color="primary"></ion-icon>
-                <ion-label>
-                    <h3>Email</h3>
-                    <p>{{ user.email }}</p>
-                </ion-label>
-            </ion-item>
-
-            <ion-item *ngIf="user.phone">
-                <ion-icon name="call" slot="start" color="primary"></ion-icon>
-                <ion-label>
-                    <h3>Phone</h3>
-                    <p>{{ user.phone }}</p>
-                </ion-label>
-            </ion-item>
-        </ion-list>
-
-        <!-- Actions -->
-        <div class="profile-actions">
-            <ion-button expand="block" fill="outline" color="danger" (click)="logout()">
-                <ion-icon slot="start" name="log-out"></ion-icon>
-                Logout
-            </ion-button>
-        </div>
     </div>
 
-    <!-- Not Logged In State -->
-    <div class="empty-state" *ngIf="!user">
-        <div class="empty-state-icon">👤</div>
-        <div class="empty-state-title">Not Logged In</div>
-        <div class="empty-state-text">Please login to view your profile</div>
-        <ion-button expand="block" class="cta-button" routerLink="/login">
-            Login
-        </ion-button>
+    <!-- Empty State: Not Logged In -->
+    <div class="empty-state-card" *ngIf="!user">
+        <div class="empty-icon-box">
+            <ion-icon name="lock-closed-outline"></ion-icon>
+        </div>
+        <div class="empty-badge">SESSION REQUIRED</div>
+        <h2 class="empty-title">Authentication Required</h2>
+        <p class="empty-desc">You are currently logged out. Sign in with your registered mobile OTP to access your
+            orders, shopping cart, and saved delivery addresses.</p>
+
+        <div class="empty-actions-col">
+            <button type="button" class="login-action-btn" routerLink="/login"
+                [queryParams]="{ returnUrl: '/tabs/profile' }">
+                <ion-icon name="log-in-outline"></ion-icon>
+                <span>Sign In with Mobile OTP</span>
+                <ion-icon name="arrow-forward" class="btn-arrow-end"></ion-icon>
+            </button>
+            <a routerLink="/vendor-portal" class="browse-catalog-link" style="color: #0284c7; font-weight: 600;">
+                <ion-icon name="business-outline"></ion-icon>
+                <span>CivilWorks Vendor Partner Portal</span>
+            </a>
+            <a routerLink="/tabs/home" class="browse-catalog-link">
+                <ion-icon name="home-outline"></ion-icon>
+                <span>Return to Homepage & Catalog</span>
+            </a>
+        </div>
+
+        <div class="empty-features-grid">
+            <div class="feature-item">
+                <ion-icon name="shield-checkmark-outline"></ion-icon>
+                <span>Instant OTP Verification</span>
+            </div>
+            <div class="feature-item">
+                <ion-icon name="receipt-outline"></ion-icon>
+                <span>Order History & Invoices</span>
+            </div>
+            <div class="feature-item">
+                <ion-icon name="trail-sign-outline"></ion-icon>
+                <span>Live Material Tracking</span>
+            </div>
+        </div>
     </div>
 </ion-content>
+
+<!-- Clean E-Commerce Edit Profile Modal Overlay -->
+<div class="custom-modal-backdrop" *ngIf="isEditModalOpen" (click)="closeEditModal()"></div>
+<div class="custom-modal-container" *ngIf="isEditModalOpen">
+    <div class="custom-modal-content">
+        <div class="modal-header">
+            <div class="modal-title-wrap">
+                <div class="modal-icon-box">
+                    <ion-icon name="create"></ion-icon>
+                </div>
+                <div>
+                    <h3 class="modal-title">Edit Profile</h3>
+                    <span class="modal-sub">Update your personal details and delivery address</span>
+                </div>
+            </div>
+            <button type="button" class="modal-close-btn" (click)="closeEditModal()" aria-label="Close modal">✕</button>
+        </div>
+
+        <form class="modal-form" (ngSubmit)="saveProfile()">
+            <div class="form-group">
+                <label class="form-label" for="editName">Full Name</label>
+                <div class="input-wrap">
+                    <ion-icon name="person-outline" class="input-icon"></ion-icon>
+                    <input id="editName" type="text" [(ngModel)]="editForm.name" name="name" class="form-input"
+                        placeholder="Enter your full name" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="editEmail">Email Address</label>
+                <div class="input-wrap">
+                    <ion-icon name="mail-outline" class="input-icon"></ion-icon>
+                    <input id="editEmail" type="email" [(ngModel)]="editForm.email" name="email" class="form-input"
+                        placeholder="Enter your email address" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="editPhone">Mobile Phone</label>
+                <div class="input-wrap">
+                    <ion-icon name="call-outline" class="input-icon"></ion-icon>
+                    <input id="editPhone" type="tel" [(ngModel)]="editForm.phone" name="phone" class="form-input"
+                        placeholder="Enter 10-digit mobile number" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="editFlatNo">Flat No / Villa No</label>
+                <div class="input-wrap">
+                    <ion-icon name="home-outline" class="input-icon"></ion-icon>
+                    <input id="editFlatNo" type="text" [(ngModel)]="editForm.flat_no" name="flat_no" class="form-input"
+                        placeholder="e.g. Flat 402, Building A / Villa 15" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="editLandmark">Landmark</label>
+                <div class="input-wrap">
+                    <ion-icon name="navigate-outline" class="input-icon"></ion-icon>
+                    <input id="editLandmark" type="text" [(ngModel)]="editForm.landmark" name="landmark"
+                        class="form-input" placeholder="e.g. Near Metro Station / Behind Mall" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="editAreaLocality">Area / Locality</label>
+                <div class="input-wrap">
+                    <ion-icon name="location-outline" class="input-icon"></ion-icon>
+                    <input id="editAreaLocality" type="text" [(ngModel)]="editForm.area_locality" name="area_locality"
+                        class="form-input" placeholder="e.g. Madhapur, Hitec City, Hyderabad" />
+                </div>
+            </div>
+
+            <div class="modal-actions-row">
+                <button type="button" class="btn-cancel" (click)="closeEditModal()"
+                    [disabled]="isSaving">Cancel</button>
+                <button type="button" class="btn-save" (click)="saveProfile()" [disabled]="isSaving">
+                    <span *ngIf="!isSaving">Save Changes</span>
+                    <span *ngIf="isSaving" class="saving-text">Saving...</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

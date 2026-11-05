@@ -1,0 +1,466 @@
+.membership-header {
+    --background: #0f172a;
+    background: #0f172a;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+    .header-row {
+        display: flex;
+        align-items: center;
+        padding: 14px 20px;
+        gap: 16px;
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #fff;
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+
+            &:hover {
+                background: rgba(255, 255, 255, 0.2);
+            }
+        }
+
+        .header-title-box {
+            display: flex;
+            flex-direction: column;
+
+            .page-title {
+                color: #fff;
+                font-size: 18px;
+                font-weight: 800;
+                margin: 0;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+
+                .badge-plus {
+                    background: linear-gradient(135deg, #f59e0b, #d97706);
+                    color: #fff;
+                    font-size: 11px;
+                    font-weight: 900;
+                    padding: 2px 8px;
+                    border-radius: 6px;
+                    letter-spacing: 0.5px;
+                }
+            }
+
+            .page-subtitle {
+                color: #94a3b8;
+                font-size: 12px;
+                margin-top: 2px;
+            }
+        }
+    }
+}
+
+.membership-content {
+    --background: #f8fafc;
+
+    .checkout-container {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 24px 16px 40px;
+    }
+
+    .checkout-grid {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 24px;
+
+        @media (max-width: 768px) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* CARD STYLES */
+    .card-box {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        border: 1px solid #e2e8f0;
+        margin-bottom: 20px;
+
+        .card-heading {
+            font-size: 16px;
+            font-weight: 800;
+            color: #0f172a;
+            margin: 0 0 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            ion-icon {
+                font-size: 20px;
+                color: #f59e0b;
+            }
+        }
+    }
+
+    /* PLAN HIGHLIGHT CARD */
+    .plan-card {
+        background: linear-gradient(145deg, #0f172a, #1e293b);
+        color: #fff;
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        position: relative;
+        overflow: hidden;
+
+        &::after {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 140px;
+            height: 140px;
+            background: radial-gradient(circle, rgba(245, 158, 11, 0.25) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .plan-top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+
+            .plan-name-wrap {
+                h3 {
+                    font-size: 22px;
+                    font-weight: 900;
+                    margin: 0;
+                    color: #fff;
+                }
+                span {
+                    color: #f59e0b;
+                    font-size: 13px;
+                    font-weight: 700;
+                }
+            }
+
+            .plan-price-wrap {
+                text-align: right;
+                .price-num {
+                    font-size: 28px;
+                    font-weight: 900;
+                    color: #fff;
+                }
+                .price-period {
+                    font-size: 11px;
+                    color: #94a3b8;
+                    display: block;
+                }
+            }
+        }
+
+        .plan-benefits-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+
+            li {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                font-size: 13px;
+                color: #cbd5e1;
+                margin-bottom: 10px;
+
+                ion-icon {
+                    color: #10b981;
+                    font-size: 16px;
+                    flex-shrink: 0;
+                }
+            }
+        }
+    }
+
+    /* FORM STYLES */
+    .form-group {
+        margin-bottom: 16px;
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            color: #334155;
+            margin-bottom: 6px;
+        }
+
+        .form-input {
+            width: 100%;
+            height: 44px;
+            border-radius: 10px;
+            border: 1px solid #cbd5e1;
+            padding: 0 14px;
+            font-size: 14px;
+            color: #0f172a;
+            background: #fff;
+            outline: none;
+            transition: all 0.2s;
+
+            &:focus {
+                border-color: #f59e0b;
+                box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
+            }
+        }
+
+        textarea.form-input {
+            height: auto;
+            padding: 10px 14px;
+        }
+    }
+
+    .form-grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+
+        @media (max-width: 600px) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* SUMMARY / BREAKDOWN */
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+        color: #475569;
+        margin-bottom: 10px;
+
+        &.total-row {
+            border-top: 1px dashed #cbd5e1;
+            padding-top: 14px;
+            margin-top: 14px;
+            font-size: 18px;
+            font-weight: 900;
+            color: #0f172a;
+
+            .total-val {
+                color: #d97706;
+            }
+        }
+    }
+
+    .btn-pay-now {
+        width: 100%;
+        background: linear-gradient(135deg, #0284c7, #0369a1);
+        color: #fff;
+        border: none;
+        border-radius: 12px;
+        padding: 16px;
+        font-size: 16px;
+        font-weight: 800;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        box-shadow: 0 8px 20px rgba(2, 132, 199, 0.3);
+        transition: all 0.2s;
+        margin-top: 20px;
+
+        &:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(2, 132, 199, 0.4);
+        }
+
+        &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+    }
+
+    .trust-badges {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        margin-top: 16px;
+        color: #64748b;
+        font-size: 11px;
+        font-weight: 600;
+
+        span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+
+            ion-icon {
+                font-size: 14px;
+                color: #10b981;
+            }
+        }
+    }
+}
+
+/* RAZORPAY MODAL SIMULATION */
+.rzp-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(4px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+
+    .rzp-modal {
+        background: #fff;
+        width: 100%;
+        max-width: 440px;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+        animation: rzpPop 0.25s ease-out;
+
+        .rzp-header {
+            background: #0c2340;
+            color: #fff;
+            padding: 18px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            .rzp-brand {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+
+                .rzp-logo-badge {
+                    background: #0284c7;
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 8px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: 900;
+                    font-size: 15px;
+                }
+
+                h4 {
+                    margin: 0;
+                    font-size: 15px;
+                    font-weight: 800;
+                }
+                span {
+                    font-size: 11px;
+                    color: #94a3b8;
+                }
+            }
+
+            .rzp-amount {
+                text-align: right;
+                .amt-val {
+                    font-size: 18px;
+                    font-weight: 900;
+                    color: #38bdf8;
+                }
+                .amt-sub {
+                    font-size: 10px;
+                    color: #94a3b8;
+                }
+            }
+        }
+
+        .rzp-body {
+            padding: 20px;
+
+            .rzp-payment-methods {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                margin-bottom: 20px;
+
+                .rzp-option {
+                    display: flex;
+                    align-items: center;
+                    padding: 12px 14px;
+                    border-radius: 10px;
+                    border: 1px solid #e2e8f0;
+                    cursor: pointer;
+                    transition: all 0.2s;
+                    gap: 12px;
+
+                    &:hover, &.selected {
+                        border-color: #0284c7;
+                        background: #f0f9ff;
+                    }
+
+                    ion-icon {
+                        font-size: 22px;
+                        color: #0284c7;
+                    }
+
+                    .opt-title {
+                        font-size: 13px;
+                        font-weight: 700;
+                        color: #0f172a;
+                        margin: 0;
+                    }
+                    .opt-desc {
+                        font-size: 11px;
+                        color: #64748b;
+                        margin: 0;
+                    }
+                }
+            }
+
+            .btn-rzp-submit {
+                width: 100%;
+                background: #0284c7;
+                color: #fff;
+                border: none;
+                border-radius: 10px;
+                padding: 14px;
+                font-size: 15px;
+                font-weight: 800;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                transition: all 0.2s;
+
+                &:hover {
+                    background: #0369a1;
+                }
+            }
+
+            .rzp-footer-tag {
+                text-align: center;
+                font-size: 10px;
+                color: #94a3b8;
+                margin-top: 14px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 4px;
+            }
+        }
+    }
+}
+
+@keyframes rzpPop {
+    from {
+        opacity: 0;
+        transform: scale(0.92);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+

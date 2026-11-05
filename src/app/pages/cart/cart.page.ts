@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { AlertController } from '@ionic/angular';
 import { CartService } from '../../services/cart.service';
 import { AuthService } from '../../services/auth.service';
@@ -18,7 +19,8 @@ export class CartPage implements OnInit {
         private cartService: CartService,
         private authService: AuthService,
         private router: Router,
-        private alertController: AlertController
+        private alertController: AlertController,
+        private location: Location
     ) { }
 
     ngOnInit() {
@@ -30,24 +32,32 @@ export class CartPage implements OnInit {
         });
     }
 
-    increaseQuantity(itemId: number) {
-        const item = this.cartItems.find(i => i.id === itemId);
-        if (item) {
-            this.cartService.updateQuantity(itemId, item.quantity + 1).subscribe();
+    increaseQuantity(item: CartItem) {
+        this.cartService.updateQuantity(item.id, item.quantity + 1).subscribe();
+    }
+
+    decreaseQuantity(item: CartItem) {
+        if (item.quantity > 1) {
+            this.cartService.updateQuantity(item.id, item.quantity - 1).subscribe();
         }
     }
 
-    decreaseQuantity(itemId: number) {
-        const item = this.cartItems.find(i => i.id === itemId);
-        if (item && item.quantity > 1) {
-            this.cartService.updateQuantity(itemId, item.quantity - 1).subscribe();
+    increaseDuration(item: CartItem) {
+        const newDur = (item.rental_duration || 1) + 1;
+        this.cartService.updateItem(item.id, { rental_duration: newDur }).subscribe();
+    }
+
+    decreaseDuration(item: CartItem) {
+        if ((item.rental_duration || 1) > 1) {
+            const newDur = (item.rental_duration || 1) - 1;
+            this.cartService.updateItem(item.id, { rental_duration: newDur }).subscribe();
         }
     }
 
-    async removeItem(itemId: number) {
+    async removeItem(item: CartItem) {
         const alert = await this.alertController.create({
             header: 'Remove Item',
-            message: 'Are you sure you want to remove this item from cart?',
+            message: `Remove "${item.product?.name || 'this item'}" from your cart?`,
             buttons: [
                 {
                     text: 'Cancel',
@@ -57,7 +67,7 @@ export class CartPage implements OnInit {
                     text: 'Remove',
                     role: 'destructive',
                     handler: () => {
-                        this.cartService.removeItem(itemId).subscribe();
+                        this.cartService.removeItem(item.id).subscribe();
                     }
                 }
             ]
@@ -76,7 +86,15 @@ export class CartPage implements OnInit {
     }
 
     continueShopping() {
-        this.router.navigate(['/tabs/products']);
+        this.goBack();
+    }
+
+    goBack() {
+        if (window.history.length > 1) {
+            this.location.back();
+        } else {
+            this.router.navigate(['/tabs/products']);
+        }
     }
 
     getProductImage(product: any): string {

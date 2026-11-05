@@ -26,7 +26,6 @@ export class CartService {
         });
     }
 
-
     loadCart() {
         const token = localStorage.getItem('civilworks_token');
         if (!token) {
@@ -42,13 +41,18 @@ export class CartService {
         });
     }
 
-    addToCart(product_id: number, quantity: number = 1): Observable<any> {
-        return this.http.post<any>(`${environment.apiUrl}/cart`, { product_id, quantity })
+    addToCart(product_id: number, quantity: number = 1, rental_duration: number = 1): Observable<any> {
+        return this.http.post<any>(`${environment.apiUrl}/cart`, { product_id, quantity, rental_duration })
             .pipe(tap(res => this.cartSubject.next(res.data)));
     }
 
     updateQuantity(itemId: number, quantity: number): Observable<any> {
         return this.http.put<any>(`${environment.apiUrl}/cart/${itemId}`, { quantity })
+            .pipe(tap(res => this.cartSubject.next(res.data)));
+    }
+
+    updateItem(itemId: number, data: { quantity?: number, rental_duration?: number }): Observable<any> {
+        return this.http.put<any>(`${environment.apiUrl}/cart/${itemId}`, data)
             .pipe(tap(res => this.cartSubject.next(res.data)));
     }
 
@@ -61,7 +65,7 @@ export class CartService {
         this.cartSubject.next({ items: [], subtotal: 0 });
     }
 
-    // ── Synchronous helpers (read from BehaviorSubject snapshot) ──
+    // ── Synchronous helpers ──
 
     getCart(): any[] {
         const cart = this.cartSubject.getValue();

@@ -1,75 +1,186 @@
-<ion-header [translucent]="true">
-    <ion-toolbar>
-        <ion-buttons slot="start">
-            <ion-back-button defaultHref="/tabs/products"></ion-back-button>
-        </ion-buttons>
-        <ion-title>Shopping Cart</ion-title>
-    </ion-toolbar>
+<ion-header class="ion-no-border modern-cart-header" [translucent]="true">
+    <div class="cart-header-row">
+        <div class="header-left">
+            <button class="back-btn" (click)="goBack()" type="button" aria-label="Go Back" title="Go back to previous page">
+                <ion-icon name="arrow-back"></ion-icon>
+            </button>
+            <div class="title-wrap">
+                <h1 class="cart-title">Shopping Cart</h1>
+                <span class="cart-subtitle" *ngIf="cartItems.length > 0">
+                    {{ cartItems.length }} item{{ cartItems.length === 1 ? '' : 's' }} in your cart
+                </span>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <button class="continue-btn" (click)="continueShopping()" type="button">
+                <span>Continue Shopping</span>
+                <ion-icon name="arrow-forward"></ion-icon>
+            </button>
+        </div>
+    </div>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-    <!-- Cart Items -->
-    <div *ngIf="cartItems.length > 0">
-        <ion-list>
-            <ion-item *ngFor="let item of cartItems" class="cart-item">
-                <ion-thumbnail slot="start">
-                    <img [src]="getProductImage(item.product)" (error)="onImageError($event, item.product)" [alt]="item.product.name">
-                </ion-thumbnail>
-                <ion-label>
-                    <h2>{{ item.product.name }}</h2>
-                    <p class="item-price">₹{{ item.product.price }} × {{ item.quantity }}</p>
-                    <div class="quantity-controls">
-                        <button class="qty-btn" (click)="decreaseQuantity(+item.product.id)">−</button>
-                        <span class="qty-value">{{ item.quantity }}</span>
-                        <button class="qty-btn" (click)="increaseQuantity(+item.product.id)">+</button>
+<ion-content [fullscreen]="true" class="cart-content">
+    <div class="cart-page-wrapper">
+        <!-- If Cart Has Items -->
+        <div class="cart-main-grid" *ngIf="cartItems.length > 0">
+            <!-- Left Column: Items List -->
+            <div class="items-column">
+                <div class="items-card-container">
+                    <div class="items-header-strip">
+                        <span class="strip-title">Cart Items</span>
+                        <span class="strip-price-label">Price</span>
                     </div>
-                </ion-label>
-                <div slot="end" class="item-total">
-                    <div class="total-price">₹{{ item.product.price * item.quantity }}</div>
-                    <ion-button fill="clear" color="danger" (click)="removeItem(+item.product.id)">
-                        <ion-icon slot="icon-only" name="trash"></ion-icon>
-                    </ion-button>
-                </div>
-            </ion-item>
-        </ion-list>
 
-        <!-- Total Card -->
-        <ion-card class="total-card">
-            <ion-card-content>
-                <div class="total-row">
-                    <span class="total-label">Subtotal</span>
-                    <span class="total-value">₹{{ total }}</span>
-                </div>
-                <div class="total-row">
-                    <span class="total-label">Delivery</span>
-                    <span class="total-value">FREE</span>
-                </div>
-                <ion-item lines="none" class="total-divider"></ion-item>
-                <div class="total-row grand-total">
-                    <span class="total-label">Total</span>
-                    <span class="total-value">₹{{ total }}</span>
-                </div>
-            </ion-card-content>
-        </ion-card>
-    </div>
+                    <div class="item-card-row" *ngFor="let item of cartItems">
+                        <!-- Product Thumbnail -->
+                        <div class="item-thumb-box">
+                            <img [src]="getProductImage(item.product)" (error)="onImageError($event, item.product)" [alt]="item.product.name">
+                        </div>
 
-    <!-- Empty Cart State -->
-    <div class="empty-state" *ngIf="cartItems.length === 0">
-        <div class="empty-state-icon">🛒</div>
-        <div class="empty-state-title">Your Cart is Empty</div>
-        <div class="empty-state-text">Add some products to get started</div>
-        <ion-button expand="block" class="cta-button" (click)="continueShopping()">
-            Start Shopping
-        </ion-button>
+                        <!-- Item Details -->
+                        <div class="item-info-col">
+                            <div class="item-badge-row">
+                                <span class="procurement-pill" [class.rental-pill]="item.subcategory_type === 'renting'">
+                                    {{ item.subcategory_type === 'renting' ? 'Rental' : 'Direct Purchase' }}
+                                </span>
+                                <span class="category-tag" *ngIf="item.product?.category_name">
+                                    {{ item.product.category_name }}
+                                </span>
+                            </div>
+
+                            <h3 class="item-name">{{ item.product.name }}</h3>
+
+                            <div class="item-unit-rate">
+                                <span class="rate-val">₹{{ item.product.price }}</span>
+                                <span class="rate-unit" *ngIf="item.unit_name">/ {{ item.unit_name }}</span>
+                            </div>
+
+                            <!-- Duration Stepper for Rental -->
+                            <div class="stepper-row" *ngIf="item.subcategory_type === 'renting'">
+                                <span class="control-label">Rental Duration:</span>
+                                <div class="stepper-box">
+                                    <button type="button" class="stepper-btn" (click)="decreaseDuration(item)" [disabled]="(item.rental_duration || 1) <= 1">−</button>
+                                    <span class="stepper-value">{{ item.rental_duration || 1 }} {{ item.unit_name || 'Days' }}</span>
+                                    <button type="button" class="stepper-btn" (click)="increaseDuration(item)">+</button>
+                                </div>
+                            </div>
+
+                            <!-- Quantity Stepper -->
+                            <div class="stepper-row">
+                                <span class="control-label">Quantity:</span>
+                                <div class="stepper-box">
+                                    <button type="button" class="stepper-btn" (click)="decreaseQuantity(item)">−</button>
+                                    <span class="stepper-value">{{ item.quantity }}</span>
+                                    <button type="button" class="stepper-btn" (click)="increaseQuantity(item)">+</button>
+                                </div>
+                            </div>
+
+                            <!-- Item Actions -->
+                            <div class="item-action-links">
+                                <button type="button" class="remove-action-btn" (click)="removeItem(item)">
+                                    <ion-icon name="trash-outline"></ion-icon>
+                                    <span>Remove</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Row Total Price -->
+                        <div class="item-total-col">
+                            <div class="row-price">
+                                ₹{{ item.item_total || ((item.rental_duration ? item.product.price * item.rental_duration : item.product.price) * item.quantity) }}
+                            </div>
+                            <span class="tax-hint">Inclusive of all taxes</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trust Guarantee Section -->
+                <div class="cart-trust-bar">
+                    <div class="trust-item">
+                        <ion-icon name="shield-checkmark" class="trust-icon"></ion-icon>
+                        <div class="trust-text">
+                            <strong>100% Quality Inspected</strong>
+                            <span>Direct manufacturer verified</span>
+                        </div>
+                    </div>
+                    <div class="trust-item">
+                        <ion-icon name="flash" class="trust-icon"></ion-icon>
+                        <div class="trust-text">
+                            <strong>Express Site Dispatch</strong>
+                            <span>Fast delivery to your site</span>
+                        </div>
+                    </div>
+                    <div class="trust-item">
+                        <ion-icon name="lock-closed" class="trust-icon"></ion-icon>
+                        <div class="trust-text">
+                            <strong>Secure Transactions</strong>
+                            <span>256-bit encrypted checkout</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Order Summary Card -->
+            <div class="summary-column">
+                <div class="summary-card">
+                    <h2 class="summary-title">Order Summary</h2>
+
+                    <div class="summary-line">
+                        <span class="line-label">Items Subtotal ({{ cartItems.length }})</span>
+                        <span class="line-val">₹{{ total }}</span>
+                    </div>
+
+                    <div class="summary-line">
+                        <span class="line-label">Site Delivery</span>
+                        <span class="free-badge">FREE</span>
+                    </div>
+
+                    <div class="summary-line">
+                        <span class="line-label">Estimated GST & Taxes</span>
+                        <span class="included-tag">Included</span>
+                    </div>
+
+                    <div class="summary-divider"></div>
+
+                    <div class="summary-line grand-total-line">
+                        <span class="total-label">Total Payable</span>
+                        <span class="total-amount">₹{{ total }}</span>
+                    </div>
+
+                    <button type="button" class="checkout-submit-btn" (click)="proceedToCheckout()">
+                        <ion-icon name="lock-closed-outline"></ion-icon>
+                        <span>Proceed to Checkout</span>
+                        <span class="btn-amount">₹{{ total }}</span>
+                    </button>
+
+                    <div class="payment-badges-row">
+                        <span>Accepted Payments:</span>
+                        <div class="payment-icons">
+                            <span class="pay-tag">UPI</span>
+                            <span class="pay-tag">Cards</span>
+                            <span class="pay-tag">NetBanking</span>
+                            <span class="pay-tag">Pay on Site</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty Cart State -->
+        <div class="empty-cart-container" *ngIf="cartItems.length === 0">
+            <div class="empty-cart-card">
+                <div class="empty-icon-wrap">
+                    <ion-icon name="cart-outline"></ion-icon>
+                </div>
+                <h2>Your Shopping Cart is Empty</h2>
+                <p>Browse our catalog of construction materials, hardware, and rental equipment ready for direct dispatch.</p>
+                <button type="button" class="explore-catalog-btn" (click)="continueShopping()">
+                    <ion-icon name="cube-outline"></ion-icon>
+                    <span>Explore Products Catalog</span>
+                </button>
+            </div>
+        </div>
     </div>
 </ion-content>
-
-<!-- Checkout Button -->
-<ion-footer *ngIf="cartItems.length > 0">
-    <ion-toolbar>
-        <ion-button expand="block" class="cta-button" (click)="proceedToCheckout()">
-            <ion-icon slot="start" name="card"></ion-icon>
-            Proceed to Checkout (₹{{ total }})
-        </ion-button>
-    </ion-toolbar>
-</ion-footer>

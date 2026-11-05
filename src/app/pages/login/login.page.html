@@ -104,7 +104,12 @@
                     <div *ngIf="step === 'phone'" class="step-container fade-in">
                         <!-- Top Header inside Card -->
                         <div class="card-top-bar">
-                            <span class="step-badge-pill">STEP 1 OF 2</span>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <button type="button" class="page-back-btn light-btn" (click)="goBack()" title="Go back to previous page" aria-label="Go back" style="width: 32px; height: 32px; min-width: 32px; font-size: 16px;">
+                                    <ion-icon name="arrow-back" style="font-size: 16px;"></ion-icon>
+                                </button>
+                                <span class="step-badge-pill">STEP 1 OF 2</span>
+                            </div>
                             <button *ngIf="showSkip" (click)="skipLogin()" class="card-skip-btn" type="button">
                                 <span>Skip</span>
                                 <ion-icon name="arrow-forward-outline"></ion-icon>

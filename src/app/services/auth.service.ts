@@ -70,6 +70,14 @@ export class AuthService {
     }
 
     setSession(user: any, token: string): void {
+        const prevUser = this.getUser();
+        if (prevUser && prevUser.id !== user.id) {
+            localStorage.removeItem('civilworks_product_orders');
+            localStorage.removeItem('civilworks_helper_bookings');
+            localStorage.removeItem('civilworks_rental_bookings');
+            localStorage.removeItem('civilworks_profile_prefs');
+            localStorage.removeItem('civilworks_last_order');
+        }
         localStorage.setItem(this.TOKEN_KEY, token);
         localStorage.setItem(this.AUTH_STORAGE_KEY, JSON.stringify(user));
         this.userSubject.next(user);
@@ -122,15 +130,45 @@ export class AuthService {
         this.userSubject.next(null);
         localStorage.removeItem(this.AUTH_STORAGE_KEY);
         localStorage.removeItem(this.TOKEN_KEY);
+        localStorage.removeItem('civilworks_user');
+        localStorage.removeItem('civilworks_token');
+        localStorage.removeItem('civilworks_product_orders');
+        localStorage.removeItem('civilworks_helper_bookings');
+        localStorage.removeItem('civilworks_rental_bookings');
+        localStorage.removeItem('civilworks_profile_prefs');
+        localStorage.removeItem('civilworks_last_order');
     }
 
     updateUserProfile(data: any): Observable<any> {
         return this.http.put<any>(`${environment.apiUrl}/auth/me`, data)
             .pipe(
                 tap(res => {
-                    if (res?.status === 'success' && res.data?.user) {
-                        localStorage.setItem(this.AUTH_STORAGE_KEY, JSON.stringify(res.data.user));
-                        this.userSubject.next(res.data.user);
+                    const updatedUser = res?.data?.user || res?.data;
+                    if (res?.status === 'success' && updatedUser) {
+                        const existingUser = this.getUser() || {};
+                        const merged = { ...existingUser, ...updatedUser };
+                        localStorage.setItem(this.AUTH_STORAGE_KEY, JSON.stringify(merged));
+                        this.userSubject.next(merged);
+                    }
+                })
+            );
+    }
+
+    isPlusMember(): boolean {
+        const u: any = this.getUser();
+        return !!(u && (u.is_plus_member === 1 || u.is_plus_member === true || u.is_plus_member === '1'));
+    }
+
+    upgradeMembership(data: { plan: string; payment_id: string; amount: number }): Observable<any> {
+        return this.http.post<any>(`${environment.apiUrl}/users/upgrade-membership`, data)
+            .pipe(
+                tap((res: any) => {
+                    const updatedUser = res?.data?.user;
+                    if (res?.status === 'success' && updatedUser) {
+                        const existingUser = this.getUser() || {};
+                        const merged = { ...existingUser, ...updatedUser };
+                        localStorage.setItem(this.AUTH_STORAGE_KEY, JSON.stringify(merged));
+                        this.userSubject.next(merged);
                     }
                 })
             );
@@ -150,7 +188,7 @@ export class AuthService {
                 }
             }),
             catchError(err => {
-                if (err.status === 401 || err.status === 403) {
+                if (err.status === 401 || err.status === 403 || err.status === 404) {
                     this.logout();
                 }
                 return of(null);

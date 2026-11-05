@@ -1,0 +1,88 @@
+<div class="nav-dropdown-host">
+    <!-- Hamburger Trigger Button -->
+    <button type="button" class="hamburger-menu-btn" [class.active]="isOpen" (click)="toggle()"
+        aria-label="Toggle navigation menu" title="Navigation Menu">
+        <div class="hamburger-bars">
+            <span class="bar bar-1"></span>
+            <span class="bar bar-2"></span>
+            <span class="bar bar-3"></span>
+            <span class="bar bar-4"></span>
+        </div>
+    </button>
+
+    <!-- Backdrop overlay -->
+    <div class="dropdown-backdrop" *ngIf="isOpen" (click)="close()"></div>
+
+    <!-- Dropdown Menu Box -->
+    <div class="nav-dropdown-menu" *ngIf="isOpen">
+        <!-- Header Banner with Sector -->
+        <div class="dropdown-header">
+            <div class="header-left">
+                <span class="badge-mini">QUICK NAVIGATION</span>
+                <h4 class="dropdown-title">CivilWorks Menu</h4>
+            </div>
+            <div class="sector-tag" *ngIf="activeSectorName">
+                <span class="pulse-dot"></span>
+                <span class="sector-label">{{ activeSectorName }}</span>
+            </div>
+        </div>
+
+        <!-- Navigation Links -->
+        <div class="dropdown-body">
+            <!-- 1. Home -->
+            <div class="nav-menu-item" [class.item-active]="isActive('/tabs/home')" (click)="navigate('/tabs/home')">
+                <div class="icon-box icon-home">
+                    <ion-icon name="home"></ion-icon>
+                </div>
+                <div class="item-text">
+                    <div class="item-title">Home</div>
+                    <div class="item-desc">Dashboard & highlights</div>
+                </div>
+                <span class="active-indicator" *ngIf="isActive('/tabs/home')">Active</span>
+                <ion-icon name="chevron-forward" class="arrow-icon" *ngIf="!isActive('/tabs/home')"></ion-icon>
+            </div>
+
+
+            <!-- 4. Orders -->
+            <div class="nav-menu-item" [class.item-active]="isActive('/tabs/orders')"
+                (click)="navigate('/tabs/orders')">
+                <div class="icon-box icon-orders">
+                    <ion-icon name="receipt"></ion-icon>
+                </div>
+                <div class="item-text">
+                    <div class="item-title">My Orders & Bookings</div>
+                    <div class="item-desc">Status, deliveries & bills</div>
+                </div>
+                <span class="active-indicator" *ngIf="isActive('/tabs/orders')">Active</span>
+                <ion-icon name="chevron-forward" class="arrow-icon" *ngIf="!isActive('/tabs/orders')"></ion-icon>
+            </div>
+
+            <!-- SOP (Sequence of Operations) -->
+
+
+            <!-- 5. Profile -->
+            <div class="nav-menu-item" [class.item-active]="isActive('/tabs/profile')"
+                (click)="navigate('/tabs/profile')">
+                <div class="icon-box icon-profile">
+                    <ion-icon name="person"></ion-icon>
+                </div>
+                <div class="item-text">
+                    <div class="item-title">My Profile</div>
+                    <div class="item-desc">Personal info, orders & addresses</div>
+                </div>
+                <span class="active-indicator" *ngIf="isActive('/tabs/profile')">Active</span>
+                <ion-icon name="chevron-forward" class="arrow-icon" *ngIf="!isActive('/tabs/profile')"></ion-icon>
+            </div>
+
+            <!-- 6. Vendor Portal -->
+
+
+            <!-- Dropdown Footer -->
+            <div class="dropdown-footer">
+                <button type="button" class="sector-switch-action" (click)="navigate('/sector-select')">
+                    <ion-icon name="swap-horizontal-outline"></ion-icon>
+                    <span>Switch Business Sector</span>
+                </button>
+            </div>
+        </div>
+    </div>

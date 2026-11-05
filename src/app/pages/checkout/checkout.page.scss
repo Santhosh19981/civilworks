@@ -1229,3 +1229,79 @@ $text-soft: #94A3B8;
         }
     }
 }
+
+// ── ACTIVE PROJECT EDIT NOTICE BANNER ──
+.edit-project-alert-banner {
+    background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+    border: 1.5px solid #F59E0B;
+    border-radius: 20px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.15);
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 5px;
+        height: 100%;
+        background: #F59E0B;
+    }
+
+    .alert-icon-box {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: rgba(245, 158, 11, 0.15);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+
+        ion-icon {
+            font-size: 22px;
+            color: #F59E0B;
+        }
+    }
+
+    .alert-text-box {
+        flex: 1;
+
+        .alert-tag {
+            background: #F59E0B;
+            color: #0F172A;
+            font-size: 9px;
+            font-weight: 800;
+            padding: 2px 7px;
+            border-radius: 5px;
+            letter-spacing: 0.05em;
+            display: inline-block;
+            margin-bottom: 3px;
+        }
+
+        h4 {
+            font-size: 15px;
+            font-weight: 800;
+            color: #FFFFFF;
+            margin: 0 0 2px;
+        }
+
+        p {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.75);
+            margin: 0;
+            line-height: 1.4;
+
+            strong {
+                color: #FFFFFF;
+            }
+        }
+    }
+}

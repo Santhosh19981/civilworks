@@ -1,0 +1,761 @@
+<div class="sop-dashboard-layout">
+    <!-- MAIN APP WRAPPER (No left sidebar as requested) -->
+    <main class="sop-main-wrapper">
+        <!-- TOP HEADER BAR -->
+        <header class="sop-top-header">
+            <div class="header-left-col">
+                <div class="brand-helmet-wrap" routerLink="/tabs/home" title="Civil Engineers Home">
+                    <svg viewBox="0 0 64 64" width="38" height="38" fill="none">
+                        <path d="M32 10C18 10 10 24 10 38H54C54 24 46 10 32 10Z" fill="#F59E0B" />
+                        <rect x="6" y="38" width="52" height="6" rx="3" fill="#D97706" />
+                        <path d="M22 13C22 13 28 22 28 38H36C36 22 42 13 42 13" stroke="#FBBF24" stroke-width="3" stroke-linecap="round" />
+                    </svg>
+                    <div class="brand-text">
+                        <h2 class="brand-title">CIVIL ENGINEERS</h2>
+                        <span class="brand-tagline">Build Better Together</span>
+                    </div>
+                </div>
+                <div class="header-divider"></div>
+                <div class="heading-text-group">
+                    <h1 class="page-main-heading">SOP (Sequence of Operations)</h1>
+                    <p class="page-sub-heading">View and track the sequence of services and their sub tasks for your order.</p>
+                </div>
+            </div>
+
+            <!-- Segmented Pill Toggle: Chat & SOP -->
+            <div class="header-center-toggle">
+                <div class="segmented-pill-wrap">
+                    <button type="button" class="pill-btn" [class.active]="activeTab === 'chat'" (click)="setTab('chat')" title="Open Project Chat">
+                        <ion-icon name="chatbubble-outline"></ion-icon>
+                        <span>Chat</span>
+                    </button>
+                    <button type="button" class="pill-btn" [class.active]="activeTab === 'sop'" (click)="setTab('sop')" title="View Sequence of Operations">
+                        <ion-icon name="list-outline"></ion-icon>
+                        <span>SOP</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Header Right Profile & Notification Area -->
+            <div class="header-right-col">
+                <div class="notification-bell-btn" title="Notifications">
+                    <ion-icon name="notifications-outline"></ion-icon>
+                    <span class="bell-badge">3</span>
+                </div>
+
+                <div class="customer-profile-pill" routerLink="/tabs/profile">
+                    <div class="profile-avatar">
+                        <ion-icon name="person"></ion-icon>
+                    </div>
+                    <span class="profile-name">{{ customerDisplayName }}</span>
+                    <ion-icon name="chevron-down-outline" class="avatar-arrow"></ion-icon>
+                </div>
+            </div>
+        </header>
+
+        <!-- PAGE CONTENT CONTAINER -->
+        <div class="sop-content-area">
+            
+            <!-- ORDER INFORMATION PANEL (Direct display without dropdown selector) -->
+            <section class="order-info-card" *ngIf="sopData">
+                <div class="order-info-item order-brand-col">
+                    <span class="order-number-title">Order #{{ sopData.order_no }}</span>
+                    <span class="order-project-subtitle">Project: {{ sopData.project_name || 'Office Building Renovation' }}</span>
+                </div>
+
+                <div class="order-info-item">
+                    <div class="info-icon-badge bg-blue-tint">
+                        <ion-icon name="person-outline"></ion-icon>
+                    </div>
+                    <div class="info-text-group">
+                        <span class="info-label">Customer</span>
+                        <strong class="info-value">{{ customerOrgName || sopData.customer_organization || sopData.customer_name || 'Customer' }}</strong>
+                    </div>
+                </div>
+
+                <div class="order-info-item">
+                    <div class="info-icon-badge bg-purple-tint">
+                        <ion-icon name="business-outline"></ion-icon>
+                    </div>
+                    <div class="info-text-group">
+                        <span class="info-label">Vendor</span>
+                        <strong class="info-value">{{ sopData.vendor?.name || 'XYZ Civil Works' }}</strong>
+                    </div>
+                </div>
+
+                <div class="order-info-item">
+                    <div class="info-icon-badge bg-amber-tint">
+                        <ion-icon name="calendar-outline"></ion-icon>
+                    </div>
+                    <div class="info-text-group">
+                        <span class="info-label">Order Date</span>
+                        <strong class="info-value">{{ sopData.created_at | date:'dd MMM yyyy' }}</strong>
+                    </div>
+                </div>
+            </section>
+
+            <!-- LOADING SKELETON -->
+            <div class="sop-loading-skeleton" *ngIf="loading">
+                <ion-spinner name="crescent"></ion-spinner>
+                <span>Loading Sequence of Operations...</span>
+            </div>
+
+            <!-- EMPTY STATE -->
+            <div class="sop-empty-state" *ngIf="!loading && (!sopData || !sopData.services || sopData.services.length === 0)">
+                <ion-icon name="clipboard-outline"></ion-icon>
+                <h3>No SOP Configured Yet</h3>
+                <p>Services and sequence of operations have not been assigned to this order yet.</p>
+                <button type="button" class="btn-refresh" (click)="loadInitialData()">Refresh</button>
+            </div>
+
+            <!-- COMPLETED ORDER EXECUTIVE SHOWCASE CARD (Read-only, client-ready) -->
+            <div class="completed-order-showcase-card" *ngIf="isOrderClosed && sopData">
+                <div class="showcase-top-row">
+                    <div class="showcase-badge">
+                        <ion-icon name="checkmark-done-circle"></ion-icon>
+                        <span>PROJECT ORDER COMPLETED & DELIVERED</span>
+                    </div>
+                    <div class="showcase-completion-date">
+                        <ion-icon name="calendar-outline"></ion-icon>
+                        <span>Verified Completion Date: <strong>{{ completedOrderDate ? (completedOrderDate | date:'dd MMM yyyy, h:mm a') : (sopData.created_at | date:'dd MMM yyyy') }}</strong></span>
+                    </div>
+                </div>
+                <div class="showcase-meta-grid">
+                    <div class="sc-meta-item">
+                        <span class="sc-lbl">PROJECT ORDER</span>
+                        <strong class="sc-val">#{{ sopData.order_no }}</strong>
+                    </div>
+                    <div class="sc-meta-item">
+                        <span class="sc-lbl">CLIENT / CUSTOMER</span>
+                        <strong class="sc-val">{{ customerOrgName || sopData.customer_name || 'Customer' }}</strong>
+                    </div>
+                    <div class="sc-meta-item">
+                        <span class="sc-lbl">TRADE PARTNER / VENDOR</span>
+                        <strong class="sc-val">{{ sopData.vendor?.name || 'Partner' }}</strong>
+                    </div>
+                    <div class="sc-meta-item">
+                        <span class="sc-lbl">STATUS</span>
+                        <strong class="sc-val text-success">All Services Concluded & Verified</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TWO COLUMN MAIN WORKSPACE -->
+            <div class="sop-two-column-grid" *ngIf="!loading && sopData && sopData.services && sopData.services.length > 0">
+                
+                <!-- LEFT COLUMN: CONTINUOUS VERTICAL STEPPER TIMELINE -->
+                <section class="service-sequence-col">
+                    <div class="sequence-panel-header">
+                        <div class="panel-heading-wrap">
+                            <h2 class="panel-section-title">Sequence of Operations (SOP)</h2>
+                            <span class="panel-order-chip">#{{ sopData.order_no }}</span>
+                        </div>
+                        
+                        <!-- Status Color Combinations Legend: Green, Orange, White -->
+                        <div class="status-legend-bar">
+                            <span class="legend-item" title="Work Completed">
+                                <span class="legend-circle circle-completed"></span>
+                                <span>Completed</span>
+                            </span>
+                            <span class="legend-item" title="Work In Process">
+                                <span class="legend-circle circle-in-progress"></span>
+                                <span>In Process</span>
+                            </span>
+                            <span class="legend-item" title="Work Not Yet Started">
+                                <span class="legend-circle circle-pending"></span>
+                                <span>Not Started</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Continuous Unified Stepper Track Container (Flipkart Order Tracking Style) -->
+                    <div class="stepper-timeline-container unified-spine-stepper">
+                        <div class="stepper-service-cluster" *ngFor="let s of sopData.services; let i = index; let isLastSvc = last"
+                             [class.is-completed]="s.service_status === 'completed'"
+                             [class.is-in-progress]="s.service_status === 'in_progress'"
+                             [class.is-pending]="s.service_status === 'pending'"
+                             [class.is-selected]="selectedService?.id === s.id">
+
+                            <!-- 1. MAJOR SERVICE NODE (Large Dot on continuous vertical spine) -->
+                            <div class="timeline-row major-service-row"
+                                 [draggable]="!isOrderClosed"
+                                 (dragstart)="!isOrderClosed && onDragStart(i, $event)"
+                                 (dragover)="!isOrderClosed && onDragOver($event)"
+                                 (drop)="!isOrderClosed && onDrop(i, $event)">
+
+                                <!-- Drag Handle -->
+                                <div class="spine-drag-col" *ngIf="!isOrderClosed" title="Drag to reorder service sequence">
+                                    <div class="drag-dots">
+                                        <span></span><span></span>
+                                        <span></span><span></span>
+                                        <span></span><span></span>
+                                    </div>
+                                </div>
+
+                                <!-- Spine Track Column with Vertical Line and Large Dot -->
+                                <div class="spine-track-col major-track-col">
+                                    <!-- Vertical Line Segment -->
+                                    <div class="spine-line-segment" 
+                                         [class.is-first]="i === 0"
+                                         [class.is-last]="isLastSvc && (!s.subtasks || s.subtasks.length === 0)"
+                                         [ngClass]="s.service_status"></div>
+
+                                    <!-- Large Circle Dot (Flipkart Style) -->
+                                    <div class="spine-large-dot" 
+                                         [ngClass]="s.service_status"
+                                         [title]="'Service ' + (s.sequence_order || (i+1)) + ': ' + getStatusText(s.service_status)">
+                                        <ion-icon *ngIf="s.service_status === 'completed'" name="checkmark"></ion-icon>
+                                        <span *ngIf="s.service_status === 'in_progress'" class="inner-pulse-dot"></span>
+                                        <span *ngIf="s.service_status === 'pending'" class="inner-pending-empty"></span>
+                                    </div>
+                                </div>
+
+                                <!-- Major Service Content Card -->
+                                <div class="spine-node-card major-service-card" (click)="selectService(s)">
+                                    <div class="service-card-main-bar">
+                                        <!-- Title & Badge Group -->
+                                        <div class="service-heading-wrap">
+                                            <span class="service-seq-badge">{{ s.sequence_order || (i + 1) }}.</span>
+                                            <h3 class="service-title-text">{{ s.service_name || s.subcategory_name }}</h3>
+                                            <span class="service-status-chip" [ngClass]="s.service_status">
+                                                <span class="chip-dot"></span>
+                                                {{ getStatusText(s.service_status) }}
+                                            </span>
+                                        </div>
+
+                                        <!-- Controls & Dates Group -->
+                                        <div class="service-actions-wrap">
+                                            <!-- Start Date Pill (Editable in-place) -->
+                                            <div class="date-chip-pill" [class.editable-chip]="!isOrderClosed" (click)="openDatePicker($event)" title="Service Start Date - Click to edit">
+                                                <span class="date-lbl">Start</span>
+                                                <ion-icon name="calendar-outline"></ion-icon>
+                                                <span class="date-val">{{ formatDateDisplay(s.start_date) }}</span>
+                                                <input *ngIf="!isOrderClosed" type="date" class="date-overlay-input" 
+                                                       [ngModel]="formatDateForInput(s.start_date)" 
+                                                       (click)="openDatePicker($event)" 
+                                                       (change)="onServiceDateChange(s, 'start_date', $event)" />
+                                            </div>
+
+                                            <!-- End Date Pill (Editable in-place) -->
+                                            <div class="date-chip-pill" [class.editable-chip]="!isOrderClosed" (click)="openDatePicker($event)" title="Service End Date - Click to edit">
+                                                <span class="date-lbl">End</span>
+                                                <ion-icon name="calendar-outline"></ion-icon>
+                                                <span class="date-val">{{ formatDateDisplay(s.end_date) }}</span>
+                                                <input *ngIf="!isOrderClosed" type="date" class="date-overlay-input" 
+                                                       [ngModel]="formatDateForInput(s.end_date)" 
+                                                       (click)="openDatePicker($event)" 
+                                                       (change)="onServiceDateChange(s, 'end_date', $event)" />
+                                            </div>
+
+                                            <!-- + Sub Task Button -->
+                                            <button *ngIf="!isOrderClosed" type="button" class="btn-action-add-st" (click)="openAddSubtask(s, $event)" title="Add sub task to this service">
+                                                <ion-icon name="add-circle-outline"></ion-icon>
+                                                <span>Sub Task</span>
+                                            </button>
+
+                                            <!-- Expand / Chevron -->
+                                            <button type="button" class="btn-expand-details" (click)="selectService(s); $event.stopPropagation()" title="View full service details in right panel">
+                                                <ion-icon [name]="selectedService?.id === s.id ? 'chevron-up-outline' : 'chevron-forward-outline'"></ion-icon>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Thin Progress Indicator -->
+                                    <div class="card-progress-bar">
+                                        <div class="progress-fill"
+                                             [style.width.%]="s.service_status === 'completed' ? 100 : (s.calculated_progress !== undefined ? s.calculated_progress : s.progress_percent)"
+                                             [style.backgroundColor]="getProgressColor(s.service_status, s.calculated_progress !== undefined ? s.calculated_progress : s.progress_percent)">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 2. SUBTASKS (Small Dots on the EXACT SAME vertical spine) -->
+                            <ng-container *ngIf="s.subtasks && s.subtasks.length > 0">
+                                <div class="timeline-row subtask-row" *ngFor="let st of s.subtasks; let j = index; let isLastSt = last"
+                                     [class.st-is-completed]="st.status === 'completed'"
+                                     [class.st-is-in-progress]="st.status === 'in_progress'"
+                                     [class.st-is-pending]="st.status === 'pending'"
+                                     [draggable]="!isOrderClosed"
+                                     (dragstart)="!isOrderClosed && onSubtaskDragStart(s.id, j, $event)"
+                                     (dragover)="!isOrderClosed && onSubtaskDragOver($event)"
+                                     (drop)="!isOrderClosed && onSubtaskDrop(s, j, $event)">
+
+                                    <!-- Drag Handle -->
+                                    <div class="spine-drag-col subtask-drag" *ngIf="!isOrderClosed" title="Drag to reorder subtask">
+                                        <ion-icon name="reorder-two-outline"></ion-icon>
+                                    </div>
+
+                                    <!-- Spine Track Column with Vertical Line and Small Dot on same line -->
+                                    <div class="spine-track-col subtask-track-col">
+                                        <!-- Vertical Line Segment extending down -->
+                                        <div class="spine-line-segment" 
+                                             [class.is-last]="isLastSvc && isLastSt" 
+                                             [ngClass]="st.status"></div>
+
+                                        <!-- Small Dot (Flipkart Style) -->
+                                        <div class="spine-small-dot" 
+                                             [ngClass]="st.status"
+                                             [title]="'Subtask: ' + st.title + ' (' + getStatusText(st.status) + ')'">
+                                            <ion-icon *ngIf="st.status === 'completed'" name="checkmark"></ion-icon>
+                                            <span *ngIf="st.status === 'in_progress'" class="inner-pulse-dot"></span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Subtask Content Card -->
+                                    <div class="spine-node-card subtask-node-card" (click)="openSubtaskDetails(st, s, $event)">
+                                        <div class="st-node-main">
+                                            <div class="st-node-title-group">
+                                                <span class="st-num">{{ j + 1 }}.</span>
+                                                <span class="st-title-text">{{ st.title }}</span>
+                                            </div>
+
+                                            <!-- Dual Start & End Date Overlay Pickers for Subtask (Vendor Style) -->
+                                            <div class="st-dates-range-group" (click)="$event.stopPropagation()">
+                                                <div class="st-mini-date-chip" [class.editable-chip]="!isOrderClosed" (click)="openDatePicker($event)" title="Click to edit subtask start date">
+                                                    <span class="st-date-lbl">Start</span>
+                                                    <ion-icon name="calendar-outline"></ion-icon>
+                                                    <span class="st-date-txt">{{ st.start_date ? (st.start_date | date:'dd MMM') : 'Set start' }}</span>
+                                                    <input *ngIf="!isOrderClosed" type="date" class="date-overlay-input" 
+                                                           [ngModel]="formatDateForInput(st.start_date)" 
+                                                           (click)="openDatePicker($event)" 
+                                                           (change)="onSubtaskDateChange(s, st, 'start_date', $event)" />
+                                                </div>
+                                                <span class="st-date-sep">–</span>
+                                                <div class="st-mini-date-chip" [class.editable-chip]="!isOrderClosed" (click)="openDatePicker($event)" title="Click to edit subtask end date">
+                                                    <span class="st-date-lbl">End</span>
+                                                    <ion-icon name="calendar-outline"></ion-icon>
+                                                    <span class="st-date-txt">{{ st.end_date ? (st.end_date | date:'dd MMM') : 'Set end' }}</span>
+                                                    <input *ngIf="!isOrderClosed" type="date" class="date-overlay-input" 
+                                                           [ngModel]="formatDateForInput(st.end_date)" 
+                                                           (click)="openDatePicker($event)" 
+                                                           (change)="onSubtaskDateChange(s, st, 'end_date', $event)" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="st-node-actions">
+                                            <!-- Subtask Status Chip (Green / Orange / White) -->
+                                            <span class="st-node-chip" [ngClass]="st.status">
+                                                {{ getStatusText(st.status) }}
+                                            </span>
+
+                                            <!-- View Details / Proof Button -->
+                                            <button type="button" class="btn-st-action-view" (click)="openSubtaskDetails(st, s, $event)" title="View subtask details & completion proof">
+                                                <ion-icon name="eye-outline"></ion-icon>
+                                                <span>View</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-container>
+
+                            <!-- If service has no subtasks yet -->
+                            <div class="timeline-row subtask-empty-row" *ngIf="(!s.subtasks || s.subtasks.length === 0) && !isOrderClosed">
+                                <div class="spine-drag-col"></div>
+                                <div class="spine-track-col empty-track-col">
+                                    <div class="spine-line-segment empty-line"></div>
+                                    <div class="spine-empty-dot"></div>
+                                </div>
+                                <div class="spine-node-card empty-subtask-card">
+                                    <span class="no-subtasks-txt">No sub tasks added yet</span>
+                                    <button type="button" class="btn-add-st-inline" (click)="openAddSubtask(s, $event)">
+                                        <ion-icon name="add"></ion-icon>
+                                        <span>Add Sub Task</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Instructional Tip -->
+                    <div class="sequence-footer-tip" *ngIf="!isOrderClosed">
+                        <ion-icon name="information-circle-outline"></ion-icon>
+                        <span>Drag & drop service cards or subtask items to adjust sequence freely. Services can run simultaneously.</span>
+                    </div>
+                </section>
+
+                <!-- RIGHT COLUMN: SERVICE DETAILS PANEL -->
+                <aside class="service-details-col" *ngIf="selectedService">
+                    <div class="details-card-container">
+                        <!-- Header with Close Button -->
+                        <div class="details-header-bar">
+                            <div class="details-title-row">
+                                <span class="service-status-dot" [ngClass]="selectedService.service_status"></span>
+                                <h3 class="details-service-title">
+                                    {{ selectedService.sequence_order || 1 }}. {{ selectedService.service_name || selectedService.subcategory_name }}
+                                </h3>
+                            </div>
+                            <button type="button" class="btn-close-details" (click)="selectedService = null" aria-label="Close details" title="Collapse Panel">
+                                <ion-icon name="close"></ion-icon>
+                            </button>
+                        </div>
+
+                        <!-- Status Badge Pill -->
+                        <div class="details-status-badge-wrap">
+                            <span class="status-pill-badge" [ngClass]="selectedService.service_status">
+                                <span class="badge-dot"></span>
+                                {{ getStatusText(selectedService.service_status) }}
+                            </span>
+                        </div>
+
+                        <!-- Date Range Form Controls -->
+                        <div class="details-dates-grid">
+                            <div class="details-date-box" [class.editable-date-box]="!isOrderClosed" (click)="openDatePicker($event)" [title]="!isOrderClosed ? 'Click to edit Start Date' : ''">
+                                <label class="details-date-label">Start Date</label>
+                                <div class="details-input-field">
+                                    <ion-icon name="calendar-outline"></ion-icon>
+                                    <span>{{ selectedService.start_date ? (selectedService.start_date | date:'dd MMM yyyy') : 'Not set' }}</span>
+                                    <ion-icon name="calendar-number-outline" class="end-cal-icon"></ion-icon>
+                                    <input *ngIf="!isOrderClosed" type="date" class="date-overlay-input" 
+                                           [ngModel]="formatDateForInput(selectedService.start_date)" 
+                                           (click)="openDatePicker($event)"
+                                           (change)="onServiceDateChange(selectedService, 'start_date', $event)" />
+                                </div>
+                            </div>
+
+                            <div class="details-date-box" [class.editable-date-box]="!isOrderClosed" (click)="openDatePicker($event)" [title]="!isOrderClosed ? 'Click to edit End Date' : ''">
+                                <label class="details-date-label">End Date</label>
+                                <div class="details-input-field">
+                                    <ion-icon name="calendar-outline"></ion-icon>
+                                    <span>{{ selectedService.end_date ? (selectedService.end_date | date:'dd MMM yyyy') : 'Not set' }}</span>
+                                    <ion-icon name="calendar-number-outline" class="end-cal-icon"></ion-icon>
+                                    <input *ngIf="!isOrderClosed" type="date" class="date-overlay-input" 
+                                           [ngModel]="formatDateForInput(selectedService.end_date)" 
+                                           (click)="openDatePicker($event)"
+                                           (change)="onServiceDateChange(selectedService, 'end_date', $event)" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Description Box -->
+                        <div class="details-desc-box">
+                            <label class="details-desc-label">Description</label>
+                            <p class="details-desc-content">
+                                {{ selectedService.description || ('Standard phase for ' + (selectedService.service_name || selectedService.subcategory_name) + ' on project') }}
+                            </p>
+                        </div>
+
+                        <!-- Sub Tasks Section -->
+                        <div class="details-subtasks-section">
+                            <h4 class="details-subtasks-heading">Sub Tasks</h4>
+
+                            <div class="details-subtasks-list">
+                                <div class="subtask-card-item" *ngFor="let st of selectedService.subtasks">
+                                    <div class="st-card-main-row">
+                                        <div class="st-card-title-group">
+                                            <span class="st-status-circle-dot" [ngClass]="getSubtaskDotClass(st.status)"></span>
+                                            <strong class="st-card-title">{{ st.title }}</strong>
+                                        </div>
+                                        <span class="st-card-status-badge" [ngClass]="getSubtaskBadgeClass(st.status)">
+                                            {{ getStatusText(st.status) }}
+                                        </span>
+                                    </div>
+                                    <div class="st-card-meta-row">
+                                        <div class="st-card-dates-range-wrap" (click)="$event.stopPropagation()">
+                                            <div class="st-mini-date-chip" [class.editable-chip]="!isOrderClosed" (click)="openDatePicker($event)" title="Click to edit subtask start date">
+                                                <ion-icon name="calendar-outline"></ion-icon>
+                                                <span>{{ st.start_date ? (st.start_date | date:'dd MMM') : 'Start' }}</span>
+                                                <input *ngIf="!isOrderClosed" type="date" class="date-overlay-input" 
+                                                       [ngModel]="formatDateForInput(st.start_date)" 
+                                                       (click)="openDatePicker($event)" 
+                                                       (change)="onSubtaskDateChange(selectedService, st, 'start_date', $event)" />
+                                            </div>
+                                            <span class="st-date-sep">–</span>
+                                            <div class="st-mini-date-chip" [class.editable-chip]="!isOrderClosed" (click)="openDatePicker($event)" title="Click to edit subtask end date">
+                                                <span>{{ st.end_date ? (st.end_date | date:'dd MMM') : 'End' }}</span>
+                                                <input *ngIf="!isOrderClosed" type="date" class="date-overlay-input" 
+                                                       [ngModel]="formatDateForInput(st.end_date)" 
+                                                       (click)="openDatePicker($event)" 
+                                                       (change)="onSubtaskDateChange(selectedService, st, 'end_date', $event)" />
+                                            </div>
+                                        </div>
+                                        <div class="st-card-btn-group">
+                                            <button type="button" class="btn-st-view-action" (click)="openSubtaskDetails(st, selectedService, $event)">
+                                                <ion-icon name="eye-outline"></ion-icon>
+                                                <span>View</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="st-empty-list" *ngIf="!selectedService.subtasks || selectedService.subtasks.length === 0">
+                                    <p>No sub tasks created for this service.</p>
+                                </div>
+                            </div>
+
+                            <!-- + Add Sub Task Outline Button -->
+                            <button type="button" class="btn-add-subtask-full" *ngIf="!isOrderClosed" (click)="openAddSubtask(selectedService)">
+                                <ion-icon name="add"></ion-icon>
+                                <span>Add Sub Task</span>
+                            </button>
+                        </div>
+
+                        <!-- Completion Request Section -->
+                        <div class="details-completion-request-box">
+                            <h4 class="completion-request-heading">Completion Request</h4>
+                            <p class="completion-request-desc">
+                                After all sub tasks are completed, the vendor will raise a completion request for this service. You can verify and accept it to mark the service as completed.
+                            </p>
+
+                            <!-- Completion Action Button -->
+                            <div class="completion-action-area">
+                                <!-- If Completed -->
+                                <button *ngIf="selectedService.service_status === 'completed'" type="button" class="btn-completion-status status-approved" disabled>
+                                    <ion-icon name="checkmark-circle"></ion-icon>
+                                    <span>Service Completed & Approved</span>
+                                </button>
+
+                                <!-- If Pending Approval from Customer -->
+                                <button *ngIf="selectedService.service_status !== 'completed' && selectedService.completion_request && selectedService.completion_request.status === 'pending'"
+                                        type="button" class="btn-completion-status status-pending-review" (click)="openCompletionReview(selectedService)">
+                                    <ion-icon name="notifications-circle-outline"></ion-icon>
+                                    <span>Review Completion Request</span>
+                                </button>
+
+                                <!-- If No Request Raised Yet -->
+                                <button *ngIf="selectedService.service_status !== 'completed' && (!selectedService.completion_request || selectedService.completion_request.status !== 'pending')"
+                                        type="button" class="btn-completion-status status-disabled" disabled>
+                                    <ion-icon name="time-outline"></ion-icon>
+                                    <span>View Completion Request</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </main>
+
+    <!-- ============================================== -->
+    <!-- MODAL 1: ADD SUB TASK                          -->
+    <!-- ============================================== -->
+    <div class="sop-modal-backdrop" *ngIf="showAddSubtaskModal" (click)="closeAddSubtaskModal()">
+        <div class="sop-modal-card add-subtask-card" (click)="$event.stopPropagation()">
+            <div class="modal-card-header">
+                <h3 class="modal-card-title">Add Sub Task</h3>
+                <button type="button" class="modal-close-btn" (click)="closeAddSubtaskModal()" aria-label="Close">
+                    <ion-icon name="close"></ion-icon>
+                </button>
+            </div>
+
+            <div class="modal-card-body">
+                <div class="modal-form-grid">
+                    <!-- Title -->
+                    <div class="form-field-group">
+                        <label class="form-label">Title *</label>
+                        <input type="text" [(ngModel)]="newSubtask.title" placeholder="Enter sub task title" class="form-text-input" />
+                    </div>
+
+                    <!-- Start Date -->
+                    <div class="form-field-group">
+                        <label class="form-label">Start Date *</label>
+                        <div class="input-with-icon">
+                            <input type="date" [(ngModel)]="newSubtask.start_date" class="form-text-input date-input" />
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="form-field-group full-width-field">
+                        <label class="form-label">Description *</label>
+                        <textarea [(ngModel)]="newSubtask.description" rows="3" placeholder="Enter description" class="form-textarea-input"></textarea>
+                    </div>
+
+                    <!-- End Date -->
+                    <div class="form-field-group">
+                        <label class="form-label">End Date *</label>
+                        <div class="input-with-icon">
+                            <input type="date" [(ngModel)]="newSubtask.end_date" class="form-text-input date-input" />
+                        </div>
+                    </div>
+
+                    <!-- Next Service Handover (Vendor) -->
+                    <div class="form-field-group">
+                        <label class="form-label">Notify Next Service (Vendor)</label>
+                        <select [(ngModel)]="newSubtask.next_order_service_id" class="form-text-input" style="height: 42px; border-radius: 8px; border: 1px solid #d1d5db; background: #fff; padding: 0 10px; font-size: 13px; color: #111827; width: 100%;">
+                            <option [ngValue]="null">-- Select Next Vendor/Service --</option>
+                            <option *ngFor="let svc of getAvailableNextServices()" [value]="svc.id">
+                                {{ svc.service_name || svc.subcategory_name }} ({{ svc.vendor_name || 'Vendor #' + svc.vendor_id }})
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-card-footer">
+                <button type="button" class="btn-footer-cancel" (click)="closeAddSubtaskModal()">
+                    Cancel
+                </button>
+                <button type="button" class="btn-footer-save" [disabled]="!newSubtask.title.trim() || isSavingSubtask" (click)="saveSubtask()">
+                    <ion-spinner *ngIf="isSavingSubtask" name="crescent"></ion-spinner>
+                    <span *ngIf="!isSavingSubtask">Save</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- MODAL 2: VIEW SUBTASK DETAILS & PROOF IMAGES   -->
+    <!-- ============================================== -->
+    <div class="sop-modal-backdrop" *ngIf="showSubtaskDetailsModal" (click)="closeSubtaskDetailsModal()">
+        <div class="sop-modal-card view-subtask-card" (click)="$event.stopPropagation()">
+            <div class="modal-card-header">
+                <div class="subtask-modal-heading-wrap">
+                    <span class="subtask-circle-dot" [ngClass]="getSubtaskDotClass(selectedSubtask?.status || 'pending')"></span>
+                    <h3 class="modal-card-title">{{ selectedSubtask?.title }}</h3>
+                    <span class="st-card-status-badge" [ngClass]="getSubtaskBadgeClass(selectedSubtask?.status || 'pending')">
+                        {{ getStatusText(selectedSubtask?.status || 'pending') }}
+                    </span>
+                </div>
+                <button type="button" class="modal-close-btn" (click)="closeSubtaskDetailsModal()" aria-label="Close">
+                    <ion-icon name="close"></ion-icon>
+                </button>
+            </div>
+
+            <div class="modal-card-body" *ngIf="selectedSubtask">
+                <!-- Parent Service -->
+                <div class="subtask-meta-row">
+                    <span class="meta-label">Parent Service:</span>
+                    <span class="meta-val">{{ selectedSubtaskService?.service_name || selectedSubtaskService?.subcategory_name }}</span>
+                </div>
+
+                <!-- Date Range -->
+                <div class="subtask-meta-row" *ngIf="selectedSubtask.start_date">
+                    <span class="meta-label">Timeline:</span>
+                    <span class="meta-val">
+                        {{ selectedSubtask.start_date | date:'dd MMM yyyy' }}
+                        {{ selectedSubtask.end_date ? ('to ' + (selectedSubtask.end_date | date:'dd MMM yyyy')) : '' }}
+                    </span>
+                </div>
+
+                <!-- Description -->
+                <div class="subtask-desc-section">
+                    <h4 class="subtask-section-subtitle">Description</h4>
+                    <p class="subtask-desc-paragraph">
+                        {{ selectedSubtask.description || 'No detailed description provided for this subtask.' }}
+                    </p>
+                </div>
+
+                <!-- Completion Proof Section -->
+                <div class="subtask-proof-section" *ngIf="hasSubtaskProof()">
+                    <h4 class="subtask-section-subtitle">
+                        <ion-icon name="images-outline"></ion-icon>
+                        <span>Completion Proof Image</span>
+                    </h4>
+
+                    <!-- Main Large Image Card -->
+                    <div class="proof-img-box" (click)="previewImageUrl = formatImageUrl(getActiveSubtaskProofUrl())" title="Click to enlarge">
+                        <img [src]="formatImageUrl(getActiveSubtaskProofUrl())" alt="Proof Image" />
+                        <span class="click-hint">Click to enlarge</span>
+                    </div>
+
+                    <!-- Proof Images Grid -->
+                    <div class="proof-gallery-grid" *ngIf="getSubtaskProofImages().length > 1">
+                        <div class="proof-thumb-card" 
+                            *ngFor="let p of getSubtaskProofImages()" 
+                            [class.active-thumb]="getActiveSubtaskProofUrl() === p.image_url"
+                            (click)="selectSubtaskProofImage(p.image_url, $event)"
+                            title="Click to view in card above">
+                            <img [src]="formatImageUrl(p.image_url)" [alt]="p.original_name || 'Proof Image'" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="proof-empty-message" *ngIf="!hasSubtaskProof()">
+                    <ion-icon name="image-outline"></ion-icon>
+                    <p>No completion-proof images uploaded yet for this subtask.</p>
+                </div>
+            </div>
+
+            <div class="modal-card-footer">
+                <button type="button" class="btn-footer-close-full" (click)="closeSubtaskDetailsModal()">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- MODAL 3: REVIEW SERVICE COMPLETION REQUEST    -->
+    <!-- ============================================== -->
+    <div class="sop-modal-backdrop" *ngIf="showCompletionReviewModal" (click)="closeCompletionReviewModal()">
+        <div class="sop-modal-card review-request-card" (click)="$event.stopPropagation()">
+            <div class="modal-card-header">
+                <div class="subtask-modal-heading-wrap">
+                    <ion-icon name="checkmark-circle-outline" class="modal-header-icon text-amber"></ion-icon>
+                    <h3 class="modal-card-title">Review Service Completion Request</h3>
+                </div>
+                <button type="button" class="modal-close-btn" (click)="closeCompletionReviewModal()" aria-label="Close">
+                    <ion-icon name="close"></ion-icon>
+                </button>
+            </div>
+
+            <div class="modal-card-body" *ngIf="activeReviewService">
+                <div class="review-banner-alert">
+                    <ion-icon name="information-circle"></ion-icon>
+                    <div>
+                        <strong>{{ activeCompletionRequest?.vendor_name || 'Vendor' }}</strong> has requested completion acceptance for 
+                        <strong>{{ activeReviewService.service_name || activeReviewService.subcategory_name }}</strong>.
+                    </div>
+                </div>
+
+                <div class="review-meta-box" *ngIf="activeCompletionRequest?.request_note">
+                    <span class="meta-label">Vendor Note:</span>
+                    <p class="review-note-txt">{{ activeCompletionRequest.request_note }}</p>
+                </div>
+
+                <h4 class="subtask-section-subtitle">Associated Sub Tasks</h4>
+                <div class="review-subtasks-summary">
+                    <div class="summary-subtask-row" *ngFor="let st of activeReviewService.subtasks">
+                        <span class="subtask-circle-dot" [ngClass]="getSubtaskDotClass(st.status)"></span>
+                        <span class="summary-title">{{ st.title }}</span>
+                        <span class="st-card-status-badge" [ngClass]="getSubtaskBadgeClass(st.status)">{{ getStatusText(st.status) }}</span>
+                    </div>
+                </div>
+
+                <!-- Rejection Reason Input -->
+                <div class="rejection-input-wrap" *ngIf="showRejectionInput">
+                    <label class="form-label text-danger">Reason for requesting corrections *</label>
+                    <textarea [(ngModel)]="rejectionReason" rows="2" placeholder="Explain what work needs revision..." class="form-textarea-input danger-border"></textarea>
+                </div>
+            </div>
+
+            <div class="modal-card-footer review-actions-row">
+                <button type="button" class="btn-footer-reject" (click)="rejectCompletion()" [disabled]="isSubmittingReview">
+                    <ion-icon name="close-circle-outline"></ion-icon>
+                    <span>{{ showRejectionInput ? 'Confirm Rejection' : 'Request Corrections' }}</span>
+                </button>
+
+                <button type="button" class="btn-footer-approve" (click)="approveCompletion()" [disabled]="isSubmittingReview">
+                    <ion-spinner *ngIf="isSubmittingReview" name="crescent"></ion-spinner>
+                    <span *ngIf="!isSubmittingReview">
+                        <ion-icon name="checkmark-circle"></ion-icon>
+                        Accept & Complete Service
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- LIGHTBOX: ENLARGED PROOF IMAGE PREVIEW         -->
+    <!-- ============================================== -->
+    <div class="sop-lightbox-overlay" *ngIf="previewImageUrl" (click)="previewImageUrl = null">
+        <div class="lightbox-content-box" (click)="$event.stopPropagation()">
+            <button type="button" class="lightbox-close-btn" (click)="previewImageUrl = null">
+                <ion-icon name="close"></ion-icon>
+            </button>
+            <img [src]="previewImageUrl" alt="Subtask Completion Proof Preview" />
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- WHATSAPP-WEB-STYLE CHAT DRAWER INTEGRATION     -->
+    <!-- ============================================== -->
+    <app-chat-panel
+        [isOpen]="showChatPanel"
+        [initialOrderId]="selectedOrderId"
+        [initialViewTab]="'chat'"
+        (close)="onChatClosed()">
+    </app-chat-panel>
+</div>

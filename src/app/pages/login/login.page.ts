@@ -16,7 +16,7 @@ export class LoginPage implements OnInit, OnDestroy {
     otp = '';
     isOtpFocused = false;
     loading = false;
-    returnUrl = '/tabs/home';
+    returnUrl = '/sector-select';
     showSkip = true;
 
     resendTimer = 30;
@@ -29,9 +29,12 @@ export class LoginPage implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private toastController: ToastController
     ) {
-        this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/tabs/home';
-        if (this.returnUrl.includes('/checkout')) {
+        const queryReturn = this.route.snapshot.queryParams['returnUrl'];
+        if (queryReturn) {
+            this.returnUrl = queryReturn;
             this.showSkip = false;
+        } else {
+            this.returnUrl = '/sector-select';
         }
     }
 
@@ -153,13 +156,15 @@ export class LoginPage implements OnInit, OnDestroy {
                         },
                         error: async (innerErr) => {
                             this.loading = false;
-                            const msg = innerErr?.error?.message || err?.error?.message || 'Invalid OTP. Please use demo code: 1234';
+                            const isNetErr = innerErr?.status === 0 || err?.status === 0;
+                            const msg = innerErr?.error?.message || err?.error?.message || (isNetErr ? 'Unable to connect to backend server. Please check if API is running.' : 'Invalid OTP. Please use demo code: 1234');
                             await this.showToast(msg, 'danger', 3000, 'alert-circle');
                         }
                     });
                 } else {
                     this.loading = false;
-                    const msg = err?.error?.message || 'Invalid OTP. Please use demo code: 1234';
+                    const isNetErr = err?.status === 0;
+                    const msg = err?.error?.message || (isNetErr ? 'Unable to connect to backend server. Please check if API is running.' : 'Invalid OTP. Please use demo code: 1234');
                     await this.showToast(msg, 'danger', 3000, 'alert-circle');
                 }
             }
@@ -220,7 +225,7 @@ export class LoginPage implements OnInit, OnDestroy {
         if (this.step === 'otp') {
             this.changeNumber();
         } else {
-            this.router.navigate(['/tabs/home']);
+            this.router.navigate(['/sector-select']);
         }
     }
 

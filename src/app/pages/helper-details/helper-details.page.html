@@ -5,7 +5,7 @@
                 <ion-icon name="arrow-back"></ion-icon>
             </ion-button>
         </ion-buttons>
-        <ion-title>Helper Profile & Booking</ion-title>
+        <ion-title>Trade Crew Details</ion-title>
         <ion-buttons slot="end">
             <ion-button class="share-btn">
                 <ion-icon name="share-social-outline"></ion-icon>
@@ -16,51 +16,33 @@
 
 <ion-content class="detail-content">
     <div *ngIf="helper" class="detail-wrapper fade-in">
-        <!-- Hero Helper Banner -->
-        <div class="helper-hero">
+        <!-- Hero Crew Showcase -->
+        <div class="crew-hero">
             <img [src]="helper.image" (error)="onImageError($event)" [alt]="helper.name" class="hero-image">
             <div class="hero-gradient-overlay">
                 <div class="hero-tags">
-                    <span class="status-pill">
-                        <ion-icon name="shield-checkmark"></ion-icon>
-                        Aadhaar & Police Background Cleared
+                    <span class="status-pill" *ngIf="helper.status === 'active'">
+                        <span class="green-dot"></span>
+                        Available for Booking
                     </span>
-                    <span class="category-pill">{{ helper.category || 'Skilled Trade' }}</span>
+                    <span class="category-pill" *ngIf="helper.category">{{ helper.category }}</span>
                 </div>
-                <h1 class="hero-title">{{ helper.name }}</h1>
-                <div class="rating-strip">
-                    <span class="star">★</span>
-                    <span class="score">{{ helper.rating || 4.9 }}</span>
-                    <span class="reviews-count">({{ helper.reviewCount || 120 }} verified job completions)</span>
-                    <span class="exp-tag" *ngIf="helper.experience">• {{ helper.experience }} Experience</span>
-                </div>
+                <h1 class="hero-title">{{ helper.service_name || helper.name }}</h1>
             </div>
             <div class="hero-price-badge">
                 <span class="currency">₹</span>
                 <span class="amount">{{ helper.pricePerDay | number }}</span>
-                <span class="unit">/ 8-hr shift</span>
+                <span class="unit">/ day / worker</span>
             </div>
         </div>
 
         <div class="content-container">
-            <!-- Trust Assurance Banner -->
-            <div class="trust-banner">
-                <div class="trust-icon-box">
-                    <ion-icon name="ribbon-outline"></ion-icon>
-                </div>
-                <div class="trust-text">
-                    <h4>CivilWorks Workmanship Guarantee</h4>
-                    <p>Every hired craftsman carries verified ID, basic hand tools, and complies with site safety protocol. Free replacement if not satisfied within 2 hours.</p>
-                </div>
-                <span class="verified-stamp">100% VERIFIED</span>
-            </div>
-
             <!-- Two-Column Grid Layout -->
             <div class="details-grid-layout">
-                <!-- Left Column: Scope & Skills -->
+                <!-- Left Column: Scope & Overview -->
                 <div class="left-column">
                     <!-- Trade Overview -->
-                    <div class="info-card">
+                    <div class="info-card" *ngIf="helper.description">
                         <h2 class="card-title">
                             <ion-icon name="briefcase-outline"></ion-icon>
                             Trade Scope & Work Overview
@@ -68,106 +50,88 @@
                         <p class="description-text">{{ helper.description }}</p>
                     </div>
 
-                    <!-- Skills Matrix -->
-                    <div class="info-card" *ngIf="helper.skills && helper.skills.length">
+                    <!-- Service Parameters (Dynamic from Admin) -->
+                    <div class="info-card" *ngIf="helperParams.length > 0">
                         <h2 class="card-title">
-                            <ion-icon name="construct-outline"></ion-icon>
-                            Specialized Skills
+                            <ion-icon name="list-outline"></ion-icon>
+                            Service Details
                         </h2>
-                        <div class="skills-wrap">
-                            <div class="skill-bubble" *ngFor="let s of helper.skills">
-                                <ion-icon name="checkmark-circle"></ion-icon>
-                                <span>{{ s }}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Work Standards -->
-                    <div class="info-card">
-                        <h2 class="card-title">
-                            <ion-icon name="shield-outline"></ion-icon>
-                            Standard Inclusions & Safety
-                        </h2>
-                        <div class="included-list">
-                            <div class="included-item">
-                                <ion-icon name="checkmark" class="inc-icon"></ion-icon>
-                                <span>Standard 8-Hour Daily Working Shift (9:00 AM - 5:30 PM with 30m break)</span>
-                            </div>
-                            <div class="included-item">
-                                <ion-icon name="checkmark" class="inc-icon"></ion-icon>
-                                <span>Personal basic toolset (wrenches, trowels, testers, cutters) carried by worker</span>
-                            </div>
-                            <div class="included-item">
-                                <ion-icon name="checkmark" class="inc-icon"></ion-icon>
-                                <span>Personal Protective Equipment (Safety shoes, reflective jacket, helmet)</span>
-                            </div>
-                            <div class="included-item">
-                                <ion-icon name="checkmark" class="inc-icon"></ion-icon>
-                                <span>Zero extra commission or hidden contractor fees</span>
+                        <div class="specs-table">
+                            <div class="spec-row" *ngFor="let item of helperParams">
+                                <span class="spec-label">{{ item.label }}</span>
+                                <span class="spec-value">{{ item.value }}</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Right Column: Interactive Crew Booking -->
+                <!-- Right Column: Interactive Crew Booking & Cost Calculator -->
                 <div class="right-column">
                     <div class="booking-calculator-card">
                         <h2 class="card-title">
-                            <ion-icon name="calendar-outline"></ion-icon>
-                            Crew Size & Hiring Details
+                            <ion-icon name="calculator-outline"></ion-icon>
+                            Work Deployment & Pricing
                         </h2>
 
-                        <!-- Crew Size Stepper -->
-                        <div class="stepper-row">
-                            <div class="stepper-label">
-                                <span class="main">Number of Workers</span>
-                                <span class="sub">Specify required crew size</span>
-                            </div>
-                            <div class="stepper-controls">
-                                <button class="step-btn" (click)="decrementMembers()" [disabled]="membersCount <= 1">−</button>
-                                <span class="step-value">{{ membersCount }} {{ membersCount > 1 ? 'Workers' : 'Worker' }}</span>
-                                <button class="step-btn" (click)="incrementMembers()">+</button>
-                            </div>
+                        <!-- Duration Presets -->
+                        <div class="duration-presets">
+                            <button class="preset-btn" [class.active]="daysCount === 1" (click)="setPresetDays(1)">
+                                1 Day
+                            </button>
+                            <button class="preset-btn" [class.active]="daysCount === 3" (click)="setPresetDays(3)">
+                                3 Days
+                            </button>
+                            <button class="preset-btn" [class.active]="daysCount === 7" (click)="setPresetDays(7)">
+                                7 Days
+                            </button>
+                            <button class="preset-btn" [class.active]="daysCount === 30" (click)="setPresetDays(30)">
+                                30 Days
+                            </button>
                         </div>
 
-                        <!-- Days Stepper -->
-                        <div class="stepper-row">
+                        <!-- Stepper 1: Days -->
+                        <div class="duration-stepper-box">
                             <div class="stepper-label">
-                                <span class="main">Booking Duration</span>
-                                <span class="sub">Total number of working days</span>
+                                <span class="main">Working Days</span>
+                                <span class="sub">Total deployment period</span>
                             </div>
                             <div class="stepper-controls">
                                 <button class="step-btn" (click)="decrementDays()" [disabled]="daysCount <= 1">−</button>
-                                <span class="step-value">{{ daysCount }} {{ daysCount > 1 ? 'Days' : 'Day' }}</span>
+                                <span class="step-value">{{ daysCount }} Days</span>
                                 <button class="step-btn" (click)="incrementDays()">+</button>
                             </div>
                         </div>
 
-                        <!-- Cost Breakdown -->
+                        <!-- Stepper 2: Members -->
+                        <div class="duration-stepper-box" style="margin-top: 10px;">
+                            <div class="stepper-label">
+                                <span class="main">Crew Strength</span>
+                                <span class="sub">Number of tradesmen needed</span>
+                            </div>
+                            <div class="stepper-controls">
+                                <button class="step-btn" (click)="decrementMembers()" [disabled]="membersCount <= 1">−</button>
+                                <span class="step-value">{{ membersCount }} Workers</span>
+                                <button class="step-btn" (click)="incrementMembers()">+</button>
+                            </div>
+                        </div>
+
+                        <!-- Cost Breakdown (Dynamic only) -->
                         <div class="cost-breakdown">
                             <div class="cost-row">
-                                <span class="cost-label">Shift Wage (per worker)</span>
-                                <span class="cost-val">₹{{ helper.pricePerDay | number }} / day</span>
+                                <span class="cost-label">Daily Wage Rate (per worker)</span>
+                                <span class="cost-val">₹{{ helper.pricePerDay | number }}</span>
                             </div>
                             <div class="cost-row">
-                                <span class="cost-label">Total Shifts Calculation</span>
-                                <span class="cost-val">{{ membersCount }} worker(s) × {{ daysCount }} day(s)</span>
-                            </div>
-                            <div class="cost-row" *ngIf="discountAmount > 0">
-                                <span class="cost-label discount-label">Multi-Day Booking Discount</span>
-                                <span class="cost-val discount-val">- ₹{{ discountAmount | number }}</span>
-                            </div>
-                            <div class="cost-row">
-                                <span class="cost-label">Worker Insurance & Compliance</span>
-                                <span class="cost-val free-val">Included (CivilWorks Cover)</span>
+                                <span class="cost-label">Duration × Crew</span>
+                                <span class="cost-val">{{ daysCount }} Days × {{ membersCount }} Workers</span>
                             </div>
 
                             <div class="cost-divider"></div>
 
                             <div class="total-row">
                                 <div class="total-label-box">
-                                    <span class="total-title">Total Payable</span>
-                                    <span class="total-subtitle">Direct wage deposit to verified worker</span>
+                                    <span class="total-title">Total Estimate</span>
+                                    <span class="total-subtitle">Calculated from rate</span>
                                 </div>
                                 <div class="total-amount-box">
                                     <span class="currency">₹</span>
@@ -176,16 +140,11 @@
                             </div>
                         </div>
 
-                        <!-- Action Button -->
-                        <button class="action-book-btn" (click)="placeBooking()">
-                            <span>Hire & Book Crew Now</span>
-                            <ion-icon name="arrow-forward"></ion-icon>
+                        <!-- Book CTA Button -->
+                        <button class="action-book-btn" (click)="placeBooking()" [disabled]="helper.status !== 'active'">
+                            <span>{{ helper.status === 'active' ? 'Book Site Crew' : 'Currently Unavailable' }}</span>
+                            <ion-icon name="arrow-forward" *ngIf="helper.status === 'active'"></ion-icon>
                         </button>
-
-                        <div class="guarantee-footer">
-                            <ion-icon name="lock-closed"></ion-icon>
-                            <span>Verified workforce • Replacement warranty if unsatisfactory</span>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -198,6 +157,7 @@
         <div style="padding: 24px;">
             <ion-skeleton-text [animated]="true" style="width: 60%; height: 32px; margin-bottom: 16px;"></ion-skeleton-text>
             <ion-skeleton-text [animated]="true" style="width: 90%; height: 20px; margin-bottom: 10px;"></ion-skeleton-text>
+            <ion-skeleton-text [animated]="true" style="width: 80%; height: 20px; margin-bottom: 24px;"></ion-skeleton-text>
             <ion-skeleton-text [animated]="true" style="width: 100%; height: 200px; border-radius: 16px;"></ion-skeleton-text>
         </div>
     </div>
@@ -206,12 +166,12 @@
 <ion-footer class="mobile-action-footer">
     <div class="footer-inner" *ngIf="helper">
         <div class="price-summary">
-            <span class="sub">{{ membersCount }} Worker(s) • {{ daysCount }} Day(s)</span>
+            <span class="sub">Total ({{ daysCount }} Days × {{ membersCount }} Crew)</span>
             <span class="amount">₹{{ totalAmount | number }}</span>
         </div>
-        <button class="footer-book-btn" (click)="placeBooking()">
-            <span>Hire Crew</span>
-            <ion-icon name="arrow-forward"></ion-icon>
+        <button class="footer-book-btn" (click)="placeBooking()" [disabled]="helper.status !== 'active'">
+            <span>{{ helper.status === 'active' ? 'Book Crew' : 'Unavailable' }}</span>
+            <ion-icon name="arrow-forward" *ngIf="helper.status === 'active'"></ion-icon>
         </button>
     </div>
 </ion-footer>

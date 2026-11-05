@@ -54,6 +54,20 @@
             <!-- Left Column: Form & Preferences -->
             <div class="checkout-form-column">
 
+                <!-- Active Project Order Edit Notice -->
+                <div class="edit-project-alert-banner" *ngIf="serviceBooking?.editOrderId">
+                    <div class="alert-icon-box">
+                        <ion-icon name="construct"></ion-icon>
+                    </div>
+                    <div class="alert-text-box">
+                        <span class="alert-tag">ADDING TO ACTIVE PROJECT</span>
+                        <h4>Order #{{ serviceBooking.editOrderNo || serviceBooking.editOrderId }}</h4>
+                        <p>Adding service <strong>{{ serviceBooking.service_name || serviceBooking.subcategory_name
+                                }}</strong> with dedicated vendor <strong>{{ serviceBooking.vendor_name ||
+                                serviceBooking.vendor?.name }}</strong>.</p>
+                    </div>
+                </div>
+
                 <!-- 1. Site / Delivery Address Card -->
                 <div class="checkout-card">
                     <div class="card-header-row">
@@ -63,17 +77,16 @@
                             </div>
                             <div>
                                 <h2 class="card-heading">Project Site & Delivery Location</h2>
-                                <p class="card-subheading">Provide exact site coordinates for heavy transport & crew arrival</p>
+                                <p class="card-subheading">Provide exact site coordinates for heavy transport & crew
+                                    arrival</p>
                             </div>
                         </div>
-                        <button type="button" class="btn-sample-fill" (click)="fillSampleAddress()">
-                            <ion-icon name="flash"></ion-icon>
-                            <span>Fill Sample Site</span>
-                        </button>
+
                     </div>
 
-                    <form [formGroup]="checkoutForm" (ngSubmit)="proceedToPayment()" novalidate class="modern-checkout-form">
-                        
+                    <form [formGroup]="checkoutForm" (ngSubmit)="proceedToPayment()" novalidate
+                        class="modern-checkout-form">
+
                         <!-- Row 1: Full Name & Mobile Number -->
                         <div class="form-grid-2">
                             <!-- Full Name -->
@@ -84,8 +97,10 @@
                                 </label>
                                 <div class="field-input-box">
                                     <ion-icon name="person-outline" class="input-icon"></ion-icon>
-                                    <input id="field-name" type="text" formControlName="name" placeholder="Enter site supervisor or contractor name" autocomplete="name" />
-                                    <ion-icon *ngIf="checkoutForm.get('name')?.valid" name="checkmark-circle" class="valid-check-icon"></ion-icon>
+                                    <input id="field-name" type="text" formControlName="name"
+                                        placeholder="Enter site supervisor or contractor name" autocomplete="name" />
+                                    <ion-icon *ngIf="checkoutForm.get('name')?.valid" name="checkmark-circle"
+                                        class="valid-check-icon"></ion-icon>
                                 </div>
                                 <div class="field-error-pill" *ngIf="isFieldInvalid('name')">
                                     <ion-icon name="alert-circle"></ion-icon>
@@ -101,7 +116,8 @@
                                 </label>
                                 <div class="field-input-box phone-input-box">
                                     <div class="country-badge">
-                                        <svg class="india-flag-svg" width="20" height="14" viewBox="0 0 20 14" fill="none">
+                                        <svg class="india-flag-svg" width="20" height="14" viewBox="0 0 20 14"
+                                            fill="none">
                                             <rect width="20" height="4.67" fill="#FF9933" />
                                             <rect y="4.67" width="20" height="4.67" fill="#FFFFFF" />
                                             <rect y="9.33" width="20" height="4.67" fill="#138808" />
@@ -111,8 +127,10 @@
                                     </div>
                                     <div class="input-divider-bar"></div>
                                     <ion-icon name="call-outline" class="input-icon"></ion-icon>
-                                    <input id="field-phone" type="tel" formControlName="phone" maxlength="10" placeholder="10-digit mobile number" autocomplete="tel" />
-                                    <ion-icon *ngIf="checkoutForm.get('phone')?.valid" name="checkmark-circle" class="valid-check-icon"></ion-icon>
+                                    <input id="field-phone" type="tel" formControlName="phone" maxlength="10"
+                                        placeholder="10-digit mobile number" autocomplete="tel" />
+                                    <ion-icon *ngIf="checkoutForm.get('phone')?.valid" name="checkmark-circle"
+                                        class="valid-check-icon"></ion-icon>
                                 </div>
                                 <div class="field-error-pill" *ngIf="isFieldInvalid('phone')">
                                     <ion-icon name="alert-circle"></ion-icon>
@@ -121,16 +139,18 @@
                             </div>
                         </div>
 
-                        <!-- Address Line 1: Site / Project Name -->
+                        <!-- Address 1: Flat No / Villa No -->
                         <div class="form-field-group" [class.has-error]="isFieldInvalid('addressLine1')">
                             <label class="field-label" for="field-addressLine1">
-                                <span>Project Name / Site Address Line 1</span>
+                                <span>Flat No / Villa No</span>
                                 <span class="req-star">*</span>
                             </label>
                             <div class="field-input-box">
-                                <ion-icon name="business-outline" class="input-icon"></ion-icon>
-                                <input id="field-addressLine1" type="text" formControlName="addressLine1" placeholder="e.g. Tower 3, Phoenix Tech Hub, Survey No 45" />
-                                <ion-icon *ngIf="checkoutForm.get('addressLine1')?.valid" name="checkmark-circle" class="valid-check-icon"></ion-icon>
+                                <ion-icon name="home-outline" class="input-icon"></ion-icon>
+                                <input id="field-addressLine1" type="text" formControlName="addressLine1"
+                                    placeholder="e.g. Flat 402, Building A / Villa 15" />
+                                <ion-icon *ngIf="checkoutForm.get('addressLine1')?.valid" name="checkmark-circle"
+                                    class="valid-check-icon"></ion-icon>
                             </div>
                             <div class="field-error-pill" *ngIf="isFieldInvalid('addressLine1')">
                                 <ion-icon name="alert-circle"></ion-icon>
@@ -138,14 +158,41 @@
                             </div>
                         </div>
 
-                        <!-- Address Line 2: Landmark / Street -->
-                        <div class="form-field-group">
-                            <label class="field-label" for="field-addressLine2">
-                                <span>Landmark, Street or Entry Gate (Optional)</span>
+                        <!-- Address 2: Landmark -->
+                        <div class="form-field-group" [class.has-error]="isFieldInvalid('landmark')">
+                            <label class="field-label" for="field-landmark">
+                                <span>Landmark</span>
                             </label>
                             <div class="field-input-box">
                                 <ion-icon name="navigate-outline" class="input-icon"></ion-icon>
-                                <input id="field-addressLine2" type="text" formControlName="addressLine2" placeholder="e.g. Opposite Metro Pillar 114, Heavy Vehicle Gate 2" />
+                                <input id="field-landmark" type="text" formControlName="landmark"
+                                    placeholder="e.g. Near Metro Station / Behind Mall" />
+                                <ion-icon
+                                    *ngIf="checkoutForm.get('landmark')?.valid && checkoutForm.get('landmark')?.value"
+                                    name="checkmark-circle" class="valid-check-icon"></ion-icon>
+                            </div>
+                            <div class="field-error-pill" *ngIf="isFieldInvalid('landmark')">
+                                <ion-icon name="alert-circle"></ion-icon>
+                                <span>{{ getErrorMessage('landmark') }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Address 3: Area / Locality -->
+                        <div class="form-field-group" [class.has-error]="isFieldInvalid('addressLine2')">
+                            <label class="field-label" for="field-addressLine2">
+                                <span>Area / Locality</span>
+                                <span class="req-star">*</span>
+                            </label>
+                            <div class="field-input-box">
+                                <ion-icon name="location-outline" class="input-icon"></ion-icon>
+                                <input id="field-addressLine2" type="text" formControlName="addressLine2"
+                                    placeholder="e.g. Madhapur, Hitec City, Hyderabad" />
+                                <ion-icon *ngIf="checkoutForm.get('addressLine2')?.valid" name="checkmark-circle"
+                                    class="valid-check-icon"></ion-icon>
+                            </div>
+                            <div class="field-error-pill" *ngIf="isFieldInvalid('addressLine2')">
+                                <ion-icon name="alert-circle"></ion-icon>
+                                <span>{{ getErrorMessage('addressLine2') }}</span>
                             </div>
                         </div>
 
@@ -159,7 +206,8 @@
                                 </label>
                                 <div class="field-input-box">
                                     <ion-icon name="map-outline" class="input-icon"></ion-icon>
-                                    <input id="field-city" type="text" formControlName="city" placeholder="e.g. Hyderabad" />
+                                    <input id="field-city" type="text" formControlName="city"
+                                        placeholder="e.g. Hyderabad" />
                                 </div>
                                 <div class="field-error-pill" *ngIf="isFieldInvalid('city')">
                                     <ion-icon name="alert-circle"></ion-icon>
@@ -175,7 +223,8 @@
                                 </label>
                                 <div class="field-input-box">
                                     <ion-icon name="compass-outline" class="input-icon"></ion-icon>
-                                    <input id="field-state" type="text" formControlName="state" placeholder="e.g. Telangana" />
+                                    <input id="field-state" type="text" formControlName="state"
+                                        placeholder="e.g. Telangana" />
                                 </div>
                                 <div class="field-error-pill" *ngIf="isFieldInvalid('state')">
                                     <ion-icon name="alert-circle"></ion-icon>
@@ -191,8 +240,10 @@
                                 </label>
                                 <div class="field-input-box">
                                     <ion-icon name="pin-outline" class="input-icon"></ion-icon>
-                                    <input id="field-pincode" type="text" maxlength="6" formControlName="pincode" placeholder="6-digit PIN" />
-                                    <ion-icon *ngIf="checkoutForm.get('pincode')?.valid" name="checkmark-circle" class="valid-check-icon"></ion-icon>
+                                    <input id="field-pincode" type="text" maxlength="6" formControlName="pincode"
+                                        placeholder="6-digit PIN" />
+                                    <ion-icon *ngIf="checkoutForm.get('pincode')?.valid" name="checkmark-circle"
+                                        class="valid-check-icon"></ion-icon>
                                 </div>
                                 <div class="field-error-pill" *ngIf="isFieldInvalid('pincode')">
                                     <ion-icon name="alert-circle"></ion-icon>
@@ -208,7 +259,8 @@
                             </label>
                             <div class="field-input-box">
                                 <ion-icon name="document-text-outline" class="input-icon"></ion-icon>
-                                <input id="field-notes" type="text" formControlName="siteNotes" placeholder="e.g. Security clearance needed, trailer parking space available" />
+                                <input id="field-notes" type="text" formControlName="siteNotes"
+                                    placeholder="e.g. Security clearance needed, trailer parking space available" />
                             </div>
                         </div>
                     </form>
@@ -223,13 +275,15 @@
                             </div>
                             <div>
                                 <h2 class="card-heading">Mobilization Schedule & Logistics Mode</h2>
-                                <p class="card-subheading">Select dispatch priority for materials or equipment transport</p>
+                                <p class="card-subheading">Select dispatch priority for materials or equipment transport
+                                </p>
                             </div>
                         </div>
                     </div>
 
                     <div class="dispatch-modes-grid">
-                        <div class="dispatch-card" [class.active]="selectedDispatchMode === 'standard'" (click)="selectDispatchMode('standard')">
+                        <div class="dispatch-card" [class.active]="selectedDispatchMode === 'standard'"
+                            (click)="selectDispatchMode('standard')">
                             <div class="dispatch-radio">
                                 <div class="radio-inner" *ngIf="selectedDispatchMode === 'standard'"></div>
                             </div>
@@ -238,11 +292,13 @@
                                     <strong>Standard Site Mobilization</strong>
                                     <span class="dispatch-pill green">Included Free</span>
                                 </div>
-                                <p>Scheduled arrival on project site by 8:00 AM next morning with verified transit manifest.</p>
+                                <p>Scheduled arrival on project site by 8:00 AM next morning with verified transit
+                                    manifest.</p>
                             </div>
                         </div>
 
-                        <div class="dispatch-card" [class.active]="selectedDispatchMode === 'priority'" (click)="selectDispatchMode('priority')">
+                        <div class="dispatch-card" [class.active]="selectedDispatchMode === 'priority'"
+                            (click)="selectDispatchMode('priority')">
                             <div class="dispatch-radio">
                                 <div class="radio-inner" *ngIf="selectedDispatchMode === 'priority'"></div>
                             </div>
@@ -251,14 +307,16 @@
                                     <strong>Priority Express Mobilization</strong>
                                     <span class="dispatch-pill orange">Within 4 Hours</span>
                                 </div>
-                                <p>Immediate warehouse trailer loading & direct dispatch for time-critical concrete or earthwork operations.</p>
+                                <p>Immediate warehouse trailer loading & direct dispatch for time-critical concrete or
+                                    earthwork operations.</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- 3. Payment Method Selection Card -->
-                <div class="checkout-card">
+                <!-- 3. Payment Method Selection Card (Hidden for Helpers & Service Orders) -->
+                <div class="checkout-card"
+                    *ngIf="!isHelperFlow && !(isBookingFlow && (bookingData?.type === 'service' || serviceBooking))">
                     <div class="card-header-row">
                         <div class="header-left-wrap">
                             <div class="card-icon-badge green-badge">
@@ -266,14 +324,16 @@
                             </div>
                             <div>
                                 <h2 class="card-heading">Select Payment Method</h2>
-                                <p class="card-subheading">100% Secure contractor payment gateway with GST tax invoice</p>
+                                <p class="card-subheading">100% Secure contractor payment gateway with GST tax invoice
+                                </p>
                             </div>
                         </div>
                     </div>
 
                     <div class="payment-options-list">
                         <!-- Option 1: Pay on Site Mobilization -->
-                        <div class="payment-tile" [class.active]="selectedPaymentMethod === 'pay_on_site'" (click)="selectPaymentMethod('pay_on_site')">
+                        <div class="payment-tile" [class.active]="selectedPaymentMethod === 'pay_on_site'"
+                            (click)="selectPaymentMethod('pay_on_site')">
                             <div class="tile-radio">
                                 <div class="radio-dot" *ngIf="selectedPaymentMethod === 'pay_on_site'"></div>
                             </div>
@@ -285,12 +345,14 @@
                                     <h4>Pay on Site Mobilization / Delivery</h4>
                                     <span class="tag-pill-badge recommended">CONTRACTOR RECOMMENDED</span>
                                 </div>
-                                <p>Inspect machinery & materials on your project site before releasing payment via UPI, NEFT or Cheque.</p>
+                                <p>Inspect machinery & materials on your project site before releasing payment via UPI,
+                                    NEFT or Cheque.</p>
                             </div>
                         </div>
 
                         <!-- Option 2: Instant UPI -->
-                        <div class="payment-tile" [class.active]="selectedPaymentMethod === 'upi'" (click)="selectPaymentMethod('upi')">
+                        <div class="payment-tile" [class.active]="selectedPaymentMethod === 'upi'"
+                            (click)="selectPaymentMethod('upi')">
                             <div class="tile-radio">
                                 <div class="radio-dot" *ngIf="selectedPaymentMethod === 'upi'"></div>
                             </div>
@@ -302,12 +364,14 @@
                                     <h4>UPI / Instant QR Payment</h4>
                                     <span class="tag-pill-badge">GPay • PhonePe • Paytm</span>
                                 </div>
-                                <p>Instant zero-fee payment confirmation with instant digital dispatch slip & receipt.</p>
+                                <p>Instant zero-fee payment confirmation with instant digital dispatch slip & receipt.
+                                </p>
                             </div>
                         </div>
 
                         <!-- Option 3: Cards & Net Banking -->
-                        <div class="payment-tile" [class.active]="selectedPaymentMethod === 'card'" (click)="selectPaymentMethod('card')">
+                        <div class="payment-tile" [class.active]="selectedPaymentMethod === 'card'"
+                            (click)="selectPaymentMethod('card')">
                             <div class="tile-radio">
                                 <div class="radio-dot" *ngIf="selectedPaymentMethod === 'card'"></div>
                             </div>
@@ -319,7 +383,54 @@
                                     <h4>Credit / Debit Card & Corporate Net Banking</h4>
                                     <span class="tag-pill-badge">Visa • MasterCard • RuPay</span>
                                 </div>
-                                <p>Support for contractor corporate accounts, GST billing, and all major Indian banks.</p>
+                                <p>Support for contractor corporate accounts, GST billing, and all major Indian banks.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3b. Service Settlement Card for Service Orders (No payment process needed) -->
+                <div class="checkout-card" *ngIf="isBookingFlow && (bookingData?.type === 'service' || serviceBooking)">
+                    <div class="card-header-row">
+                        <div class="header-left-wrap">
+                            <div class="card-icon-badge green-badge">
+                                <ion-icon name="checkmark-done-circle-outline"></ion-icon>
+                            </div>
+                            <div>
+                                <h2 class="card-heading">Service Booking Settlement</h2>
+                                <p class="card-subheading">No upfront online payment required for service orders</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        style="background: rgba(16, 185, 129, 0.08); border: 1.5px solid rgba(16, 185, 129, 0.25); border-radius: 14px; padding: 18px; display: flex; align-items: center; gap: 16px;">
+                        <div
+                            style="width: 48px; height: 48px; border-radius: 12px; background: #10B981; display: flex; align-items: center; justify-content: center; color: #FFFFFF; font-size: 24px; flex-shrink: 0;">
+                            <ion-icon name="cash-outline"></ion-icon>
+                        </div>
+                        <div>
+                            <h4 style="margin: 0; font-size: 15px; font-weight: 800; color: #065F46;">Pay Directly on
+                                Site / Post Work Completion</h4>
+                            <p style="margin: 4px 0 0; font-size: 13px; color: #047857; line-height: 1.4;">Zero payment
+                                gateway charges. Release payment directly to the assigned contractor after quality
+                                inspection on your project site.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Workforce Notice Card for Helpers (No Payment Required) -->
+                <div class="checkout-card" *ngIf="isHelperFlow"
+                    style="border: 1.5px solid rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.04);">
+                    <div class="card-header-row" style="margin-bottom: 0;">
+                        <div class="header-left-wrap">
+                            <div class="card-icon-badge green-badge">
+                                <ion-icon name="people"></ion-icon>
+                            </div>
+                            <div>
+                                <h2 class="card-heading">Workforce Deployment (No Payment Required)</h2>
+                                <p class="card-subheading">Zero upfront fee. Site allocation will be verified directly
+                                    before service begins.</p>
                             </div>
                         </div>
                     </div>
@@ -329,7 +440,7 @@
             <!-- Right Column: Sticky Order Intelligence & Pricing Summary -->
             <div class="checkout-summary-column">
                 <div class="summary-sticky-card">
-                    
+
                     <div class="summary-card-header">
                         <div class="header-icon-wrap">
                             <ion-icon name="receipt-outline"></ion-icon>
@@ -340,18 +451,49 @@
                         </div>
                     </div>
 
-                    <!-- Flow A: Machinery or Helper Booking Visual Card -->
+                    <!-- Flow A: Machinery, Service or Helper Booking Visual Card -->
                     <div class="procurement-preview-card" *ngIf="isBookingFlow && bookingData">
                         <div class="item-visual-row">
-                            <img [src]="bookingData.image || 'assets/rentals/jcb_3dx.jpg'" [alt]="bookingData.rentalName || bookingData.serviceName" class="procurement-thumbnail" />
+                            <img [src]="bookingData.image || 'assets/rentals/jcb_3dx.jpg'"
+                                [alt]="bookingData.rentalName || bookingData.serviceName || bookingData.name"
+                                class="procurement-thumbnail" />
                             <div class="procurement-meta">
-                                <span class="flow-type-pill">{{ bookingData.type === 'rental' ? 'Heavy Machinery Rental' : 'Skilled Site Crew' }}</span>
-                                <h4 class="procurement-name">{{ bookingData.rentalName || bookingData.serviceName }}</h4>
+                                <span class="flow-type-pill">{{ bookingData.type === 'rental' ? 'Heavy Machinery Rental'
+                                    : (bookingData.type === 'service' ? 'Verified Service Order' : 'Skilled Site Crew')
+                                    }}</span>
+                                <h4 class="procurement-name">{{ bookingData.rentalName || bookingData.serviceName ||
+                                    bookingData.name }}</h4>
                                 <div class="procurement-tags">
-                                    <span class="mini-tag" *ngIf="bookingData.days">⏱️ {{ bookingData.days }} Day(s)</span>
-                                    <span class="mini-tag" *ngIf="bookingData.members">👷 {{ bookingData.members }} Worker(s)</span>
+                                    <span class="mini-tag" *ngIf="bookingData.subcategory_name">{{
+                                        bookingData.subcategory_name }}</span>
+                                    <span class="mini-tag" *ngIf="bookingData.days">⏱️ {{ bookingData.days }}
+                                        Day(s)</span>
+                                    <span class="mini-tag" *ngIf="bookingData.members">👷 {{ bookingData.members }}
+                                        Worker(s)</span>
                                     <span class="mini-tag green">✔ Inspected</span>
                                 </div>
+                            </div>
+                        </div>
+
+                        <!-- Assigned Vendor Details Section if Service Booking -->
+                        <div class="assigned-vendor-banner"
+                            *ngIf="bookingData.type === 'service' && (bookingData.vendor || bookingData.vendor_name)"
+                            style="margin: 14px 0 6px; padding: 12px 14px; background: rgba(245, 158, 11, 0.08); border: 1.5px solid rgba(245, 158, 11, 0.25); border-radius: 14px; display: flex; align-items: center; gap: 14px;">
+                            <div
+                                style="width: 48px; height: 48px; border-radius: 14px; overflow: hidden; background: #0d1b2a; flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: #f59e0b; font-weight: 800; font-size: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                                <img *ngIf="bookingData.vendor?.image || bookingData.vendor_image"
+                                    [src]="formatImageUrl(bookingData.vendor?.image || bookingData.vendor_image)"
+                                    style="width: 100%; height: 100%; object-fit: cover;">
+                                <span *ngIf="!(bookingData.vendor?.image || bookingData.vendor_image)">{{
+                                    (bookingData.vendor?.name || bookingData.vendor_name || 'V').charAt(0).toUpperCase()
+                                    }}</span>
+                            </div>
+                            <div style="flex: 1;">
+                                <span
+                                    style="font-size: 9px; font-weight: 800; text-transform: uppercase; color: #b45309; letter-spacing: 0.1em; display: block;">Assigned
+                                    Service Vendor</span>
+                                <h5 style="margin: 2px 0 0; font-size: 15px; font-weight: 800; color: #0f172a;">{{
+                                    bookingData.vendor?.name || bookingData.vendor_name }}</h5>
                             </div>
                         </div>
 
@@ -362,7 +504,7 @@
                             </div>
                             <div class="strip-item">
                                 <ion-icon name="checkmark-circle" class="inc-green"></ion-icon>
-                                <span>Certified Operator & Fuel Standards</span>
+                                <span>Certified Workmanship Standards</span>
                             </div>
                         </div>
                     </div>
@@ -370,7 +512,8 @@
                     <!-- Flow B: Materials E-Commerce Cart Items Preview -->
                     <div class="cart-items-preview-list" *ngIf="!isBookingFlow && cartItems.length > 0">
                         <div class="cart-preview-item" *ngFor="let item of cartItems">
-                            <img [src]="getItemImage(item)" [alt]="item.product?.name || 'Material'" class="cart-thumb" />
+                            <img [src]="getItemImage(item)" [alt]="item.product?.name || 'Material'"
+                                class="cart-thumb" />
                             <div class="cart-item-details">
                                 <span class="c-name">{{ item.product?.name || 'Construction Material' }}</span>
                                 <span class="c-meta">Qty: {{ item.quantity }} × ₹{{ item.product?.price || 100 }}</span>
@@ -383,7 +526,8 @@
                     <div class="coupon-box-wrap">
                         <div class="coupon-input-row" *ngIf="!couponApplied">
                             <ion-icon name="pricetag-outline" class="coupon-icon"></ion-icon>
-                            <input type="text" [(ngModel)]="couponInput" placeholder="Enter coupon (e.g. CIVIL10)" (keyup.enter)="applyCoupon()" />
+                            <input type="text" [(ngModel)]="couponInput" placeholder="Enter coupon (e.g. CIVIL10)"
+                                (keyup.enter)="applyCoupon()" />
                             <button type="button" class="btn-apply-coupon" (click)="applyCoupon()">Apply</button>
                         </div>
                         <div class="coupon-applied-pill" *ngIf="couponApplied">
@@ -393,7 +537,8 @@
                             </div>
                             <button type="button" class="btn-remove-coupon" (click)="removeCoupon()">Remove</button>
                         </div>
-                        <span class="coupon-msg" *ngIf="couponMessage" [class.success]="couponApplied">{{ couponMessage }}</span>
+                        <span class="coupon-msg" *ngIf="couponMessage" [class.success]="couponApplied">{{ couponMessage
+                            }}</span>
                     </div>
 
                     <!-- Detailed Price Breakdown -->
@@ -434,10 +579,14 @@
                     </div>
 
                     <!-- Primary Action Button -->
-                    <button type="button" class="btn-place-order-cta" (click)="proceedToPayment()" [disabled]="isSubmitting">
+                    <button type="button" class="btn-place-order-cta" (click)="proceedToPayment()"
+                        [disabled]="isSubmitting">
                         <ion-spinner *ngIf="isSubmitting" name="crescent" class="cta-spinner"></ion-spinner>
                         <ion-icon *ngIf="!isSubmitting" name="checkmark-done-circle"></ion-icon>
-                        <span>{{ isSubmitting ? 'Finalizing Site Dispatch...' : 'Confirm & Place Order' }}</span>
+                        <span>{{ isSubmitting ? 'Processing...' : (isHelperFlow ? 'Deploy Helpers (No Payment Required)'
+                            : ((isBookingFlow && (bookingData?.type === 'service' || serviceBooking)) ? 'Confirm & Book
+                            Service (Pay on Site)' : (serviceBooking?.editOrderId ? 'Place Order & Update Project' :
+                            'Confirm & Place Order'))) }}</span>
                         <ion-icon *ngIf="!isSubmitting" name="arrow-forward" class="arrow-forward-icon"></ion-icon>
                     </button>
 

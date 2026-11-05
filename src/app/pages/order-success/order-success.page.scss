@@ -1028,6 +1028,328 @@
   }
 }
 
+/* Service Orders & Edit Order Confirmation Styles */
+.service-assigned-card {
+  background: #FFFFFF;
+  border-radius: 20px;
+  border: 1px solid #E2E8F0;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+  padding: 24px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+
+  .card-top-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #D97706;
+    background: #FEF3C7;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    margin-bottom: 16px;
+  }
+}
+
+.service-vendor-hero {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 18px 20px;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(251, 191, 36, 0.04) 100%);
+  border: 1.5px solid rgba(245, 158, 11, 0.25);
+  border-radius: 16px;
+  margin-bottom: 20px;
+
+  .vendor-avatar-box {
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+    background: #0F172A;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+    box-shadow: 0 8px 16px rgba(15, 23, 42, 0.15);
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .initial-text {
+      color: #F59E0B;
+      font-size: 26px;
+      font-weight: 800;
+    }
+  }
+
+  .vendor-info-meta {
+    flex: 1;
+
+    .vendor-role-label {
+      font-size: 11px;
+      font-weight: 800;
+      color: #B45309;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      display: block;
+    }
+
+    .vendor-full-name {
+      margin: 4px 0 2px;
+      font-size: 20px;
+      font-weight: 800;
+      color: #0F172A;
+    }
+
+    .service-highlight-title {
+      font-size: 13px;
+      color: #475569;
+      font-weight: 600;
+      margin: 0;
+
+      strong {
+        color: #D97706;
+      }
+    }
+  }
+
+  .vendor-call-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #0F172A;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 18px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+    transition: all 0.2s ease;
+
+    ion-icon {
+      font-size: 16px;
+      color: #10B981;
+    }
+
+    &:hover {
+      background: #1E293B;
+      transform: translateY(-2px);
+    }
+  }
+}
+
+.service-inclusions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  padding-top: 14px;
+  border-top: 1px dashed #E2E8F0;
+
+  .inc-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #334155;
+
+    ion-icon {
+      font-size: 16px;
+      color: #10B981;
+      flex-shrink: 0;
+    }
+  }
+}
+
+/* Multi-Service Project Summary List */
+.project-services-card {
+  background: #FFFFFF;
+  border-radius: 20px;
+  border: 1px solid #E2E8F0;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05);
+  padding: 24px;
+  margin-bottom: 24px;
+
+  .card-sec-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: #0F172A;
+    margin: 0 0 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    ion-icon {
+      color: #FF6B00;
+      font-size: 18px;
+    }
+  }
+
+  .service-rows-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .service-project-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    background: #F8FAFC;
+    border-radius: 12px;
+    border: 1px solid #E2E8F0;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: #F1F5F9;
+      border-color: #CBD5E1;
+    }
+
+    .srv-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .srv-bullet {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #10B981;
+      }
+
+      .srv-name {
+        font-size: 14px;
+        font-weight: 700;
+        color: #0F172A;
+        display: block;
+      }
+
+      .srv-vendor {
+        font-size: 12px;
+        font-weight: 600;
+        color: #64748B;
+      }
+    }
+
+    .srv-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+
+      .status-pill {
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        padding: 4px 10px;
+        border-radius: 9999px;
+        letter-spacing: 0.05em;
+
+        &.pending {
+          background: #FEF3C7;
+          color: #B45309;
+        }
+
+        &.accepted, &.confirmed {
+          background: #ECFDF5;
+          color: #047857;
+        }
+      }
+
+      .srv-price {
+        font-size: 14px;
+        font-weight: 800;
+        color: #0F172A;
+      }
+    }
+  }
+}
+
+/* Preserved Coordinates Card */
+.preserved-coords-card {
+  background: #FFFFFF;
+  border-radius: 20px;
+  border: 1px solid #E2E8F0;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05);
+  padding: 24px;
+  margin-bottom: 24px;
+
+  .coords-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+
+    .coords-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #0F172A;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .preserved-tag {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      background: #ECFDF5;
+      color: #047857;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+  }
+
+  .coords-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+
+    .coord-item {
+      background: #F8FAFC;
+      border-radius: 12px;
+      padding: 14px 16px;
+      border: 1px solid #E2E8F0;
+
+      .coord-lbl {
+        font-size: 11px;
+        font-weight: 700;
+        color: #64748B;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      .coord-val {
+        font-size: 14px;
+        font-weight: 700;
+        color: #0F172A;
+        display: block;
+      }
+
+      .coord-sub {
+        font-size: 12px;
+        color: #64748B;
+        margin-top: 2px;
+        display: block;
+      }
+    }
+  }
+}
+
 /* Staggered Animations */
 .fade-in-up {
   animation: fadeInUpAnim 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;

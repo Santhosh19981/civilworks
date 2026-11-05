@@ -23,12 +23,15 @@ export class AuthInterceptor implements HttpInterceptor {
             catchError((error: HttpErrorResponse) => {
                 const isAuthEndpoint = request.url.includes('/auth/login') ||
                     request.url.includes('/auth/verify-otp') ||
-                    request.url.includes('/auth/send-otp');
+                    request.url.includes('/auth/send-otp') ||
+                    request.url.includes('/vendor-portal/check-mobile') ||
+                    request.url.includes('/vendor-portal/verify-otp') ||
+                    request.url.includes('/vendor-portal/signup');
 
-                if (!isAuthEndpoint && (error.status === 401 || error.status === 403) && token) {
+                if (!isAuthEndpoint && error.status === 401 && token) {
                     localStorage.removeItem('civilworks_token');
                     localStorage.removeItem('civilworks_user');
-                    if (!this.router.url.includes('/login') && !this.router.url.includes('/splash')) {
+                    if (!this.router.url.includes('/login') && !this.router.url.includes('/splash') && !this.router.url.includes('/vendor-portal')) {
                         this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url } });
                     }
                 }

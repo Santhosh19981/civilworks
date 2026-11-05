@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { ProductDetailPage } from './product-detail.page';
 import { RouterModule, Routes } from '@angular/router';
+import { NavDropdownComponent } from '../../components/nav-dropdown/nav-dropdown.component';
 
 const routes: Routes = [
     {
@@ -17,7 +18,8 @@ const routes: Routes = [
         CommonModule,
         FormsModule,
         IonicModule,
-        RouterModule.forChild(routes)
+        RouterModule.forChild(routes),
+        NavDropdownComponent
     ],
     declarations: [ProductDetailPage]
 })

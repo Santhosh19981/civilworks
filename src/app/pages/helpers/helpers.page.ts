@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
+import { Subscription } from 'rxjs';
 import { HelperService } from '../../services/helper.service';
 
 @Component({
@@ -7,7 +9,7 @@ import { HelperService } from '../../services/helper.service';
     templateUrl: './helpers.page.html',
     styleUrls: ['./helpers.page.scss'],
 })
-export class HelpersPage implements OnInit {
+export class HelpersPage implements OnInit, OnDestroy {
     helpers: any[] = [];
     filteredHelpers: any[] = [];
     searchQuery = '';
@@ -15,19 +17,41 @@ export class HelpersPage implements OnInit {
     categories: string[] = ['All'];
     sortBy = 'rating';
     loading = true;
+    mainCategoryId: number | null = null;
+    private routeSub?: Subscription;
 
     constructor(
         private helperService: HelperService,
-        private router: Router
+        private router: Router,
+        private route: ActivatedRoute,
+        private location: Location
     ) { }
 
     ngOnInit() {
-        this.loadHelpers();
+        this.routeSub = this.route.queryParams.subscribe(params => {
+            const savedSector = localStorage.getItem('selectedSectorId');
+            this.mainCategoryId = params['mainCategoryId'] ? Number(params['mainCategoryId']) : (savedSector ? Number(savedSector) : null);
+            this.loadHelpers();
+        });
+    }
+
+    ngOnDestroy() {
+        if (this.routeSub) {
+            this.routeSub.unsubscribe();
+        }
     }
 
     loadHelpers() {
         this.loading = true;
-        this.helperService.getHelpers({ limit: 100 }).subscribe({
+        this.helpers = [];
+        this.filteredHelpers = [];
+
+        const params: any = { limit: 100 };
+        if (this.mainCategoryId) {
+            params.main_category_id = this.mainCategoryId;
+        }
+
+        this.helperService.getHelpers(params).subscribe({
             next: (data: any[]) => {
                 const list = Array.isArray(data) ? data : [];
                 this.helpers = list.map(h => this.normalizeHelper(h));
@@ -197,6 +221,14 @@ export class HelpersPage implements OnInit {
 
     viewHelper(id: string) {
         this.router.navigate(['/helper-details', id]);
+    }
+
+    goBack() {
+        if (window.history.length > 1) {
+            this.location.back();
+        } else {
+            this.router.navigate(['/tabs/home']);
+        }
     }
 
     onImageError(event: any) {

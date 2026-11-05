@@ -40,6 +40,19 @@ export class OrderService {
         return this.placeOrder(orderData);
     }
 
+    // Order Editing (Multi-Service Editable Orders)
+    addServiceToOrder(orderId: number | string, data: { subcategory_id: number; vendor_id: number; service_name?: string; price?: number; notes?: string }): Observable<any> {
+        return this.http.post<any>(`${environment.apiUrl}/orders/${orderId}/services`, data);
+    }
+
+    removeServiceFromOrder(orderId: number | string, serviceId: number | string): Observable<any> {
+        return this.http.delete<any>(`${environment.apiUrl}/orders/${orderId}/services/${serviceId}`);
+    }
+
+    reselectVendor(orderId: number | string, serviceId: number | string, data: { vendor_id: number; notes?: string }): Observable<any> {
+        return this.http.put<any>(`${environment.apiUrl}/orders/${orderId}/services/${serviceId}/reselect-vendor`, data);
+    }
+
     // Address Management
     getAddresses(): Observable<any[]> {
         return this.http.get<any>(`${environment.apiUrl}/addresses`)

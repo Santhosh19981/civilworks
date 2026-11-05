@@ -1,28 +1,30 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { IonContent, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { ProductService } from '../../services/product.service';
 import { RentalService } from '../../services/rental.service';
 import { CartService } from '../../services/cart.service';
-import { Product } from '../../models/product.model';
+import { AuthService } from '../../services/auth.service';
+import { Product, MainCategory, Category } from '../../models/product.model';
 import { Rental } from '../../models/rental.model';
 
-export interface CategoryItem {
-    id?: number;
-    name: string;
-    icon: string;
-    itemCount?: string;
-    color?: string;
-}
+import { ChatService } from '../../services/chat.service';
+import { OrderService } from '../../services/order.service';
 
 export interface PromoBanner {
-    tag: string;
+    id?: number;
+    tag?: string;
     title: string;
-    subtitle: string;
-    cta: string;
+    subtitle?: string;
+    cta?: string;
+    cta_link?: string;
+    route?: string;
+    assurance_badge?: string;
+    badge?: string;
     image: string;
-    route: string;
+    main_category_id?: number;
+    main_category_name?: string;
 }
 
 @Component({
@@ -33,100 +35,290 @@ export interface PromoBanner {
 export class HomePage implements OnInit, OnDestroy {
     @ViewChild(IonContent) content!: IonContent;
 
-    banners: PromoBanner[] = [
-        {
-            tag: 'DIRECT WHOLESALE',
-            title: 'Quality Building Materials',
-            subtitle: 'Direct supply on Cement, TMT Steel, Sand & Site Essentials at bulk rates',
-            cta: 'Explore Materials',
-            image: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1200&q=80',
-            route: '/tabs/products'
-        },
-        {
-            tag: 'EXPRESS SITE DISPATCH',
-            title: 'Heavy Equipment & Machinery',
-            subtitle: 'JCB 3DX, Excavators, Cranes & Mixers with certified operators at your site',
-            cta: 'Rent Machinery',
-            image: 'https://images.unsplash.com/photo-1541625602330-2277a1cd1f59?auto=format&fit=crop&w=1200&q=80',
-            route: '/tabs/rentals'
-        },
-        {
-            tag: 'VERIFIED WORKFORCE',
-            title: 'Skilled Construction Labor',
-            subtitle: 'Certified masons, carpenters, electricians & helpers on flexible daily contracts',
-            cta: 'Book Workers',
-            image: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=1200&q=80',
-            route: '/helpers'
-        }
-    ];
+    banners: PromoBanner[] = [];
 
-    quickCategories: CategoryItem[] = [
-        { name: 'Cement & Sand', icon: 'cube-outline', itemCount: '40+ items', color: '#F97316' },
-        { name: 'Steel & TMT', icon: 'layers-outline', itemCount: '25+ items', color: '#0284C7' },
-        { name: 'Construction Tools', icon: 'construct-outline', itemCount: '60+ items', color: '#EAB308' },
-        { name: 'Safety Equipment', icon: 'shield-checkmark-outline', itemCount: '30+ items', color: '#10B981' },
-        { name: 'Plumbing & Pipes', icon: 'water-outline', itemCount: '50+ items', color: '#06B6D4' },
-        { name: 'Electrical & Lighting', icon: 'flash-outline', itemCount: '35+ items', color: '#8B5CF6' },
-        { name: 'Hardware & Fittings', icon: 'hardware-chip-outline', itemCount: '45+ items', color: '#EC4899' },
-        { name: 'Heavy Machinery', icon: 'speedometer-outline', itemCount: '15+ fleet', color: '#F59E0B' }
-    ];
-
+    mainCategories: MainCategory[] = [];
+    sectorCategories: Category[] = [];
     featuredProducts: Product[] = [];
     popularRentals: Rental[] = [];
+    hasRentalOrServiceSubcategories: boolean = false;
+    hasRentalOrServiceProducts: boolean = false;
+    showRentalSection: boolean = false;
     loading = true;
     currentSlide = 0;
     cartCount = 0;
     searchQuery = '';
     slideInterval: any;
     addingToCartId: string | number | null = null;
+    activeSectorId: number | null = null;
+    activeSectorName: string = '';
+
+    // Floating Cap Chat State & Order Editing
+    showChatPanel: boolean = false;
+    unreadMessagesCount: number = 0;
+    showEditModal: boolean = false;
+    editingOrder: any = null;
+
     private cartSub?: Subscription;
+    private routeSub?: Subscription;
+    private chatSub?: Subscription;
 
     constructor(
         private productService: ProductService,
         private rentalService: RentalService,
         private cartService: CartService,
+        private chatService: ChatService,
+        private orderService: OrderService,
         private toastCtrl: ToastController,
-        private router: Router
+        private router: Router,
+        private route: ActivatedRoute,
+        public authService: AuthService
     ) { }
 
     ngOnInit() {
-        this.loadData();
+        this.routeSub = this.route.queryParams.subscribe(params => {
+            if (params['mainCategoryId']) {
+                this.activeSectorId = Number(params['mainCategoryId']);
+                localStorage.setItem('selectedSectorId', String(this.activeSectorId));
+            } else {
+                const savedId = localStorage.getItem('selectedSectorId');
+                this.activeSectorId = savedId ? Number(savedId) : null;
+            }
+            const savedName = localStorage.getItem('selectedSectorName');
+            if (savedName) {
+                this.activeSectorName = savedName;
+            }
+            this.loadData();
+        });
+
         this.startBannerAutoSlide();
 
         this.cartSub = this.cartService.cart$.subscribe((cart) => {
             this.cartCount = cart?.items?.length || 0;
         });
+
+        this.chatSub = this.chatService.unreadCount$.subscribe(count => {
+            this.unreadMessagesCount = count;
+        });
+        this.chatService.loadConversations().subscribe({ error: () => {} });
     }
 
     ngOnDestroy() {
-        if (this.slideInterval) {
-            clearInterval(this.slideInterval);
-        }
-        if (this.cartSub) {
-            this.cartSub.unsubscribe();
-        }
+        if (this.slideInterval) clearInterval(this.slideInterval);
+        if (this.cartSub) this.cartSub.unsubscribe();
+        if (this.routeSub) this.routeSub.unsubscribe();
+        if (this.chatSub) this.chatSub.unsubscribe();
+    }
+
+    toggleChatPanel() {
+        this.showChatPanel = !this.showChatPanel;
+    }
+
+    openEditOrderFromChat(conv: any) {
+        if (!conv) return;
+        this.orderService.getOrderDetails(conv.order_id || conv.orderNo).subscribe({
+            next: (orderDetails) => {
+                this.editingOrder = orderDetails;
+                this.showEditModal = true;
+            },
+            error: () => {
+                this.editingOrder = {
+                    id: conv.order_id,
+                    order_no: conv.order_no,
+                    services: conv.services || []
+                };
+                this.showEditModal = true;
+            }
+        });
     }
 
     loadData() {
         this.loading = true;
+        this.hasRentalOrServiceSubcategories = false;
+        this.hasRentalOrServiceProducts = false;
+        this.showRentalSection = false;
 
-        // Load Featured Products
-        this.productService.getFeaturedProducts(8).subscribe({
+        // Load Dynamic Active Main Categories from API
+        this.productService.getMainCategories().subscribe({
+            next: (mainCats) => {
+                this.mainCategories = (mainCats || []).filter(m => m.status === 'active' || !m.status);
+                if (this.activeSectorId) {
+                    const found = this.mainCategories.find(m => m.id == this.activeSectorId);
+                    if (found) {
+                        this.activeSectorName = found.name;
+                        localStorage.setItem('selectedSectorName', found.name);
+                    }
+                }
+            },
+            error: (err) => console.error('Error loading main categories', err)
+        });
+
+        // Load Dynamic Categories tagged to the active sector
+        this.productService.getCategories(this.activeSectorId || undefined).subscribe({
+            next: (cats) => {
+                let list = cats || [];
+                if (this.activeSectorId) {
+                    const sectorId = Number(this.activeSectorId);
+                    list = list.filter(c => {
+                        if (Array.isArray(c.main_category_ids) && c.main_category_ids.map(Number).includes(sectorId)) {
+                            return true;
+                        }
+                        return Number(c.main_category_id) === sectorId;
+                    });
+                }
+                this.sectorCategories = list;
+                this.checkLoading();
+            },
+            error: (err) => {
+                console.error('Error loading sector categories', err);
+                this.checkLoading();
+            }
+        });
+
+        // Check if active sector has any subcategories configured with renting or services behavior
+        const subParams: any = { limit: 100 };
+        if (this.activeSectorId) {
+            subParams.main_category_id = this.activeSectorId;
+        }
+        this.productService.getSubcategories(subParams).subscribe({
+            next: (subs) => {
+                let list = subs || [];
+                if (this.activeSectorId) {
+                    const sectorId = Number(this.activeSectorId);
+                    list = list.filter(s => {
+                        const sub: any = s;
+                        if (Array.isArray(sub.main_category_ids) && sub.main_category_ids.map(Number).includes(sectorId)) {
+                            return true;
+                        }
+                        return Number(sub.main_category_id) === sectorId;
+                    });
+                }
+                const rentalOrServiceSubs = list.filter(s => {
+                    const t = ((s.type || '') as string).toLowerCase().trim();
+                    return t === 'renting' || t === 'services' || t === 'rental' || t === 'service';
+                });
+                this.hasRentalOrServiceSubcategories = rentalOrServiceSubs.length > 0;
+                this.updateRentalSectionVisibility();
+            },
+            error: () => {
+                this.hasRentalOrServiceSubcategories = false;
+                this.updateRentalSectionVisibility();
+            }
+        });
+
+        // Load Dynamic Hero Advertisements strictly isolated to active sector
+        this.productService.getBanners(this.activeSectorId || undefined).subscribe({
+            next: (banners) => {
+                let list = banners || [];
+                if (this.activeSectorId) {
+                    list = list.filter(b => b.main_category_id == this.activeSectorId);
+                }
+                this.banners = list;
+                this.currentSlide = 0;
+                this.startBannerAutoSlide();
+            },
+            error: (err) => console.error('Error loading hero banners', err)
+        });
+
+        // Load Featured Products (scoped to sector if activeSectorId is set)
+        const prodParams: any = { featured: 1 };
+        if (this.activeSectorId) {
+            prodParams.main_category_id = this.activeSectorId;
+        }
+        this.productService.getProducts(prodParams).subscribe({
             next: (products) => {
-                this.featuredProducts = products;
-                this.checkLoading();
+                let list = products || [];
+                if (list.length === 0 && this.activeSectorId) {
+                    this.productService.getProducts({ main_category_id: this.activeSectorId }).subscribe({
+                        next: (allSectorProds) => {
+                            this.featuredProducts = (allSectorProds || []).slice(0, 8);
+                            this.checkProductTypes(allSectorProds || []);
+                            this.checkLoading();
+                        },
+                        error: () => this.checkLoading()
+                    });
+                } else if (!this.activeSectorId) {
+                    this.featuredProducts = list.slice(0, 8);
+                    this.checkProductTypes(list);
+                    this.checkLoading();
+                } else {
+                    this.featuredProducts = list.slice(0, 8);
+                    this.checkProductTypes(list);
+                    this.checkLoading();
+                }
             },
             error: () => this.checkLoading()
         });
 
-        // Load Popular Rentals
-        this.rentalService.getRentals({ featured: 1 }).subscribe({
+        // Load Popular Rentals strictly scoped to sector
+        const rentalParams: any = { featured: 1 };
+        if (this.activeSectorId) {
+            rentalParams.main_category_id = this.activeSectorId;
+        }
+        this.rentalService.getRentals(rentalParams).subscribe({
             next: (rentals) => {
-                this.popularRentals = rentals;
-                this.checkLoading();
+                let list = rentals || [];
+                if (this.activeSectorId) {
+                    list = list.filter(r => r.main_category_id == this.activeSectorId);
+                }
+                if (list.length === 0 && this.activeSectorId) {
+                    this.rentalService.getRentals({ main_category_id: this.activeSectorId }).subscribe({
+                        next: (allSectorRentals) => {
+                            let allList = allSectorRentals || [];
+                            if (this.activeSectorId) {
+                                allList = allList.filter(r => r.main_category_id == this.activeSectorId);
+                            }
+                            this.popularRentals = allList;
+                            this.updateRentalSectionVisibility();
+                            this.checkLoading();
+                        },
+                        error: () => {
+                            this.popularRentals = [];
+                            this.updateRentalSectionVisibility();
+                            this.checkLoading();
+                        }
+                    });
+                } else {
+                    this.popularRentals = list;
+                    this.updateRentalSectionVisibility();
+                    this.checkLoading();
+                }
             },
-            error: () => this.checkLoading()
+            error: () => {
+                this.popularRentals = [];
+                this.updateRentalSectionVisibility();
+                this.checkLoading();
+            }
         });
+    }
+
+    checkProductTypes(prods: Product[]) {
+        const rentalOrServiceProds = (prods || []).filter(p => {
+            const pType = ((p.product_type || p.type || '') as string).toLowerCase().trim();
+            const subType = (((p as any).subcategory_type || '') as string).toLowerCase().trim();
+            return pType === 'renting' || pType === 'services' || pType === 'rental' || pType === 'service' ||
+                   subType === 'renting' || subType === 'services' || subType === 'rental' || subType === 'service';
+        });
+        this.hasRentalOrServiceProducts = rentalOrServiceProds.length > 0;
+        this.updateRentalSectionVisibility();
+    }
+
+    updateRentalSectionVisibility() {
+        const hasRentals = this.popularRentals && this.popularRentals.length > 0;
+        const hasRentalOrServiceType = this.hasRentalOrServiceSubcategories || this.hasRentalOrServiceProducts;
+
+        // If in a specific sector: only show if the sector actually has renting/services capability OR rentals in DB, AND has items to display.
+        // If "no product or sub category has rentals , services in the main category", this portion is removed completely.
+        if (this.activeSectorId) {
+            this.showRentalSection = (hasRentalOrServiceType || hasRentals) && hasRentals;
+        } else {
+            // All sectors view
+            this.showRentalSection = hasRentals;
+        }
+    }
+
+    switchSector() {
+        this.router.navigate(['/sector-select']);
     }
 
     private checkLoading() {
@@ -137,8 +329,11 @@ export class HomePage implements OnInit, OnDestroy {
         if (this.slideInterval) {
             clearInterval(this.slideInterval);
         }
+        if (!this.banners || this.banners.length <= 1) return;
         this.slideInterval = setInterval(() => {
-            this.currentSlide = (this.currentSlide + 1) % this.banners.length;
+            if (this.banners.length > 0) {
+                this.currentSlide = (this.currentSlide + 1) % this.banners.length;
+            }
         }, 5000);
     }
 
@@ -148,13 +343,39 @@ export class HomePage implements OnInit, OnDestroy {
     }
 
     nextSlide() {
-        this.currentSlide = (this.currentSlide + 1) % this.banners.length;
+        if (this.banners && this.banners.length > 0) {
+            this.currentSlide = (this.currentSlide + 1) % this.banners.length;
+        }
         this.startBannerAutoSlide();
     }
 
     prevSlide() {
-        this.currentSlide = (this.currentSlide - 1 + this.banners.length) % this.banners.length;
+        if (this.banners && this.banners.length > 0) {
+            this.currentSlide = (this.currentSlide - 1 + this.banners.length) % this.banners.length;
+        }
         this.startBannerAutoSlide();
+    }
+
+
+    get totalSlides(): number {
+        return 1 + (this.banners ? this.banners.length : 0);
+    }
+
+    get isPlusMember(): boolean {
+        return this.authService.isPlusMember();
+    }
+
+    joinMembership() {
+        const currentUrl = this.router.url;
+        if (!this.authService.isAuthenticated()) {
+            this.router.navigate(['/login'], {
+                queryParams: { returnUrl: '/membership-checkout?returnUrl=' + encodeURIComponent(currentUrl) }
+            });
+            return;
+        }
+        this.router.navigate(['/membership-checkout'], {
+            queryParams: { returnUrl: currentUrl }
+        });
     }
 
     handleRefresh(event: any) {
@@ -165,39 +386,118 @@ export class HomePage implements OnInit, OnDestroy {
     }
 
     onSearch() {
+        const queryParams: any = {};
+        if (this.activeSectorId) queryParams.mainCategoryId = this.activeSectorId;
         if (this.searchQuery && this.searchQuery.trim()) {
-            this.router.navigate(['/tabs/products'], {
-                queryParams: { search: this.searchQuery.trim() }
-            });
+            queryParams.search = this.searchQuery.trim();
+        }
+        this.router.navigate(['/tabs/products'], { queryParams });
+    }
+
+    selectCategory(cat: any) {
+        const queryParams: any = {};
+        if (this.activeSectorId) queryParams.mainCategoryId = this.activeSectorId;
+
+        if (typeof cat === 'object' && cat && cat.id) {
+            queryParams.categoryId = cat.id;
+            const name = (cat.name || '').toLowerCase();
+            if (name.includes('machinery & equipment') || name === 'heavy machinery') {
+                this.router.navigate(['/tabs/rentals'], { queryParams });
+                return;
+            }
+            this.router.navigate(['/tabs/products'], { queryParams });
+            return;
+        }
+
+        const catName = String(cat);
+        queryParams.category = catName;
+        if (catName.toLowerCase().includes('machinery') || catName.toLowerCase().includes('equipment')) {
+            this.router.navigate(['/tabs/rentals'], { queryParams });
         } else {
-            this.router.navigate(['/tabs/products']);
+            this.router.navigate(['/tabs/products'], { queryParams });
         }
     }
 
-    selectCategory(catName: string) {
-        if (catName === 'Heavy Machinery') {
-            this.router.navigate(['/tabs/rentals']);
-        } else {
-            this.router.navigate(['/tabs/products'], {
-                queryParams: { category: catName }
-            });
+    getCategoryIcon(cat: any): string {
+        const name = (cat.name || '').toLowerCase();
+        if (name.includes('civil') || name.includes('interior')) return 'cube-outline';
+        if (name.includes('machin') || name.includes('equipment') || name.includes('rental')) return 'construct-outline';
+        if (name.includes('electr')) return 'flash-outline';
+        if (name.includes('plumb')) return 'water-outline';
+        if (name.includes('hardw') || name.includes('tool')) return 'hammer-outline';
+        if (name.includes('furnit') || name.includes('architect')) return 'bed-outline';
+        if (name.includes('estate') || name.includes('prop')) return 'business-outline';
+        return 'grid-outline';
+    }
+
+    getCategoryThemeClass(cat: any, index: number): string {
+        const name = (cat.name || '').toLowerCase();
+        if (name.includes('civil') || name.includes('interior')) return 'theme-orange';
+        if (name.includes('machin') || name.includes('equipment')) return 'theme-navy';
+        if (name.includes('electr')) return 'theme-amber';
+        if (name.includes('plumb')) return 'theme-cyan';
+        if (name.includes('hardw') || name.includes('tool')) return 'theme-emerald';
+        if (name.includes('furnit')) return 'theme-indigo';
+        const themes = ['theme-orange', 'theme-navy', 'theme-amber', 'theme-cyan', 'theme-emerald', 'theme-indigo'];
+        return themes[index % themes.length];
+    }
+
+    getCategoryDesc(cat: any): string {
+        if (cat.description && typeof cat.description === 'string' && cat.description.trim() !== '') {
+            return cat.description;
         }
+        const name = (cat.name || '').toLowerCase();
+        if (name.includes('civil')) return 'Cement, TMT Steel, Sand, Blocks & essential building supplies.';
+        if (name.includes('machin') || name.includes('equipment')) return 'Heavy machinery, JCBs, cranes, mixers & tools on flexible rental.';
+        if (name.includes('electr')) return 'Conduits, wires, switches, sockets, DB boards & industrial lighting.';
+        if (name.includes('plumb')) return 'CPVC pipes, fittings, sanitary ware, bath fixtures & water tanks.';
+        if (name.includes('hardw') || name.includes('tool')) return 'Construction tools, safety gear, laser levels & measurement instruments.';
+        if (name.includes('furnit')) return 'Architectural hardware, wardrobe fittings, door locks & kitchen systems.';
+        return `High-grade products, equipment & certified solutions mapped to ${cat.name}.`;
+    }
+
+    selectMainCategory(mainCat: MainCategory) {
+        this.router.navigate(['/tabs/home'], {
+            queryParams: { mainCategoryId: mainCat.id }
+        });
+    }
+
+    viewAllCategories() {
+        const queryParams: any = {};
+        if (this.activeSectorId) queryParams.mainCategoryId = this.activeSectorId;
+        this.router.navigate(['/tabs/products'], { queryParams });
     }
 
     navigateToBuy() {
-        this.router.navigate(['/tabs/products']);
+        const queryParams: any = {};
+        if (this.activeSectorId) queryParams.mainCategoryId = this.activeSectorId;
+        this.router.navigate(['/tabs/products'], { queryParams });
     }
 
     navigateToRental() {
-        this.router.navigate(['/tabs/rentals']);
+        const queryParams: any = {};
+        if (this.activeSectorId) queryParams.mainCategoryId = this.activeSectorId;
+        this.router.navigate(['/tabs/rentals'], { queryParams });
     }
 
     navigateToHelpers() {
-        this.router.navigate(['/helpers']);
+        const queryParams: any = {};
+        if (this.activeSectorId) queryParams.mainCategoryId = this.activeSectorId;
+        this.router.navigate(['/helpers'], { queryParams });
     }
 
     viewProduct(productId: string | number) {
         this.router.navigate(['/product-detail', productId]);
+    }
+
+    isRenting(product: any): boolean {
+        const t = ((product?.product_type || product?.type || product?.subcategory_type || '') as string).toLowerCase().trim();
+        return t === 'renting' || t === 'rental';
+    }
+
+    isService(product: any): boolean {
+        const t = ((product?.product_type || product?.type || product?.subcategory_type || '') as string).toLowerCase().trim();
+        return t === 'services' || t === 'service';
     }
 
     viewRental(rentalId: string | number) {
@@ -205,11 +505,15 @@ export class HomePage implements OnInit, OnDestroy {
     }
 
     viewAllProducts() {
-        this.router.navigate(['/tabs/products']);
+        const queryParams: any = {};
+        if (this.activeSectorId) queryParams.mainCategoryId = this.activeSectorId;
+        this.router.navigate(['/tabs/products'], { queryParams });
     }
 
     viewAllRentals() {
-        this.router.navigate(['/tabs/rentals']);
+        const queryParams: any = {};
+        if (this.activeSectorId) queryParams.mainCategoryId = this.activeSectorId;
+        this.router.navigate(['/tabs/rentals'], { queryParams });
     }
 
     async addToCart(product: any, event: Event) {

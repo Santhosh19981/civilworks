@@ -1,0 +1,3417 @@
+:host {
+    display: block;
+    width: 100%;
+    min-height: 100vh;
+    background-color: #f8fafc;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: #0f172a;
+}
+
+/* ============================================================
+   MAIN DASHBOARD LAYOUT (SIDEBAR + MAIN CONTENT)
+============================================================ */
+.sop-dashboard-layout {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+    background-color: #f8fafc;
+}
+
+/* ── SIDEBAR ── */
+.sop-sidebar {
+    width: 250px;
+    background: #ffffff;
+    border-right: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    padding: 24px 16px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    z-index: 20;
+
+    .sidebar-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding-bottom: 24px;
+        border-bottom: 1px solid #f1f5f9;
+        margin-bottom: 20px;
+        cursor: pointer;
+
+        .brand-helmet-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+
+            .brand-title {
+                margin: 0;
+                font-size: 15px;
+                font-weight: 800;
+                letter-spacing: 0.5px;
+                color: #0f172a;
+            }
+
+            .brand-tagline {
+                font-size: 11px;
+                color: #64748b;
+                font-weight: 500;
+            }
+        }
+    }
+
+    .sidebar-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 11px 16px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #475569;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+
+            ion-icon {
+                font-size: 20px;
+                color: #64748b;
+                transition: color 0.2s;
+            }
+
+            &:hover {
+                background: #f1f5f9;
+                color: #0f172a;
+
+                ion-icon {
+                    color: #2563eb;
+                }
+            }
+
+            &.active {
+                background: #eff6ff;
+                color: #2563eb;
+
+                ion-icon {
+                    color: #2563eb;
+                }
+            }
+        }
+    }
+}
+
+/* ── MAIN WORKSPACE WRAPPER ── */
+.sop-main-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    height: 100vh;
+    overflow-y: auto;
+    background-color: #f8fafc;
+}
+
+/* ── TOP HEADER BAR ── */
+.sop-top-header {
+    background: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 18px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 15;
+
+    .header-left-col {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+
+        .brand-helmet-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+
+            .brand-text {
+                display: flex;
+                flex-direction: column;
+
+                .brand-title {
+                    margin: 0;
+                    font-size: 14.5px;
+                    font-weight: 800;
+                    letter-spacing: 0.5px;
+                    color: #0f172a;
+                    line-height: 1.1;
+                }
+
+                .brand-tagline {
+                    font-size: 10.5px;
+                    color: #64748b;
+                    font-weight: 500;
+                }
+            }
+        }
+
+        .header-divider {
+            width: 1px;
+            height: 32px;
+            background: #e2e8f0;
+        }
+
+        .heading-text-group {
+            .page-main-heading {
+                margin: 0;
+                font-size: 20px;
+                font-weight: 800;
+                color: #0f172a;
+                letter-spacing: -0.3px;
+            }
+
+            .page-sub-heading {
+                margin: 3px 0 0 0;
+                font-size: 12.5px;
+                color: #64748b;
+            }
+        }
+    }
+
+    /* Segmented Pill Toggle */
+    .header-center-toggle {
+        .segmented-pill-wrap {
+            display: flex;
+            background: #f1f5f9;
+            padding: 4px;
+            border-radius: 9999px;
+            border: 1px solid #e2e8f0;
+
+            .pill-btn {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 8px 22px;
+                border-radius: 9999px;
+                border: none;
+                background: transparent;
+                font-size: 13px;
+                font-weight: 700;
+                color: #475569;
+                cursor: pointer;
+                transition: all 0.2s ease;
+
+                ion-icon {
+                    font-size: 16px;
+                }
+
+                &:hover {
+                    color: #0f172a;
+                }
+
+                &.active {
+                    background: #2563eb;
+                    color: #ffffff;
+                    box-shadow: 0 2px 6px rgba(37, 99, 235, 0.28);
+                }
+            }
+        }
+    }
+
+    /* Notification & Profile */
+    .header-right-col {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+
+        .notification-bell-btn {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #475569;
+            transition: all 0.2s;
+
+            ion-icon {
+                font-size: 20px;
+            }
+
+            .bell-badge {
+                position: absolute;
+                top: -2px;
+                right: -2px;
+                background: #ef4444;
+                color: #ffffff;
+                font-size: 10px;
+                font-weight: 800;
+                width: 17px;
+                height: 17px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 2px solid #ffffff;
+            }
+
+            &:hover {
+                background: #f1f5f9;
+                color: #0f172a;
+            }
+        }
+
+        .customer-profile-pill {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 5px 12px 5px 6px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: all 0.2s;
+
+            .profile-avatar {
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                background: #e2e8f0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #475569;
+                font-size: 18px;
+            }
+
+            .profile-name {
+                font-size: 13px;
+                font-weight: 700;
+                color: #0f172a;
+            }
+
+            .avatar-arrow {
+                font-size: 14px;
+                color: #64748b;
+            }
+
+            &:hover {
+                background: #f8fafc;
+                border-color: #cbd5e1;
+            }
+        }
+    }
+}
+
+/* ── CONTENT AREA ── */
+.sop-content-area {
+    padding: 24px 32px 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    max-width: 1560px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* ── ORDER INFORMATION PANEL ── */
+.order-info-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 18px 24px;
+    display: grid;
+    grid-template-columns: 1.8fr 1.2fr 1.2fr 1fr;
+    gap: 24px;
+    align-items: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+
+    .order-info-item {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+
+        &.order-brand-col,
+        &.order-select-col {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
+
+            .order-number-title {
+                font-size: 16px;
+                font-weight: 800;
+                color: #0f172a;
+            }
+
+            .order-project-subtitle {
+                font-size: 13px;
+                color: #64748b;
+                font-weight: 500;
+            }
+        }
+
+        .info-icon-badge {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+
+            &.bg-blue-tint {
+                background: #eff6ff;
+                color: #2563eb;
+            }
+
+            &.bg-purple-tint {
+                background: #f5f3ff;
+                color: #7c3aed;
+            }
+
+            &.bg-amber-tint {
+                background: #fffbeb;
+                color: #d97706;
+            }
+        }
+
+        .info-text-group {
+            display: flex;
+            flex-direction: column;
+
+            .info-label {
+                font-size: 12px;
+                color: #64748b;
+                font-weight: 500;
+            }
+
+            .info-value {
+                font-size: 14px;
+                color: #0f172a;
+                font-weight: 700;
+                margin-top: 2px;
+            }
+        }
+    }
+}
+
+/* ── TWO COLUMN WORKSPACE ── */
+.sop-two-column-grid {
+    display: grid;
+    grid-template-columns: 1fr 390px;
+    gap: 24px;
+    align-items: start;
+}
+
+/* ── LEFT COLUMN: SERVICE SEQUENCE ── */
+.service-sequence-col {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+
+    .sequence-panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #f1f5f9;
+        margin-bottom: 24px;
+
+        .panel-section-title {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        .status-legend-bar {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+
+            .legend-item {
+                display: flex;
+                align-items: center;
+                gap: 7px;
+                font-size: 12px;
+                font-weight: 600;
+                color: #64748b;
+
+                .legend-circle {
+                    width: 10px;
+                    height: 10px;
+                    border-radius: 50%;
+
+                    &.circle-pending {
+                        background: #ffffff;
+                        border: 2px solid #cbd5e1;
+                    }
+
+                    &.circle-in-progress {
+                        background: #f59e0b;
+                    }
+
+                    &.circle-completed {
+                        background: #10b981;
+                    }
+                }
+            }
+        }
+    }
+
+    /* Unified Single Vertical Spine Stepper (Flipkart Order Tracking Style) */
+    .unified-spine-stepper {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        position: relative;
+        padding: 8px 0;
+
+        .stepper-service-cluster {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+
+            .timeline-row {
+                display: flex;
+                align-items: stretch;
+                position: relative;
+                min-height: 48px;
+
+                // Drag handle column (18px)
+                .spine-drag-col {
+                    width: 18px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: grab;
+                    color: #cbd5e1;
+                    flex-shrink: 0;
+                    transition: color 0.2s;
+
+                    .drag-dots {
+                        display: grid;
+                        grid-template-columns: repeat(2, 3px);
+                        gap: 2.5px;
+
+                        span {
+                            width: 3px;
+                            height: 3px;
+                            border-radius: 50%;
+                            background: #cbd5e1;
+                        }
+                    }
+
+                    &:hover {
+                        color: #64748b;
+
+                        .drag-dots span {
+                            background: #64748b;
+                        }
+                    }
+
+                    &.subtask-drag {
+                        ion-icon {
+                            font-size: 15px;
+                            color: #cbd5e1;
+                        }
+
+                        &:hover ion-icon {
+                            color: #64748b;
+                        }
+                    }
+                }
+
+                // Spine Track Column - EXACT SAME 36px WIDTH across services and subtasks!
+                // Center of spine is strictly at x = 18px for all dots!
+                .spine-track-col {
+                    width: 36px;
+                    position: relative;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    flex-shrink: 0;
+
+                    // Unbroken vertical spine line segment
+                    .spine-line-segment {
+                        position: absolute;
+                        top: -6px;
+                        bottom: -6px;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        width: 3px;
+                        background: #cbd5e1;
+                        z-index: 1;
+
+                        &.completed {
+                            background: #10b981;
+                        }
+
+                        &.in_progress {
+                            background: #f59e0b;
+                        }
+
+                        &.pending {
+                            background: #cbd5e1;
+                        }
+
+                        &.empty-line {
+                            background: transparent;
+                            border-left: 2px dashed #cbd5e1;
+                            width: 0;
+                        }
+
+                        &.is-first {
+                            top: 50% !important;
+                        }
+
+                        &.is-last {
+                            bottom: 50% !important;
+                        }
+                    }
+
+                    // 1. Large Dot (Service level - Flipkart Style)
+                    .spine-large-dot {
+                        width: 28px;
+                        height: 28px;
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        z-index: 3;
+                        transition: all 0.25s ease;
+                        flex-shrink: 0;
+
+                        // Completed: Filled Green
+                        &.completed {
+                            background: #10b981;
+                            color: #ffffff;
+                            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+
+                            ion-icon {
+                                font-size: 15px;
+                                font-weight: 800;
+                            }
+                        }
+
+                        // Ongoing / In Process: Filled Orange / Pulse
+                        &.in_progress {
+                            background: #ffffff;
+                            border: 3px solid #f59e0b;
+                            box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.25);
+
+                            .inner-pulse-dot {
+                                width: 10px;
+                                height: 10px;
+                                border-radius: 50%;
+                                background: #f59e0b;
+                                animation: pulseAmber 1.6s infinite ease-in-out;
+                            }
+                        }
+
+                        // Pending: White with crisp slate border
+                        &.pending {
+                            background: #ffffff;
+                            border: 2.5px solid #cbd5e1;
+                            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+
+                            .inner-pending-empty {
+                                width: 6px;
+                                height: 6px;
+                                border-radius: 50%;
+                                background: #f1f5f9;
+                            }
+                        }
+                    }
+
+                    // 2. Small Dot (Subtask level - on EXACT SAME vertical spine)
+                    .spine-small-dot {
+                        width: 14px;
+                        height: 14px;
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        z-index: 3;
+                        flex-shrink: 0;
+                        transition: all 0.2s ease;
+
+                        // Completed: Filled Green
+                        &.completed {
+                            background: #10b981;
+                            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25);
+
+                            ion-icon {
+                                font-size: 9px;
+                                color: #ffffff;
+                                font-weight: 800;
+                            }
+                        }
+
+                        // Ongoing: Filled Orange
+                        &.in_progress {
+                            background: #ffffff;
+                            border: 2.5px solid #f59e0b;
+                            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25);
+
+                            .inner-pulse-dot {
+                                width: 6px;
+                                height: 6px;
+                                border-radius: 50%;
+                                background: #f59e0b;
+                                animation: pulseAmber 1.6s infinite ease-in-out;
+                            }
+                        }
+
+                        // Pending: Pure White with slate border
+                        &.pending {
+                            background: #ffffff;
+                            border: 2px solid #cbd5e1;
+                            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+                        }
+                    }
+
+                    .spine-empty-dot {
+                        width: 8px;
+                        height: 8px;
+                        border-radius: 50%;
+                        background: #cbd5e1;
+                        z-index: 3;
+                    }
+                }
+
+                // 3. Content Cards
+                .spine-node-card {
+                    flex: 1;
+                    min-width: 0;
+                }
+
+                // MAJOR SERVICE CARD
+                &.major-service-row {
+                    margin-bottom: 8px;
+
+                    .major-service-card {
+                        background: #ffffff;
+                        border: 1.5px solid #e2e8f0;
+                        border-radius: 12px;
+                        padding: 14px 18px;
+                        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+                        cursor: pointer;
+                        transition: all 0.2s ease;
+
+                        &:hover {
+                            border-color: #cbd5e1;
+                            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+                        }
+
+                        .service-card-main-bar {
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            gap: 14px;
+                            flex-wrap: wrap;
+
+                            .service-heading-wrap {
+                                display: flex;
+                                align-items: center;
+                                gap: 10px;
+                                flex: 1;
+                                min-width: 200px;
+
+                                .service-seq-badge {
+                                    background: #f1f5f9;
+                                    color: #475569;
+                                    font-size: 12px;
+                                    font-weight: 800;
+                                    padding: 2px 8px;
+                                    border-radius: 6px;
+                                    flex-shrink: 0;
+                                }
+
+                                .service-title-text {
+                                    margin: 0;
+                                    font-size: 15px;
+                                    font-weight: 800;
+                                    color: #0f172a;
+                                    white-space: nowrap;
+                                    overflow: hidden;
+                                    text-overflow: ellipsis;
+                                }
+
+                                .service-status-chip {
+                                    display: inline-flex;
+                                    align-items: center;
+                                    gap: 5px;
+                                    padding: 3px 9px;
+                                    border-radius: 6px;
+                                    font-size: 11px;
+                                    font-weight: 700;
+                                    flex-shrink: 0;
+
+                                    .chip-dot {
+                                        width: 6px;
+                                        height: 6px;
+                                        border-radius: 50%;
+                                    }
+
+                                    &.completed {
+                                        background: #ecfdf5;
+                                        color: #059669;
+                                        border: 1px solid #a7f3d0;
+
+                                        .chip-dot {
+                                            background: #10b981;
+                                        }
+                                    }
+
+                                    &.in_progress {
+                                        background: #fffbeb;
+                                        color: #d97706;
+                                        border: 1px solid #fde68a;
+
+                                        .chip-dot {
+                                            background: #f59e0b;
+                                        }
+                                    }
+
+                                    &.pending {
+                                        background: #f8fafc;
+                                        color: #64748b;
+                                        border: 1px solid #cbd5e1;
+
+                                        .chip-dot {
+                                            background: #94a3b8;
+                                        }
+                                    }
+                                }
+                            }
+
+                            .service-actions-wrap {
+                                display: flex;
+                                align-items: center;
+                                gap: 10px;
+                                flex-shrink: 0;
+                                flex-wrap: wrap;
+
+                                .date-chip-pill {
+                                    position: relative;
+                                    display: inline-flex;
+                                    align-items: center;
+                                    gap: 6px;
+                                    background: #f8fafc;
+                                    border: 1px solid #e2e8f0;
+                                    border-radius: 8px;
+                                    padding: 5px 12px;
+                                    font-size: 12px;
+                                    font-weight: 600;
+                                    color: #334155;
+                                    cursor: pointer;
+                                    transition: all 0.2s;
+
+                                    .date-lbl {
+                                        font-size: 9.5px;
+                                        font-weight: 800;
+                                        color: #94a3b8;
+                                        text-transform: uppercase;
+                                    }
+
+                                    ion-icon {
+                                        font-size: 14px;
+                                        color: #64748b;
+                                    }
+
+                                    .date-val {
+                                        font-weight: 700;
+                                    }
+
+                                    .date-overlay-input {
+                                        position: absolute;
+                                        top: 0;
+                                        left: 0;
+                                        width: 100%;
+                                        height: 100%;
+                                        opacity: 0 !important;
+                                        cursor: pointer;
+                                        z-index: 10;
+                                        border: none;
+                                        margin: 0;
+                                        padding: 0;
+                                    }
+
+                                    &.editable-chip:hover {
+                                        background: #eff6ff;
+                                        border-color: #93c5fd;
+                                        color: #2563eb;
+
+                                        ion-icon {
+                                            color: #2563eb;
+                                        }
+                                    }
+                                }
+
+                                .btn-action-add-st {
+                                    display: inline-flex;
+                                    align-items: center;
+                                    gap: 5px;
+                                    padding: 5px 12px;
+                                    border-radius: 8px;
+                                    background: #eff6ff;
+                                    color: #2563eb;
+                                    border: 1px solid #bfdbfe;
+                                    font-size: 12px;
+                                    font-weight: 700;
+                                    cursor: pointer;
+                                    transition: all 0.2s;
+
+                                    &:hover {
+                                        background: #dbeafe;
+                                    }
+
+                                    ion-icon {
+                                        font-size: 15px;
+                                    }
+                                }
+
+                                .btn-expand-details {
+                                    width: 30px;
+                                    height: 30px;
+                                    border-radius: 8px;
+                                    border: none;
+                                    background: #f1f5f9;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    color: #64748b;
+                                    cursor: pointer;
+                                    font-size: 16px;
+                                    transition: all 0.2s;
+
+                                    &:hover {
+                                        background: #e2e8f0;
+                                        color: #0f172a;
+                                    }
+                                }
+                            }
+                        }
+
+                        .card-progress-bar {
+                            width: 100%;
+                            height: 4px;
+                            background: #f1f5f9;
+                            border-radius: 9999px;
+                            overflow: hidden;
+                            margin-top: 10px;
+
+                            .progress-fill {
+                                height: 100%;
+                                border-radius: 9999px;
+                                transition: width 0.4s ease;
+                            }
+                        }
+                    }
+                }
+
+                // SUBTASK ROW (Aligned on same single vertical line)
+                &.subtask-row {
+                    margin-bottom: 6px;
+
+                    .subtask-node-card {
+                        background: #f8fafc;
+                        border: 1px solid #e2e8f0;
+                        border-radius: 10px;
+                        padding: 9px 14px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        gap: 12px;
+                        cursor: pointer;
+                        transition: all 0.2s ease;
+
+                        &:hover {
+                            background: #ffffff;
+                            border-color: #cbd5e1;
+                            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+                        }
+
+                        .st-node-main {
+                            display: flex;
+                            align-items: center;
+                            gap: 12px;
+                            flex: 1;
+                            min-width: 0;
+
+                            .st-node-title-group {
+                                display: flex;
+                                align-items: center;
+                                gap: 6px;
+                                flex: 1;
+                                min-width: 140px;
+
+                                .st-num {
+                                    font-size: 11px;
+                                    font-weight: 800;
+                                    color: #94a3b8;
+                                    flex-shrink: 0;
+                                }
+
+                                .st-title-text {
+                                    font-size: 13px;
+                                    font-weight: 700;
+                                    color: #1e293b;
+                                    white-space: nowrap;
+                                    overflow: hidden;
+                                    text-overflow: ellipsis;
+                                }
+                            }
+
+                            .st-dates-range-group {
+                                display: inline-flex;
+                                align-items: center;
+                                gap: 4px;
+                                background: #ffffff;
+                                border: 1px solid #e2e8f0;
+                                border-radius: 7px;
+                                padding: 2px 8px;
+
+                                .st-mini-date-chip,
+                                .st-date-picker-box {
+                                    position: relative;
+                                    display: inline-flex;
+                                    align-items: center;
+                                    gap: 3px;
+                                    font-size: 11px;
+                                    font-weight: 600;
+                                    color: #475569;
+                                    cursor: pointer;
+
+                                    .st-date-lbl {
+                                        font-size: 9px;
+                                        font-weight: 700;
+                                        color: #94a3b8;
+                                        text-transform: uppercase;
+                                    }
+
+                                    ion-icon {
+                                        font-size: 12px;
+                                        color: #64748b;
+                                    }
+
+                                    .st-date-txt {
+                                        font-weight: 700;
+                                    }
+
+                                    .date-overlay-input {
+                                        position: absolute;
+                                        top: 0;
+                                        left: 0;
+                                        width: 100%;
+                                        height: 100%;
+                                        opacity: 0 !important;
+                                        cursor: pointer;
+                                        z-index: 10;
+                                        border: none;
+                                        margin: 0;
+                                        padding: 0;
+
+                                        &::-webkit-calendar-picker-indicator {
+                                            position: absolute;
+                                            top: 0;
+                                            left: 0;
+                                            width: 100%;
+                                            height: 100%;
+                                            opacity: 0;
+                                            cursor: pointer;
+                                        }
+                                    }
+
+                                    &:hover,
+                                    &.editable-chip:hover,
+                                    &.editable:hover {
+                                        color: #2563eb;
+
+                                        ion-icon {
+                                            color: #2563eb;
+                                        }
+                                    }
+                                }
+
+                                .st-date-sep {
+                                    color: #cbd5e1;
+                                    font-size: 11px;
+                                }
+                            }
+                        }
+
+                        .st-node-actions {
+                            display: flex;
+                            align-items: center;
+                            gap: 8px;
+                            flex-shrink: 0;
+
+                            .st-node-chip {
+                                font-size: 10.5px;
+                                font-weight: 700;
+                                padding: 2.5px 8px;
+                                border-radius: 5px;
+                                flex-shrink: 0;
+
+                                &.completed {
+                                    background: #ecfdf5;
+                                    color: #059669;
+                                }
+
+                                &.in_progress {
+                                    background: #fffbeb;
+                                    color: #d97706;
+                                }
+
+                                &.pending {
+                                    background: #ffffff;
+                                    color: #64748b;
+                                    border: 1px solid #cbd5e1;
+                                }
+                            }
+
+                            .btn-st-action-view {
+                                display: inline-flex;
+                                align-items: center;
+                                gap: 3px;
+                                border: 1px solid #bfdbfe;
+                                background: #eff6ff;
+                                color: #2563eb;
+                                font-size: 11px;
+                                font-weight: 700;
+                                padding: 3px 9px;
+                                border-radius: 6px;
+                                cursor: pointer;
+                                transition: all 0.2s;
+
+                                &:hover {
+                                    background: #dbeafe;
+                                }
+
+                                ion-icon {
+                                    font-size: 13px;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // EMPTY SUBTASKS INLINE ACTION
+                &.subtask-empty-row {
+                    padding-bottom: 10px;
+
+                    .empty-subtask-card {
+                        display: flex;
+                        align-items: center;
+                        gap: 12px;
+                        padding: 8px 14px;
+
+                        .no-subtasks-txt {
+                            font-size: 12px;
+                            color: #94a3b8;
+                            font-style: italic;
+                        }
+
+                        .btn-add-st-inline {
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 4px;
+                            background: transparent;
+                            border: 1.5px dashed #cbd5e1;
+                            border-radius: 8px;
+                            padding: 4px 10px;
+                            font-size: 11.5px;
+                            font-weight: 700;
+                            color: #2563eb;
+                            cursor: pointer;
+                            transition: all 0.2s;
+
+                            &:hover {
+                                border-color: #2563eb;
+                                background: #eff6ff;
+                            }
+
+                            ion-icon {
+                                font-size: 14px;
+                            }
+                        }
+                    }
+                }
+            }
+
+            &.is-selected {
+                .major-service-card {
+                    border-color: #93c5fd;
+                    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.12), 0 4px 14px rgba(0, 0, 0, 0.06);
+                }
+            }
+        }
+    }
+
+    /* Footer Info Tip */
+    .sequence-footer-tip {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 24px;
+        padding: 12px 18px;
+        background: #f0f9ff;
+        border: 1px solid #bae6fd;
+        border-radius: 10px;
+        font-size: 13px;
+        color: #0369a1;
+        font-weight: 500;
+
+        ion-icon {
+            font-size: 18px;
+            color: #0284c7;
+            flex-shrink: 0;
+        }
+    }
+}
+
+/* ── RIGHT COLUMN: SERVICE DETAILS PANEL ── */
+.service-details-col {
+    position: sticky;
+    top: 96px;
+
+    .details-card-container {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 24px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+
+        .details-header-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            .details-title-row {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+
+                .service-status-dot {
+                    width: 14px;
+                    height: 14px;
+                    border-radius: 50%;
+
+                    &.completed {
+                        background: #10b981;
+                    }
+
+                    &.in_progress {
+                        background: #f59e0b;
+                    }
+
+                    &.pending {
+                        background: #cbd5e1;
+                    }
+                }
+
+                .details-service-title {
+                    margin: 0;
+                    font-size: 16px;
+                    font-weight: 800;
+                    color: #0f172a;
+                }
+            }
+
+            .btn-close-details {
+                border: none;
+                background: #f1f5f9;
+                width: 28px;
+                height: 28px;
+                border-radius: 6px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                color: #64748b;
+                font-size: 16px;
+
+                &:hover {
+                    background: #e2e8f0;
+                    color: #0f172a;
+                }
+            }
+        }
+
+        .details-status-badge-wrap {
+            .status-pill-badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                padding: 4px 12px;
+                border-radius: 9999px;
+                font-size: 12px;
+                font-weight: 700;
+
+                .badge-dot {
+                    width: 6px;
+                    height: 6px;
+                    border-radius: 50%;
+                }
+
+                &.completed {
+                    background: #ecfdf5;
+                    color: #059669;
+
+                    .badge-dot {
+                        background: #10b981;
+                    }
+                }
+
+                &.in_progress {
+                    background: #fffbeb;
+                    color: #d97706;
+
+                    .badge-dot {
+                        background: #f59e0b;
+                    }
+                }
+
+                &.pending {
+                    background: #f1f5f9;
+                    color: #475569;
+
+                    .badge-dot {
+                        background: #94a3b8;
+                    }
+                }
+            }
+        }
+
+        /* Dates grid */
+        .details-dates-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+
+            .details-date-box {
+                .details-date-label {
+                    display: block;
+                    font-size: 11px;
+                    font-weight: 600;
+                    color: #64748b;
+                    margin-bottom: 4px;
+                }
+
+                .details-input-field {
+                    position: relative;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    background: #f8fafc;
+                    border: 1px solid #e2e8f0;
+                    border-radius: 8px;
+                    padding: 8px 10px;
+                    font-size: 12px;
+                    font-weight: 600;
+                    color: #1e293b;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+
+                    &:hover {
+                        border-color: #93c5fd;
+                        background: #eff6ff;
+                    }
+
+                    ion-icon {
+                        font-size: 14px;
+                        color: #64748b;
+                    }
+
+                    .date-overlay-input {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        opacity: 0;
+                        cursor: pointer;
+                        z-index: 10;
+                        border: none;
+                        margin: 0;
+                        padding: 0;
+                        background: transparent;
+                    }
+                }
+            }
+        }
+
+        /* Description */
+        .details-desc-box {
+            .details-desc-label {
+                display: block;
+                font-size: 12px;
+                font-weight: 700;
+                color: #0f172a;
+                margin-bottom: 6px;
+            }
+
+            .details-desc-content {
+                margin: 0;
+                font-size: 13px;
+                color: #475569;
+                line-height: 1.5;
+            }
+        }
+
+        /* Subtasks in Details panel */
+        .details-subtasks-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+
+            .details-subtasks-heading {
+                margin: 0;
+                font-size: 13px;
+                font-weight: 800;
+                color: #0f172a;
+            }
+
+            .details-subtasks-list {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+
+                .subtask-card-item {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 6px;
+                    background: #ffffff;
+                    border: 1px solid #e2e8f0;
+                    border-radius: 8px;
+                    padding: 9px 12px;
+                    transition: border-color 0.2s;
+
+                    &:hover {
+                        border-color: #cbd5e1;
+                        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+                    }
+
+                    .st-card-main-row {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        gap: 8px;
+
+                        .st-card-title-group {
+                            display: flex;
+                            align-items: center;
+                            gap: 6px;
+                            flex: 1;
+                            min-width: 0;
+
+                            .st-status-circle-dot {
+                                width: 7px;
+                                height: 7px;
+                                border-radius: 50%;
+                                flex-shrink: 0;
+
+                                &.dot-completed {
+                                    background: #10b981;
+                                }
+
+                                &.dot-in-progress {
+                                    background: #f59e0b;
+                                }
+
+                                &.dot-pending {
+                                    background: #cbd5e1;
+                                }
+                            }
+
+                            .st-card-title {
+                                font-size: 12.5px;
+                                font-weight: 700;
+                                color: #0f172a;
+                                white-space: nowrap;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                            }
+                        }
+
+                        .st-card-status-badge {
+                            font-size: 10px;
+                            font-weight: 700;
+                            padding: 2px 6px;
+                            border-radius: 4px;
+                            flex-shrink: 0;
+
+                            &.badge-completed {
+                                background: #ecfdf5;
+                                color: #059669;
+                            }
+
+                            &.badge-in-progress {
+                                background: #fffbeb;
+                                color: #d97706;
+                            }
+
+                            &.badge-pending {
+                                background: #f1f5f9;
+                                color: #64748b;
+                            }
+                        }
+                    }
+
+                    .st-card-meta-row {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        gap: 8px;
+                        padding-top: 4px;
+                        border-top: 1px solid #f8fafc;
+
+                        .st-card-dates {
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 4px;
+                            font-size: 11px;
+                            color: #64748b;
+
+                            ion-icon {
+                                font-size: 13px;
+                                color: #94a3b8;
+                            }
+
+                            &.text-muted {
+                                color: #94a3b8;
+                                font-style: italic;
+                            }
+                        }
+
+                        .st-card-dates-range-wrap {
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 4px;
+
+                            .st-mini-date-chip {
+                                position: relative;
+                                display: inline-flex;
+                                align-items: center;
+                                gap: 3px;
+                                font-size: 11px;
+                                font-weight: 600;
+                                color: #475569;
+                                cursor: pointer;
+                                background: #f8fafc;
+                                border: 1px solid #e2e8f0;
+                                border-radius: 5px;
+                                padding: 2px 7px;
+                                transition: all 0.15s ease;
+
+                                &:hover {
+                                    color: #2563eb;
+                                    border-color: #93c5fd;
+                                    background: #eff6ff;
+
+                                    ion-icon {
+                                        color: #2563eb;
+                                    }
+                                }
+
+                                ion-icon {
+                                    font-size: 12px;
+                                    color: #64748b;
+                                }
+
+                                .date-overlay-input {
+                                    position: absolute;
+                                    top: 0;
+                                    left: 0;
+                                    width: 100%;
+                                    height: 100%;
+                                    opacity: 0 !important;
+                                    cursor: pointer;
+                                    z-index: 10;
+                                    border: none;
+                                    margin: 0;
+                                    padding: 0;
+
+                                    &::-webkit-calendar-picker-indicator {
+                                        position: absolute;
+                                        top: 0;
+                                        left: 0;
+                                        width: 100%;
+                                        height: 100%;
+                                        opacity: 0;
+                                        cursor: pointer;
+                                    }
+                                }
+                            }
+
+                            .st-date-sep {
+                                font-size: 11px;
+                                color: #cbd5e1;
+                            }
+                        }
+
+                        .st-card-btn-group {
+                            display: flex;
+                            align-items: center;
+                            gap: 6px;
+                            flex-shrink: 0;
+
+                            .btn-st-view-action {
+                                display: inline-flex;
+                                align-items: center;
+                                gap: 3px;
+                                border: 1px solid #bfdbfe;
+                                background: #eff6ff;
+                                color: #2563eb;
+                                font-size: 11px;
+                                font-weight: 700;
+                                padding: 2.5px 8px;
+                                border-radius: 5px;
+                                cursor: pointer;
+                                transition: all 0.2s;
+
+                                &:hover {
+                                    background: #dbeafe;
+                                }
+
+                                ion-icon {
+                                    font-size: 12px;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                .st-empty-list {
+                    font-size: 12px;
+                    color: #94a3b8;
+                    font-style: italic;
+                    text-align: center;
+                    padding: 8px;
+                }
+            }
+
+            .btn-add-subtask-full {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+                width: 100%;
+                padding: 9px;
+                border: 1px dashed #2563eb;
+                background: #eff6ff;
+                color: #2563eb;
+                border-radius: 8px;
+                font-size: 13px;
+                font-weight: 700;
+                cursor: pointer;
+                transition: all 0.2s;
+
+                &:hover {
+                    background: #dbeafe;
+                }
+            }
+        }
+
+        /* Completion Request Box */
+        .details-completion-request-box {
+            border-top: 1px solid #f1f5f9;
+            padding-top: 16px;
+
+            .completion-request-heading {
+                margin: 0;
+                font-size: 13px;
+                font-weight: 800;
+                color: #0f172a;
+            }
+
+            .completion-request-desc {
+                margin: 6px 0 14px 0;
+                font-size: 12px;
+                color: #64748b;
+                line-height: 1.5;
+            }
+
+            .completion-action-area {
+                .btn-completion-status {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 8px;
+                    width: 100%;
+                    padding: 10px 16px;
+                    border-radius: 8px;
+                    font-size: 13px;
+                    font-weight: 700;
+                    cursor: pointer;
+                    transition: all 0.2s;
+
+                    &.status-disabled {
+                        background: #f8fafc;
+                        border: 1px solid #e2e8f0;
+                        color: #94a3b8;
+                        cursor: not-allowed;
+                    }
+
+                    &.status-pending-review {
+                        background: #f59e0b;
+                        color: #ffffff;
+                        border: none;
+                        box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+
+                        &:hover {
+                            background: #d97706;
+                        }
+                    }
+
+                    &.status-approved {
+                        background: #ecfdf5;
+                        color: #059669;
+                        border: 1px solid #a7f3d0;
+                        cursor: default;
+                    }
+                }
+            }
+        }
+    }
+}
+
+/* ── MODALS (POPUPS) ── */
+.sop-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.5);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 20px;
+}
+
+.sop-modal-card {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    width: 100%;
+
+    &.add-subtask-card {
+        max-width: 580px;
+    }
+
+    &.view-subtask-card {
+        max-width: 620px;
+    }
+
+    &.review-request-card {
+        max-width: 560px;
+    }
+
+    .modal-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 24px;
+        border-bottom: 1px solid #e2e8f0;
+
+        .modal-card-title {
+            margin: 0;
+            font-size: 17px;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        .subtask-modal-heading-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            .subtask-circle-dot {
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+
+                &.dot-completed {
+                    background: #10b981;
+                }
+
+                &.dot-in-progress {
+                    background: #f59e0b;
+                }
+
+                &.dot-pending {
+                    background: #cbd5e1;
+                }
+            }
+
+            .modal-header-icon {
+                font-size: 22px;
+            }
+
+            .st-card-status-badge {
+                font-size: 11px;
+                font-weight: 700;
+                padding: 2px 8px;
+                border-radius: 4px;
+
+                &.badge-completed {
+                    background: #ecfdf5;
+                    color: #059669;
+                }
+
+                &.badge-in-progress {
+                    background: #fffbeb;
+                    color: #d97706;
+                }
+
+                &.badge-pending {
+                    background: #f1f5f9;
+                    color: #64748b;
+                }
+            }
+        }
+
+        .modal-close-btn {
+            border: none;
+            background: #f1f5f9;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #64748b;
+            font-size: 18px;
+            transition: all 0.2s;
+
+            &:hover {
+                background: #e2e8f0;
+                color: #0f172a;
+            }
+        }
+    }
+
+    .modal-card-body {
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        max-height: 70vh;
+        overflow-y: auto;
+
+        .modal-form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+
+            .full-width-field {
+                grid-column: span 2;
+            }
+
+            .form-field-group {
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+
+                .form-label {
+                    font-size: 13px;
+                    font-weight: 700;
+                    color: #334155;
+                }
+
+                .form-text-input,
+                .form-textarea-input {
+                    padding: 10px 14px;
+                    border: 1px solid #cbd5e1;
+                    border-radius: 8px;
+                    font-size: 13px;
+                    color: #0f172a;
+                    outline: none;
+                    transition: border-color 0.2s;
+
+                    &:focus {
+                        border-color: #2563eb;
+                        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+                    }
+                }
+            }
+        }
+
+        /* Subtask View Details Specifics */
+        .subtask-meta-row {
+            display: flex;
+            gap: 8px;
+            font-size: 13px;
+
+            .meta-label {
+                color: #64748b;
+                font-weight: 600;
+            }
+
+            .meta-val {
+                color: #0f172a;
+                font-weight: 700;
+            }
+        }
+
+        .subtask-desc-section,
+        .subtask-proof-section {
+            .subtask-section-subtitle {
+                margin: 0 0 8px 0;
+                font-size: 13px;
+                font-weight: 800;
+                color: #0f172a;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+            .subtask-desc-paragraph {
+                margin: 0;
+                font-size: 13px;
+                color: #475569;
+                line-height: 1.5;
+            }
+        }
+
+        /* Main Proof Large Card */
+        .proof-img-box {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1.5px solid #e2e8f0;
+            cursor: pointer;
+            height: 240px;
+            max-height: 240px;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            margin-bottom: 12px;
+
+            img {
+                max-width: 100%;
+                max-height: 100%;
+                width: auto;
+                height: auto;
+                object-fit: contain;
+                display: block;
+                margin: 0 auto;
+                transition: transform 0.25s ease;
+            }
+
+            .click-hint {
+                position: absolute;
+                bottom: 8px;
+                right: 8px;
+                background: rgba(15, 23, 42, 0.82);
+                color: #ffffff;
+                font-size: 10.5px;
+                font-weight: 700;
+                padding: 3px 8px;
+                border-radius: 6px;
+                backdrop-filter: blur(4px);
+                pointer-events: none;
+            }
+
+            &:hover img {
+                transform: scale(1.02);
+            }
+        }
+
+        /* Proof Gallery Thumbnails */
+        .proof-gallery-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 8px;
+
+            .proof-thumb-card {
+                width: 64px;
+                height: 64px;
+                border-radius: 8px;
+                overflow: hidden;
+                border: 2px solid #e2e8f0;
+                cursor: pointer;
+                background: #ffffff;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 2px;
+                transition: all 0.2s ease;
+
+                img {
+                    max-width: 100%;
+                    max-height: 100%;
+                    width: auto;
+                    height: auto;
+                    object-fit: contain;
+                    transition: transform 0.2s ease;
+                }
+
+                &:hover {
+                    border-color: #94a3b8;
+                    img {
+                        transform: scale(1.06);
+                    }
+                }
+
+                &.active-thumb {
+                    border-color: #2563eb;
+                    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.4);
+                    transform: scale(1.04);
+                }
+            }
+        }
+
+        .proof-empty-message {
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            border-radius: 8px;
+            padding: 18px;
+            text-align: center;
+            color: #64748b;
+            font-size: 12px;
+
+            ion-icon {
+                font-size: 24px;
+                color: #94a3b8;
+                margin-bottom: 4px;
+            }
+        }
+
+        /* Review Request Alerts */
+        .review-banner-alert {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            color: #92400e;
+            font-size: 13px;
+
+            ion-icon {
+                font-size: 22px;
+                color: #d97706;
+                flex-shrink: 0;
+            }
+        }
+
+        .review-meta-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 13px;
+
+            .meta-label {
+                font-weight: 700;
+                color: #334155;
+            }
+
+            .review-note-txt {
+                margin: 4px 0 0 0;
+                color: #475569;
+            }
+        }
+
+        .review-subtasks-summary {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+
+            .summary-subtask-row {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 6px 10px;
+                background: #f8fafc;
+                border-radius: 6px;
+                font-size: 12px;
+
+                .summary-title {
+                    flex: 1;
+                    font-weight: 600;
+                    color: #0f172a;
+                }
+            }
+        }
+
+        .rejection-input-wrap {
+            margin-top: 10px;
+
+            .text-danger {
+                color: #dc2626;
+            }
+
+            .danger-border {
+                border-color: #fca5a5 !important;
+            }
+        }
+    }
+
+    .modal-card-footer {
+        padding: 16px 24px;
+        background: #f8fafc;
+        border-top: 1px solid #e2e8f0;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 12px;
+
+        .btn-footer-cancel {
+            padding: 9px 18px;
+            border: 1px solid #cbd5e1;
+            background: #ffffff;
+            color: #475569;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+
+            &:hover {
+                background: #f1f5f9;
+            }
+        }
+
+        .btn-footer-save {
+            padding: 9px 24px;
+            border: none;
+            background: #2563eb;
+            color: #ffffff;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
+
+            &:hover {
+                background: #1d4ed8;
+            }
+
+            &:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+            }
+        }
+
+        .btn-footer-close-full {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            background: #ffffff;
+            color: #334155;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+
+            &:hover {
+                background: #f1f5f9;
+            }
+        }
+
+        &.review-actions-row {
+            justify-content: space-between;
+
+            .btn-footer-reject {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding: 10px 18px;
+                background: #fef2f2;
+                border: 1px solid #fecaca;
+                color: #dc2626;
+                border-radius: 8px;
+                font-size: 13px;
+                font-weight: 700;
+                cursor: pointer;
+
+                &:hover {
+                    background: #fee2e2;
+                }
+            }
+
+            .btn-footer-approve {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding: 10px 22px;
+                background: #10b981;
+                border: none;
+                color: #ffffff;
+                border-radius: 8px;
+                font-size: 13px;
+                font-weight: 700;
+                cursor: pointer;
+                box-shadow: 0 2px 6px rgba(16, 185, 129, 0.28);
+
+                &:hover {
+                    background: #059669;
+                }
+            }
+        }
+    }
+}
+
+/* ── LIGHTBOX ── */
+.sop-lightbox-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    padding: 24px;
+
+    .lightbox-content-box {
+        position: relative;
+        max-width: 90vw;
+        max-height: 90vh;
+
+        img {
+            max-width: 100%;
+            max-height: 85vh;
+            border-radius: 8px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .lightbox-close-btn {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            font-size: 30px;
+            cursor: pointer;
+        }
+    }
+}
+
+/* ── LOADING & EMPTY STATES ── */
+.sop-loading-skeleton,
+.sop-empty-state {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 60px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    text-align: center;
+    color: #64748b;
+
+    ion-icon {
+        font-size: 48px;
+        color: #94a3b8;
+    }
+
+    h3 {
+        margin: 0;
+        font-size: 17px;
+        font-weight: 800;
+        color: #0f172a;
+    }
+
+    p {
+        margin: 0;
+        font-size: 13px;
+        max-width: 400px;
+    }
+
+    .btn-refresh {
+        margin-top: 8px;
+        padding: 8px 20px;
+        background: #2563eb;
+        color: #ffffff;
+        border: none;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+}
+
+/* ============================================================
+   RESPONSIVE DESIGN (TABLET & MOBILE)
+============================================================ */
+@media (max-width: 1200px) {
+    .sop-two-column-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .service-details-col {
+        position: static;
+    }
+}
+
+@media (max-width: 900px) {
+    .sop-sidebar {
+        display: none;
+    }
+
+    .order-info-card {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .sop-top-header {
+        padding: 14px 16px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+
+        .header-right-col {
+            width: 100%;
+            justify-content: space-between;
+        }
+    }
+
+    .sop-content-area {
+        padding: 16px;
+    }
+
+    .order-info-card {
+        grid-template-columns: 1fr;
+    }
+
+    .service-card-top {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .modal-form-grid {
+        grid-template-columns: 1fr !important;
+
+        .full-width-field {
+            grid-column: span 1 !important;
+        }
+    }
+}
+
+.date-field-pill.editable-date-pill {
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+        border-color: #3b82f6 !important;
+        background: #eff6ff !important;
+    }
+
+    .date-value-wrap {
+        position: relative;
+    }
+
+    .date-overlay-input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+        z-index: 10;
+    }
+}
+
+.details-date-box.editable-date-box {
+    .details-input-field {
+        position: relative;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover {
+            border-color: #3b82f6 !important;
+            background: #eff6ff !important;
+        }
+
+        .date-overlay-input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+            z-index: 10;
+        }
+    }
+}
+
+/* ============================================================
+   EXECUTIVE COMPLETED ORDER SHOWCASE CARD
+============================================================ */
+.completed-order-showcase-card {
+    background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+    border: 1.5px solid #a7f3d0;
+    border-radius: 14px;
+    padding: 18px 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.08);
+
+    .showcase-top-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid rgba(167, 243, 208, 0.6);
+        margin-bottom: 14px;
+        flex-wrap: wrap;
+
+        .showcase-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13.5px;
+            font-weight: 800;
+            color: #065f46;
+            letter-spacing: 0.5px;
+
+            ion-icon {
+                font-size: 22px;
+                color: #10b981;
+            }
+        }
+
+        .showcase-completion-date {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: #047857;
+
+            ion-icon {
+                font-size: 16px;
+            }
+
+            strong {
+                color: #065f46;
+                font-weight: 700;
+            }
+        }
+    }
+
+    .showcase-meta-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+
+        @media (max-width: 992px) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        @media (max-width: 576px) {
+            grid-template-columns: 1fr;
+        }
+
+        .sc-meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+
+            .sc-lbl {
+                font-size: 11px;
+                font-weight: 700;
+                color: #047857;
+                letter-spacing: 0.5px;
+            }
+
+            .sc-val {
+                font-size: 14px;
+                font-weight: 700;
+                color: #0f172a;
+
+                &.text-success {
+                    color: #059669;
+                }
+            }
+        }
+    }
+}
+
+/* ============================================================
+   CONTINUOUS VERTICAL STEPPER TIMELINE (SERVICES & SUBTASKS)
+============================================================ */
+.service-sequence-col {
+    .sequence-panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+
+        .panel-heading-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            .panel-section-title {
+                margin: 0;
+                font-size: 18px;
+                font-weight: 800;
+                color: #0f172a;
+            }
+
+            .panel-order-chip {
+                background: #eff6ff;
+                color: #2563eb;
+                font-size: 12px;
+                font-weight: 700;
+                padding: 3px 8px;
+                border-radius: 6px;
+            }
+        }
+
+        .status-legend-bar {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+
+            .legend-item {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                font-size: 12px;
+                font-weight: 600;
+                color: #64748b;
+
+                .legend-circle {
+                    width: 11px;
+                    height: 11px;
+                    border-radius: 50%;
+
+                    &.circle-completed {
+                        background: #10b981;
+                        box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.25);
+                    }
+
+                    &.circle-in-progress {
+                        background: #f59e0b;
+                        box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.25);
+                    }
+
+                    &.circle-pending {
+                        background: #ffffff;
+                        border: 2px solid #cbd5e1;
+                    }
+                }
+            }
+        }
+    }
+
+    // Stepper Timeline Track Container
+    .stepper-timeline-container {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        padding: 4px 0 16px;
+    }
+
+    .stepper-service-cluster {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+
+        // MAJOR SERVICE NODE
+        .major-service-node {
+            display: flex;
+            align-items: stretch;
+            gap: 14px;
+            position: relative;
+
+            .node-drag-col {
+                width: 18px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: grab;
+                color: #94a3b8;
+                flex-shrink: 0;
+                padding-top: 4px;
+
+                .drag-dots {
+                    display: grid;
+                    grid-template-columns: repeat(2, 3.5px);
+                    gap: 3px;
+
+                    span {
+                        width: 3.5px;
+                        height: 3.5px;
+                        border-radius: 50%;
+                        background: #cbd5e1;
+                    }
+                }
+
+                &:hover span {
+                    background: #64748b;
+                }
+            }
+
+            // Major Circle Dot Column (Centered over connecting spine)
+            .major-dot-col {
+                width: 34px;
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                flex-shrink: 0;
+
+                .major-circle-dot {
+                    width: 28px;
+                    height: 28px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 3;
+                    transition: all 0.25s ease;
+                    margin-top: 14px;
+                    flex-shrink: 0;
+
+                    // GREEN: Completed
+                    &.completed {
+                        background: #10b981;
+                        color: #ffffff;
+                        box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+
+                        ion-icon {
+                            font-size: 16px;
+                            font-weight: 800;
+                        }
+                    }
+
+                    // ORANGE: In Process
+                    &.in_progress {
+                        background: #ffffff;
+                        border: 3.5px solid #f59e0b;
+                        box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.2);
+
+                        .inner-pulse-dot {
+                            width: 10px;
+                            height: 10px;
+                            border-radius: 50%;
+                            background: #f59e0b;
+                            animation: pulseAmber 1.6s infinite ease-in-out;
+                        }
+                    }
+
+                    // WHITE: Not Yet Started / Pending
+                    &.pending {
+                        background: #ffffff;
+                        border: 2.5px solid #cbd5e1;
+                        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+
+                        .inner-pending-empty {
+                            width: 6px;
+                            height: 6px;
+                            border-radius: 50%;
+                            background: #e2e8f0;
+                        }
+                    }
+                }
+
+                // Continuous Connecting Track Line
+                .stepper-vertical-line {
+                    position: absolute;
+                    top: 42px;
+                    bottom: 0;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    width: 2.5px;
+                    background: #e2e8f0;
+                    z-index: 1;
+
+                    &.completed {
+                        background: #10b981;
+                    }
+
+                    &.in_progress {
+                        background: linear-gradient(180deg, #f59e0b, #e2e8f0);
+                    }
+                }
+            }
+
+            // Major Service Card Body
+            .major-service-card {
+                flex: 1;
+                min-width: 0;
+                background: #ffffff;
+                border: 1.5px solid #e2e8f0;
+                border-radius: 12px;
+                padding: 14px 18px;
+                margin-bottom: 8px;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+                cursor: pointer;
+                transition: all 0.2s ease;
+
+                &:hover {
+                    border-color: #cbd5e1;
+                    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+                }
+
+                .service-card-top-row {
+                    display: flex;
+                    align-items: flex-start;
+                    justify-content: space-between;
+                    gap: 14px;
+                    margin-bottom: 12px;
+                    flex-wrap: wrap;
+
+                    .service-title-area {
+                        flex: 1;
+                        min-width: 0;
+
+                        .service-name-row {
+                            display: flex;
+                            align-items: center;
+                            gap: 8px;
+
+                            .service-seq-badge {
+                                background: #f1f5f9;
+                                color: #475569;
+                                font-size: 11px;
+                                font-weight: 800;
+                                padding: 2px 7px;
+                                border-radius: 6px;
+                            }
+
+                            .service-name-text {
+                                margin: 0;
+                                font-size: 15px;
+                                font-weight: 800;
+                                color: #0f172a;
+                                white-space: nowrap;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                            }
+                        }
+
+                        .service-desc-text {
+                            margin: 4px 0 0;
+                            font-size: 12px;
+                            color: #64748b;
+                            line-height: 1.4;
+                        }
+                    }
+
+                    .service-controls-right {
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                        flex-shrink: 0;
+                        flex-wrap: wrap;
+
+                        .service-status-tag {
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 5px;
+                            padding: 3px 8px;
+                            border-radius: 6px;
+                            font-size: 11px;
+                            font-weight: 700;
+
+                            .tag-dot {
+                                width: 6px;
+                                height: 6px;
+                                border-radius: 50%;
+                            }
+
+                            &.completed {
+                                background: #ecfdf5;
+                                color: #059669;
+                                border: 1px solid #a7f3d0;
+
+                                .tag-dot {
+                                    background: #10b981;
+                                }
+                            }
+
+                            &.in_progress {
+                                background: #fffbeb;
+                                color: #d97706;
+                                border: 1px solid #fde68a;
+
+                                .tag-dot {
+                                    background: #f59e0b;
+                                }
+                            }
+
+                            &.pending {
+                                background: #ffffff;
+                                color: #64748b;
+                                border: 1px solid #cbd5e1;
+
+                                .tag-dot {
+                                    background: #94a3b8;
+                                }
+                            }
+                        }
+
+                        .date-field-pill {
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 5px;
+                            border: 1px solid #e2e8f0;
+                            border-radius: 8px;
+                            padding: 4px 9px;
+                            background: #f8fafc;
+                            font-size: 11.5px;
+                            font-weight: 600;
+                            color: #334155;
+
+                            .date-prefix-label {
+                                font-size: 9px;
+                                font-weight: 800;
+                                color: #94a3b8;
+                                text-transform: uppercase;
+                            }
+
+                            .date-value-wrap {
+                                position: relative;
+                                display: flex;
+                                align-items: center;
+                                gap: 4px;
+
+                                .cal-icon-left {
+                                    font-size: 13px;
+                                    color: #64748b;
+                                }
+
+                                .date-display-txt {
+                                    font-size: 11.5px;
+                                    font-weight: 700;
+                                }
+
+                                .date-overlay-input {
+                                    position: absolute;
+                                    top: 0;
+                                    left: 0;
+                                    width: 100%;
+                                    height: 100%;
+                                    opacity: 0 !important;
+                                    cursor: pointer;
+                                    z-index: 10;
+                                    border: none;
+                                    margin: 0;
+                                    padding: 0;
+                                }
+                            }
+
+                            &.editable-date-pill:hover {
+                                background: #eff6ff;
+                                border-color: #93c5fd;
+
+                                .date-display-txt,
+                                .cal-icon-left {
+                                    color: #2563eb;
+                                }
+                            }
+                        }
+
+                        .btn-subtask-pill {
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 4px;
+                            padding: 4px 10px;
+                            border-radius: 8px;
+                            background: #eff6ff;
+                            color: #2563eb;
+                            border: 1px solid #bfdbfe;
+                            font-size: 11.5px;
+                            font-weight: 700;
+                            cursor: pointer;
+                            transition: all 0.2s;
+
+                            &:hover {
+                                background: #dbeafe;
+                            }
+
+                            ion-icon {
+                                font-size: 14px;
+                            }
+                        }
+
+                        .btn-chevron-select {
+                            width: 28px;
+                            height: 28px;
+                            border-radius: 8px;
+                            border: none;
+                            background: #f1f5f9;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            color: #64748b;
+                            cursor: pointer;
+                            font-size: 15px;
+                            transition: all 0.2s;
+
+                            &:hover {
+                                background: #e2e8f0;
+                                color: #0f172a;
+                            }
+                        }
+                    }
+                }
+
+                .service-progress-track {
+                    width: 100%;
+                    height: 5px;
+                    background: #f1f5f9;
+                    border-radius: 9999px;
+                    overflow: hidden;
+
+                    .service-progress-fill {
+                        height: 100%;
+                        border-radius: 9999px;
+                        transition: width 0.4s ease;
+                    }
+                }
+            }
+        }
+
+        // SUBTASKS ALONG THE VERTICAL LINE (SMALL DOTS)
+        .subtasks-vertical-spine-cluster {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            margin-left: 15px; // Indented past the drag grip column
+            position: relative;
+
+            .subtask-stepper-row {
+                display: flex;
+                align-items: stretch;
+                gap: 12px;
+                position: relative;
+                padding-bottom: 8px;
+
+                &:hover {
+                    .subtask-item-card {
+                        border-color: #cbd5e1;
+                        background: #ffffff;
+                    }
+                }
+
+                .subtask-drag-grip {
+                    width: 18px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: grab;
+                    color: #94a3b8;
+                    flex-shrink: 0;
+
+                    ion-icon {
+                        font-size: 16px;
+                    }
+
+                    &:hover {
+                        color: #475569;
+                    }
+                }
+
+                // Small Dot Column (Directly on vertical connecting spine)
+                .small-dot-track-col {
+                    width: 34px;
+                    position: relative;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    flex-shrink: 0;
+
+                    .small-circle-dot {
+                        width: 14px;
+                        height: 14px;
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        z-index: 3;
+                        margin-top: 10px;
+                        flex-shrink: 0;
+                        transition: all 0.2s ease;
+
+                        // GREEN: Completed
+                        &.completed {
+                            background: #10b981;
+                            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25);
+
+                            ion-icon {
+                                font-size: 9px;
+                                color: #ffffff;
+                                font-weight: 800;
+                            }
+                        }
+
+                        // ORANGE: In Process
+                        &.in_progress {
+                            background: #ffffff;
+                            border: 2.5px solid #f59e0b;
+                            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25);
+
+                            .inner-small-orange {
+                                width: 5px;
+                                height: 5px;
+                                border-radius: 50%;
+                                background: #f59e0b;
+                            }
+                        }
+
+                        // WHITE: Not Yet Started / Pending
+                        &.pending {
+                            background: #ffffff;
+                            border: 2px solid #cbd5e1;
+                            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+                        }
+                    }
+
+                    .subtask-track-line {
+                        position: absolute;
+                        top: 24px;
+                        bottom: 0;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        width: 2px;
+                        background: #e2e8f0;
+                        z-index: 1;
+
+                        &.completed {
+                            background: #10b981;
+                        }
+
+                        &.in_progress {
+                            background: #f59e0b;
+                        }
+                    }
+                }
+
+                // Subtask Item Card
+                .subtask-item-card {
+                    flex: 1;
+                    min-width: 0;
+                    background: #f8fafc;
+                    border: 1px solid #e2e8f0;
+                    border-radius: 10px;
+                    padding: 8px 14px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 12px;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+
+                    .subtask-main-info {
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                        flex: 1;
+                        min-width: 0;
+
+                        .st-seq-num {
+                            font-size: 11px;
+                            font-weight: 800;
+                            color: #94a3b8;
+                        }
+
+                        .st-title-text {
+                            font-size: 13px;
+                            font-weight: 700;
+                            color: #1e293b;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                        }
+
+                        .st-date-badge-pill {
+                            position: relative;
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 4px;
+                            background: #ffffff;
+                            border: 1px solid #e2e8f0;
+                            border-radius: 6px;
+                            padding: 2px 7px;
+                            font-size: 11px;
+                            font-weight: 600;
+                            color: #64748b;
+                            flex-shrink: 0;
+
+                            ion-icon {
+                                font-size: 12px;
+                                color: #94a3b8;
+                            }
+
+                            &.editable-st-date:hover {
+                                border-color: #93c5fd;
+                                color: #2563eb;
+                                background: #eff6ff;
+
+                                ion-icon {
+                                    color: #2563eb;
+                                }
+                            }
+
+                            .date-overlay-input {
+                                position: absolute;
+                                top: 0;
+                                left: 0;
+                                width: 100%;
+                                height: 100%;
+                                opacity: 0 !important;
+                                cursor: pointer;
+                                z-index: 10;
+                                border: none;
+                                margin: 0;
+                                padding: 0;
+
+                                &::-webkit-calendar-picker-indicator {
+                                    position: absolute;
+                                    top: 0;
+                                    left: 0;
+                                    width: 100%;
+                                    height: 100%;
+                                    opacity: 0;
+                                    cursor: pointer;
+                                }
+                            }
+                        }
+
+                        .st-dates-range-group {
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 3px;
+                            background: #ffffff;
+                            border: 1px solid #e2e8f0;
+                            border-radius: 6px;
+                            padding: 2px 6px;
+
+                            .st-date-picker-box,
+                            .st-mini-date-chip {
+                                position: relative;
+                                display: inline-flex;
+                                align-items: center;
+                                gap: 3px;
+                                background: transparent;
+                                border: none;
+                                border-radius: 4px;
+                                padding: 1px 4px;
+                                font-size: 11px;
+                                font-weight: 600;
+                                color: #475569;
+                                cursor: pointer;
+                                transition: all 0.15s ease;
+
+                                .st-date-lbl {
+                                    font-size: 9px;
+                                    font-weight: 700;
+                                    color: #94a3b8;
+                                    text-transform: uppercase;
+                                }
+
+                                ion-icon {
+                                    font-size: 12px;
+                                    color: #64748b;
+                                }
+
+                                .st-date-txt {
+                                    font-weight: 700;
+                                }
+
+                                &:hover,
+                                &.editable-chip:hover {
+                                    color: #2563eb;
+                                    background: #eff6ff;
+
+                                    ion-icon {
+                                        color: #2563eb;
+                                    }
+                                }
+
+                                .date-overlay-input {
+                                    position: absolute;
+                                    top: 0;
+                                    left: 0;
+                                    width: 100%;
+                                    height: 100%;
+                                    opacity: 0 !important;
+                                    cursor: pointer;
+                                    z-index: 10;
+                                    border: none;
+                                    margin: 0;
+                                    padding: 0;
+
+                                    &::-webkit-calendar-picker-indicator {
+                                        position: absolute;
+                                        top: 0;
+                                        left: 0;
+                                        width: 100%;
+                                        height: 100%;
+                                        opacity: 0;
+                                        cursor: pointer;
+                                    }
+                                }
+                            }
+
+                            .st-date-sep {
+                                font-size: 11px;
+                                color: #cbd5e1;
+                            }
+                        }
+
+                        .st-card-dates-range-wrap {
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 4px;
+
+                            .st-mini-date-chip {
+                                position: relative;
+                                display: inline-flex;
+                                align-items: center;
+                                gap: 3px;
+                                font-size: 11px;
+                                font-weight: 600;
+                                color: #475569;
+                                cursor: pointer;
+                                background: #f8fafc;
+                                border: 1px solid #e2e8f0;
+                                border-radius: 5px;
+                                padding: 2px 7px;
+                                transition: all 0.15s ease;
+
+                                &:hover {
+                                    color: #2563eb;
+                                    border-color: #93c5fd;
+                                    background: #eff6ff;
+
+                                    ion-icon {
+                                        color: #2563eb;
+                                    }
+                                }
+
+                                ion-icon {
+                                    font-size: 12px;
+                                    color: #64748b;
+                                }
+
+                                .date-overlay-input {
+                                    position: absolute;
+                                    top: 0;
+                                    left: 0;
+                                    width: 100%;
+                                    height: 100%;
+                                    opacity: 0 !important;
+                                    cursor: pointer;
+                                    z-index: 10;
+                                    border: none;
+                                    margin: 0;
+                                    padding: 0;
+
+                                    &::-webkit-calendar-picker-indicator {
+                                        position: absolute;
+                                        top: 0;
+                                        left: 0;
+                                        width: 100%;
+                                        height: 100%;
+                                        opacity: 0;
+                                        cursor: pointer;
+                                    }
+                                }
+                            }
+
+                            .st-date-sep {
+                                font-size: 11px;
+                                color: #cbd5e1;
+                            }
+                        }
+                    }
+
+                    .subtask-actions-col {
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                        flex-shrink: 0;
+
+                        .subtask-status-chip {
+                            font-size: 10.5px;
+                            font-weight: 700;
+                            padding: 2px 7px;
+                            border-radius: 5px;
+
+                            &.completed {
+                                background: #ecfdf5;
+                                color: #059669;
+                                border: 1px solid #a7f3d0;
+                            }
+
+                            &.in_progress {
+                                background: #fffbeb;
+                                color: #d97706;
+                                border: 1px solid #fde68a;
+                            }
+
+                            &.pending {
+                                background: #ffffff;
+                                color: #64748b;
+                                border: 1px solid #cbd5e1;
+                            }
+                        }
+
+                        .btn-st-action-view {
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 4px;
+                            padding: 3px 8px;
+                            border-radius: 6px;
+                            border: 1px solid #e2e8f0;
+                            background: #ffffff;
+                            color: #475569;
+                            font-size: 11px;
+                            font-weight: 700;
+                            cursor: pointer;
+                            transition: all 0.2s;
+
+                            &:hover {
+                                background: #eff6ff;
+                                border-color: #bfdbfe;
+                                color: #2563eb;
+                            }
+
+                            ion-icon {
+                                font-size: 13px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Empty Subtasks Spine
+        .subtasks-empty-spine {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-left: 32px;
+            padding: 4px 0 12px;
+
+            .empty-spine-dot {
+                width: 34px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+
+                &::after {
+                    content: '';
+                    width: 6px;
+                    height: 6px;
+                    border-radius: 50%;
+                    background: #cbd5e1;
+                }
+            }
+
+            .no-subtasks-note {
+                font-size: 11.5px;
+                color: #94a3b8;
+                font-style: italic;
+            }
+
+            .btn-add-st-inline {
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+                background: none;
+                border: none;
+                color: #2563eb;
+                font-size: 11.5px;
+                font-weight: 700;
+                cursor: pointer;
+                padding: 2px 6px;
+
+                &:hover {
+                    text-decoration: underline;
+                }
+
+                ion-icon {
+                    font-size: 14px;
+                }
+            }
+        }
+    }
+
+    .sequence-footer-tip {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: #f1f5f9;
+        border-radius: 8px;
+        padding: 10px 14px;
+        margin-top: 16px;
+        font-size: 12px;
+        color: #475569;
+        font-weight: 500;
+
+        ion-icon {
+            font-size: 16px;
+            color: #2563eb;
+            flex-shrink: 0;
+        }
+    }
+}
+
+@keyframes pulseAmber {
+    0% {
+        transform: scale(0.9);
+        box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4);
+    }
+
+    70% {
+        transform: scale(1.1);
+        box-shadow: 0 0 0 6px rgba(245, 158, 11, 0);
+    }
+
+    100% {
+        transform: scale(0.9);
+        box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
+    }
+}

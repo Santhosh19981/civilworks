@@ -19,7 +19,7 @@ export class SplashPage implements OnInit {
         const delay = isAuth ? 400 : 1000;
         setTimeout(() => {
             if (this.authService.isAuthenticated()) {
-                this.router.navigateByUrl('/tabs/home', { replaceUrl: true });
+                this.router.navigateByUrl('/sector-select', { replaceUrl: true });
             } else {
                 this.router.navigateByUrl('/login', { replaceUrl: true });
             }

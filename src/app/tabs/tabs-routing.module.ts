@@ -28,6 +28,14 @@ const routes: Routes = [
                 loadChildren: () => import('../pages/profile/profile.module').then(m => m.ProfilePageModule)
             },
             {
+                path: 'sop',
+                loadChildren: () => import('../pages/sop/sop.module').then(m => m.SOPPageModule)
+            },
+            {
+                path: 'sop/:orderId',
+                loadChildren: () => import('../pages/sop/sop.module').then(m => m.SOPPageModule)
+            },
+            {
                 path: '',
                 redirectTo: '/tabs/home',
                 pathMatch: 'full'

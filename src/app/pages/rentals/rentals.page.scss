@@ -45,6 +45,17 @@ $text-soft: #94A3B8;
         }
 
         .brand-section {
+            .nav-back-row {
+                display: inline-flex;
+                align-items: center;
+                gap: 12px;
+                margin-bottom: 10px;
+
+                .hub-pill {
+                    margin-bottom: 0;
+                }
+            }
+
             .hub-pill {
                 display: inline-block;
                 background: rgba(255, 107, 0, 0.18);

@@ -4,6 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { HomePage } from './home.page';
 import { RouterModule, Routes } from '@angular/router';
+import { NavDropdownComponent } from '../../components/nav-dropdown/nav-dropdown.component';
+import { ChatPanelComponent } from '../../components/chat-panel/chat-panel.component';
+import { EditOrderModalComponent } from '../../components/edit-order-modal/edit-order-modal.component';
 
 const routes: Routes = [
     {
@@ -17,7 +20,10 @@ const routes: Routes = [
         CommonModule,
         FormsModule,
         IonicModule,
-        RouterModule.forChild(routes)
+        RouterModule.forChild(routes),
+        NavDropdownComponent,
+        ChatPanelComponent,
+        EditOrderModalComponent
     ],
     declarations: [HomePage]
 })

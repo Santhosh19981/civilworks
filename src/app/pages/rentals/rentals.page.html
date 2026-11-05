@@ -2,8 +2,13 @@
     <div class="header-inner">
         <div class="header-top">
             <div class="brand-section">
-                <span class="hub-pill">CIVILWORKS FLEET HUB</span>
-                <h1>Equipment & Machinery Rental</h1>
+                <div class="nav-back-row">
+                    <button type="button" class="page-back-btn" (click)="goBack()" title="Go back to previous page" aria-label="Go back">
+                        <ion-icon name="arrow-back"></ion-icon>
+                    </button>
+                    <span class="hub-pill" routerLink="/sector-select" title="Switch Sector" style="cursor: pointer;">CIVILWORKS FLEET HUB</span>
+                </div>
+                <h1 routerLink="/sector-select" title="Switch Sector" style="cursor: pointer;">Equipment & Machinery Rental</h1>
                 <p class="tagline">50-Point Certified Construction Machinery • Rapid Site Dispatch Across Region</p>
             </div>
             <div class="fleet-stats">
@@ -15,6 +20,10 @@
                     <span class="stat-num">4 Hrs</span>
                     <span class="stat-label">Avg. Dispatch</span>
                 </div>
+            </div>
+
+            <div class="header-actions">
+                <app-nav-dropdown></app-nav-dropdown>
             </div>
         </div>
 
@@ -86,43 +95,14 @@
                 <div class="rental-card-body">
                     <div class="title-rating-row">
                         <h3 class="machine-title">{{ rental.name }}</h3>
-                        <div class="rating-badge">
-                            <span class="star">★</span>
-                            <span class="score">{{ rental.rating }}</span>
-                            <span class="count">({{ rental.reviewCount }})</span>
-                        </div>
                     </div>
 
-                    <p class="machine-desc">{{ rental.description }}</p>
-
-                    <!-- Technical Specifications Chips -->
-                    <div class="specs-grid" *ngIf="rental.specs && rental.specs.length">
-                        <div class="spec-item" *ngFor="let spec of rental.specs">
-                            <ion-icon name="checkmark-circle" class="spec-check"></ion-icon>
-                            <span>{{ spec }}</span>
-                        </div>
-                    </div>
-
-                    <!-- Operator & Fuel Badges -->
-                    <div class="features-row">
-                        <span class="feature-tag fuel-tag">
-                            <ion-icon name="flash-outline"></ion-icon>
-                            {{ rental.fuelType }}
-                        </span>
-                        <span class="feature-tag operator-tag">
-                            <ion-icon name="person-outline"></ion-icon>
-                            {{ rental.badge }}
-                        </span>
-                        <span class="feature-tag inspect-tag">
-                            <ion-icon name="ribbon-outline"></ion-icon>
-                            50-Pt Inspected
-                        </span>
-                    </div>
+                    <p class="machine-desc" *ngIf="rental.description">{{ rental.description }}</p>
 
                     <!-- Action Buttons -->
                     <div class="card-actions">
                         <button class="btn-specs" (click)="viewRental(rental.id); $event.stopPropagation()">
-                            Inspect Specs
+                            View Details
                         </button>
                         <button class="btn-rent" (click)="viewRental(rental.id); $event.stopPropagation()">
                             <span>Rent Machine</span>

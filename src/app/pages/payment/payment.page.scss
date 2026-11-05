@@ -1,110 +1,634 @@
-.payment-container {
-    padding: 16px;
+$navy-dark: #0d1b2a;
+$navy-surface: #1b263b;
+$primary-orange: #f59e0b;
+$border-light: #e2e8f0;
+$text-dark: #0f172a;
+$text-muted: #64748b;
+$emerald-green: #10b981;
+
+.payment-header-bar {
+    background: $navy-dark;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+    .header-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 16px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+
+            .nav-back-btn {
+                background: rgba(255, 255, 255, 0.08);
+                border: none;
+                color: #ffffff;
+                width: 40px;
+                height: 40px;
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 20px;
+                cursor: pointer;
+                transition: all 0.2s;
+
+                &:hover {
+                    background: $primary-orange;
+                    color: $navy-dark;
+                }
+            }
+
+            .header-title-box {
+                .header-brand-tag {
+                    display: block;
+                    font-size: 9px;
+                    font-weight: 900;
+                    letter-spacing: 0.15em;
+                    color: $primary-orange;
+                    text-transform: uppercase;
+                }
+
+                .header-page-title {
+                    margin: 0;
+                    font-size: 18px;
+                    font-weight: 800;
+                    color: #ffffff;
+                }
+            }
+        }
+
+        .header-right {
+            .security-badge {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                background: rgba(16, 185, 129, 0.12);
+                border: 1px solid rgba(16, 185, 129, 0.3);
+                padding: 6px 14px;
+                border-radius: 20px;
+                color: #10b981;
+                font-size: 11px;
+                font-weight: 700;
+            }
+        }
+    }
 }
 
-.payment-header {
-    margin-bottom: 32px;
+.payment-content {
+    --background: #f8fafc;
 }
 
-.amount-card {
-    background: linear-gradient(135deg, #0B2C4D 0%, #1a4d7a 100%);
-    padding: 24px;
-    border-radius: 16px;
-    text-align: center;
-    box-shadow: 0 4px 16px rgba(11, 44, 77, 0.3);
+.payment-page-container {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 24px 20px 60px;
 }
 
-.amount-label {
-    font-size: 14px;
-    color: rgba(255, 255, 255, 0.8);
-    margin-bottom: 8px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.amount-value {
-    font-size: 40px;
-    font-weight: 800;
-    color: #FFC107;
-}
-
-.payment-methods {
-    margin-bottom: 24px;
-}
-
-.payment-option {
+// Flow steps
+.flow-steps-bar {
     display: flex;
     align-items: center;
-    gap: 16px;
-    padding: 20px;
+    justify-content: center;
+    margin-bottom: 28px;
+    padding: 16px 20px;
     background: #ffffff;
-    border-radius: 12px;
-    margin-bottom: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    cursor: pointer;
-    transition: all 0.2s;
+    border-radius: 18px;
+    border: 1px solid $border-light;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
 
-    &:active {
-        transform: scale(0.98);
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+    .step-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        .step-circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 800;
+            background: #f1f5f9;
+            color: $text-muted;
+        }
+
+        .step-meta {
+            display: flex;
+            flex-direction: column;
+
+            .step-title {
+                font-size: 12px;
+                font-weight: 800;
+                color: $text-muted;
+            }
+
+            .step-sub {
+                font-size: 10px;
+                color: #94a3b8;
+            }
+        }
+
+        &.done {
+            .step-circle {
+                background: $emerald-green;
+                color: #ffffff;
+            }
+            .step-title {
+                color: $text-dark;
+            }
+        }
+
+        &.active {
+            .step-circle {
+                background: $navy-dark;
+                color: $primary-orange;
+                box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25);
+            }
+            .step-title {
+                color: $navy-dark;
+            }
+        }
+    }
+
+    .step-connector {
+        flex: 1;
+        max-width: 60px;
+        height: 2px;
+        background: #e2e8f0;
+        margin: 0 12px;
+
+        &.done {
+            background: $emerald-green;
+        }
     }
 }
 
-.option-icon {
-    width: 56px;
-    height: 56px;
-    border-radius: 12px;
-    background: linear-gradient(135deg, #F7931E 0%, #FFC107 100%);
+// 2-Column Grid
+.payment-main-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+
+    @media (min-width: 900px) {
+        grid-template-columns: 1.5fr 1fr;
+    }
+}
+
+.details-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.payment-card {
+    background: #ffffff;
+    border-radius: 22px;
+    border: 1px solid $border-light;
+    padding: 24px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+
+    .card-header {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 20px;
+
+        .card-icon-box {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+
+            &.orange {
+                background: rgba(245, 158, 11, 0.12);
+                color: $primary-orange;
+            }
+            &.navy {
+                background: rgba(13, 27, 42, 0.08);
+                color: $navy-dark;
+            }
+            &.green {
+                background: rgba(16, 185, 129, 0.1);
+                color: $emerald-green;
+            }
+        }
+
+        .card-mini-tag {
+            display: block;
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: $text-muted;
+
+            &.gold-text {
+                color: $primary-orange;
+            }
+        }
+
+        .card-title {
+            margin: 2px 0 0;
+            font-size: 18px;
+            font-weight: 800;
+            color: $navy-dark;
+        }
+    }
+
+    .service-meta-strip {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        padding: 14px 18px;
+        background: #f8fafc;
+        border-radius: 14px;
+        margin-bottom: 16px;
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+
+            .meta-label {
+                font-size: 10px;
+                color: $text-muted;
+                font-weight: 700;
+                text-transform: uppercase;
+            }
+
+            .meta-val {
+                font-size: 13px;
+                font-weight: 800;
+                color: $text-dark;
+
+                &.tag-service {
+                    color: $primary-orange;
+                }
+            }
+        }
+    }
+
+    .service-inclusions {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        .inc-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #334155;
+
+            ion-icon {
+                color: $emerald-green;
+                font-size: 16px;
+            }
+        }
+    }
+}
+
+// Vendor Profile Strip
+.vendor-card {
+    border-left: 4px solid $primary-orange;
+}
+
+.vendor-profile-strip {
     display: flex;
     align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-
-    ion-icon {
-        font-size: 28px;
-        color: #ffffff;
-    }
-
-    &.cod {
-        background: linear-gradient(135deg, #2dd36f 0%, #42d77d 100%);
-    }
-}
-
-.option-content {
-    flex: 1;
-
-    h3 {
-        font-size: 16px;
-        font-weight: 700;
-        color: #0B2C4D;
-        margin: 0 0 4px 0;
-    }
-
-    p {
-        font-size: 13px;
-        color: #666;
-        margin: 0;
-    }
-}
-
-.arrow-icon {
-    font-size: 20px;
-    color: #999;
-}
-
-.payment-note {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+    gap: 18px;
     padding: 16px;
-    background: #f5f5f5;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    color: #2dd36f;
+    background: #f8fafc;
+    border-radius: 18px;
 
-    ion-icon {
-        font-size: 20px;
+    .vendor-avatar-stage {
+        width: 72px;
+        height: 72px;
+        border-radius: 20px;
+        overflow: hidden;
+        border: 2px solid #e2e8f0;
+        background: #ffffff;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+
+        .vendor-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .vendor-fallback-avatar {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, $navy-dark, $navy-surface);
+            color: $primary-orange;
+            font-size: 28px;
+            font-weight: 900;
+        }
+    }
+
+    .vendor-info-box {
+        flex: 1;
+
+        .vendor-display-name {
+            margin: 0 0 6px;
+            font-size: 17px;
+            font-weight: 800;
+            color: $navy-dark;
+        }
+
+        .vendor-badge-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+
+            .partner-badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+                font-size: 11px;
+                font-weight: 700;
+                background: rgba(245, 158, 11, 0.12);
+                color: #b45309;
+                padding: 4px 10px;
+                border-radius: 8px;
+            }
+
+            .status-badge {
+                font-size: 11px;
+                font-weight: 700;
+                color: $emerald-green;
+                background: rgba(16, 185, 129, 0.1);
+                padding: 4px 10px;
+                border-radius: 8px;
+            }
+        }
+    }
+}
+
+// Payment Methods List
+.payment-methods-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    .method-option-tile {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 16px 20px;
+        border: 2px solid $border-light;
+        border-radius: 16px;
+        cursor: pointer;
+        transition: all 0.2s;
+
+        &:hover {
+            border-color: rgba(245, 158, 11, 0.5);
+            background: #fffcf7;
+        }
+
+        &.selected {
+            border-color: $primary-orange;
+            background: rgba(245, 158, 11, 0.04);
+            box-shadow: 0 6px 18px rgba(245, 158, 11, 0.12);
+        }
+
+        .radio-box {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 2px solid #cbd5e1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .radio-dot {
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+                background: $primary-orange;
+            }
+        }
+
+        .method-icon-box {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+
+            &.blue {
+                background: #eff6ff;
+                color: #2563eb;
+            }
+
+            &.orange {
+                background: #fff7ed;
+                color: #ea580c;
+            }
+        }
+
+        .method-details {
+            flex: 1;
+
+            .method-title-row {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+
+                h4 {
+                    margin: 0;
+                    font-size: 14px;
+                    font-weight: 800;
+                    color: $navy-dark;
+                }
+
+                .tag-pill {
+                    font-size: 9px;
+                    font-weight: 800;
+                    background: #dbeafe;
+                    color: #1e40af;
+                    padding: 2px 8px;
+                    border-radius: 6px;
+
+                    &.alt {
+                        background: #fef3c7;
+                        color: #92400e;
+                    }
+                }
+            }
+
+            p {
+                margin: 4px 0 0;
+                font-size: 11px;
+                color: $text-muted;
+            }
+        }
+    }
+}
+
+// Right Column Summary
+.summary-column {
+    .summary-card {
+        background: #ffffff;
+        border-radius: 24px;
+        border: 1px solid $border-light;
+        padding: 24px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        position: sticky;
+        top: 24px;
+
+        .summary-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid #e2e8f0;
+
+            ion-icon {
+                font-size: 22px;
+                color: $primary-orange;
+            }
+
+            h3 {
+                margin: 0;
+                font-size: 16px;
+                font-weight: 800;
+                color: $navy-dark;
+            }
+        }
+
+        .summary-breakdown {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+
+            .summary-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                font-size: 13px;
+                color: $text-muted;
+
+                .val {
+                    font-weight: 700;
+                    color: $text-dark;
+
+                    &.green {
+                        color: $emerald-green;
+                    }
+                }
+            }
+
+            .divider-line {
+                height: 1px;
+                background: #e2e8f0;
+                margin: 6px 0;
+            }
+
+            .total-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+
+                .total-label {
+                    display: block;
+                    font-size: 14px;
+                    font-weight: 800;
+                    color: $navy-dark;
+                }
+
+                .total-sub {
+                    font-size: 10px;
+                    color: $text-muted;
+                }
+
+                .total-amount {
+                    display: flex;
+                    align-items: baseline;
+                    gap: 2px;
+                    color: $primary-orange;
+
+                    .curr {
+                        font-size: 18px;
+                        font-weight: 800;
+                    }
+
+                    .num {
+                        font-size: 28px;
+                        font-weight: 900;
+                    }
+                }
+            }
+        }
+
+        .btn-proceed-checkout {
+            margin-top: 24px;
+            width: 100%;
+            background: linear-gradient(135deg, $navy-dark, #1b263b);
+            color: #ffffff;
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            padding: 16px;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 10px 24px rgba(13, 27, 42, 0.25);
+            cursor: pointer;
+            transition: all 0.2s;
+
+            ion-icon {
+                font-size: 18px;
+                color: $primary-orange;
+            }
+
+            &:hover {
+                background: $primary-orange;
+                color: $navy-dark;
+                border-color: $primary-orange;
+
+                ion-icon {
+                    color: $navy-dark;
+                }
+            }
+
+            &:active {
+                transform: scale(0.98);
+            }
+        }
+
+        .trust-guarantee {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 14px;
+            font-size: 11px;
+            font-weight: 600;
+            color: $text-muted;
+
+            ion-icon {
+                color: $emerald-green;
+                font-size: 14px;
+            }
+        }
     }
 }

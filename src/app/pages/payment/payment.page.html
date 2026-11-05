@@ -1,52 +1,248 @@
-<ion-header [translucent]="true">
-    <ion-toolbar>
-        <ion-buttons slot="start">
-            <ion-button (click)="goBack()">
-                <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
-            </ion-button>
-        </ion-buttons>
-        <ion-title>Payment</ion-title>
-    </ion-toolbar>
+<ion-header class="ion-no-border payment-header-bar" [translucent]="true">
+    <div class="header-inner">
+        <div class="header-left">
+            <button (click)="goBack()" class="nav-back-btn" aria-label="Go back">
+                <ion-icon name="arrow-back"></ion-icon>
+            </button>
+            <div class="header-title-box">
+                <span class="header-brand-tag">CIVILWORKS MOBILIZATION</span>
+                <h1 class="header-page-title">Service & Payment Details</h1>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="security-badge">
+                <ion-icon name="shield-checkmark"></ion-icon>
+                <span>Verified Partner</span>
+            </div>
+        </div>
+    </div>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-    <div class="payment-container">
-        <div class="payment-header">
-            <div class="amount-card">
-                <div class="amount-label">Total Amount</div>
-                <div class="amount-value">₹{{ total }}</div>
+<ion-content [fullscreen]="true" class="payment-content">
+    <div class="payment-page-container fade-in">
+
+        <!-- Progress Steps Bar -->
+        <div class="flow-steps-bar">
+            <div class="step-item done">
+                <div class="step-circle"><ion-icon name="checkmark"></ion-icon></div>
+                <div class="step-meta">
+                    <span class="step-title">Select Service</span>
+                    <span class="step-sub">Subcategory</span>
+                </div>
+            </div>
+            <div class="step-connector done"></div>
+            <div class="step-item done">
+                <div class="step-circle"><ion-icon name="checkmark"></ion-icon></div>
+                <div class="step-meta">
+                    <span class="step-title">Choose Vendor</span>
+                    <span class="step-sub">Verified Partner</span>
+                </div>
+            </div>
+            <div class="step-connector done"></div>
+            <div class="step-item active">
+                <div class="step-circle">3</div>
+                <div class="step-meta">
+                    <span class="step-title">Payment Mode</span>
+                    <span class="step-sub">Rate & Terms</span>
+                </div>
+            </div>
+            <div class="step-connector"></div>
+            <div class="step-item">
+                <div class="step-circle">4</div>
+                <div class="step-meta">
+                    <span class="step-title">Site Checkout</span>
+                    <span class="step-sub">Order Placed</span>
+                </div>
             </div>
         </div>
 
-        <h2 class="section-title">Select Payment Method</h2>
+        <div class="payment-main-grid">
+            <!-- Left Column: Service Details & Selected Vendor Details -->
+            <div class="details-column">
 
-        <div class="payment-methods">
-            <div class="payment-option" (click)="payNow()">
-                <div class="option-icon">
-                    <ion-icon name="card"></ion-icon>
+                <!-- 1. Service Details Card (If Service Booking) -->
+                <div class="payment-card" *ngIf="serviceBooking">
+                    <div class="card-header">
+                        <div class="card-icon-box orange">
+                            <ion-icon name="construct-outline"></ion-icon>
+                        </div>
+                        <div>
+                            <span class="card-mini-tag">SELECTED SERVICE</span>
+                            <h2 class="card-title">{{ serviceBooking.service_name || serviceBooking.name }}</h2>
+                        </div>
+                    </div>
+
+                    <div class="service-meta-strip">
+                        <div class="meta-item">
+                            <span class="meta-label">Subcategory</span>
+                            <span class="meta-val">{{ serviceBooking.subcategory_name || 'General Construction' }}</span>
+                        </div>
+                        <div class="meta-item" *ngIf="serviceBooking.category_name">
+                            <span class="meta-label">Category</span>
+                            <span class="meta-val">{{ serviceBooking.category_name }}</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Procurement Type</span>
+                            <span class="meta-val tag-service">SERVICE ORDER</span>
+                        </div>
+                    </div>
+
+                    <div class="service-inclusions">
+                        <div class="inc-row">
+                            <ion-icon name="checkmark-circle"></ion-icon>
+                            <span>Dedicated professional crew allocation</span>
+                        </div>
+                        <div class="inc-row">
+                            <ion-icon name="checkmark-circle"></ion-icon>
+                            <span>Direct project communication channel upon booking</span>
+                        </div>
+                        <div class="inc-row">
+                            <ion-icon name="checkmark-circle"></ion-icon>
+                            <span>Site inspection & verified workmanship guarantee</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="option-content">
-                    <h3>Pay Now</h3>
-                    <p>Credit/Debit Card, UPI, Net Banking</p>
+
+                <!-- 2. Selected Vendor Details Card -->
+                <div class="payment-card vendor-card" *ngIf="serviceBooking?.vendor">
+                    <div class="card-header">
+                        <div class="card-icon-box navy">
+                            <ion-icon name="person-circle-outline"></ion-icon>
+                        </div>
+                        <div>
+                            <span class="card-mini-tag gold-text">ASSIGNED PARTNER</span>
+                            <h2 class="card-title">Selected Vendor Details</h2>
+                        </div>
+                    </div>
+
+                    <div class="vendor-profile-strip">
+                        <div class="vendor-avatar-stage">
+                            <img *ngIf="serviceBooking.vendor.image" 
+                                [src]="formatImageUrl(serviceBooking.vendor.image)" 
+                                [alt]="serviceBooking.vendor.name" 
+                                class="vendor-photo" />
+                            <div *ngIf="!serviceBooking.vendor.image" class="vendor-fallback-avatar">
+                                {{ serviceBooking.vendor.name ? serviceBooking.vendor.name.charAt(0).toUpperCase() : 'V' }}
+                            </div>
+                        </div>
+
+                        <div class="vendor-info-box">
+                            <h3 class="vendor-display-name">{{ serviceBooking.vendor.name }}</h3>
+                            <div class="vendor-badge-row">
+                                <span class="partner-badge">
+                                    <ion-icon name="shield-checkmark"></ion-icon>
+                                    CivilWorks Verified Partner
+                                </span>
+                                <span class="status-badge">Available for Dispatch</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <ion-icon name="chevron-forward" class="arrow-icon"></ion-icon>
+
+                <!-- 3. Payment Method Selection -->
+                <div class="payment-card">
+                    <div class="card-header">
+                        <div class="card-icon-box green">
+                            <ion-icon name="wallet-outline"></ion-icon>
+                        </div>
+                        <div>
+                            <span class="card-mini-tag">PAYMENT PREFERENCE</span>
+                            <h2 class="card-title">Choose Payment Method</h2>
+                        </div>
+                    </div>
+
+                    <div class="payment-methods-list">
+                        <!-- Option 1: Instant Online Payment -->
+                        <div class="method-option-tile" [class.selected]="selectedPaymentMethod === 'online'" (click)="selectPaymentMethod('online')">
+                            <div class="radio-box">
+                                <div class="radio-dot" *ngIf="selectedPaymentMethod === 'online'"></div>
+                            </div>
+                            <div class="method-icon-box blue">
+                                <ion-icon name="card-outline"></ion-icon>
+                            </div>
+                            <div class="method-details">
+                                <div class="method-title-row">
+                                    <h4>Instant Online Payment</h4>
+                                    <span class="tag-pill">RECOMMENDED</span>
+                                </div>
+                                <p>UPI (GPay, PhonePe, Paytm), Credit/Debit Cards, Corporate Net Banking.</p>
+                            </div>
+                        </div>
+
+                        <!-- Option 2: Pay on Site Mobilization / COD -->
+                        <div class="method-option-tile" [class.selected]="selectedPaymentMethod === 'cod'" (click)="selectPaymentMethod('cod')">
+                            <div class="radio-box">
+                                <div class="radio-dot" *ngIf="selectedPaymentMethod === 'cod'"></div>
+                            </div>
+                            <div class="method-icon-box orange">
+                                <ion-icon name="cash-outline"></ion-icon>
+                            </div>
+                            <div class="method-details">
+                                <div class="method-title-row">
+                                    <h4>Pay on Site Mobilization</h4>
+                                    <span class="tag-pill alt">SITE VERIFIED</span>
+                                </div>
+                                <p>Release payment directly after vendor and service technician arrives on your project site.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
-            <div class="payment-option" (click)="cashOnDelivery()">
-                <div class="option-icon cod">
-                    <ion-icon name="cash"></ion-icon>
+            <!-- Right Column: Summary & Checkout CTA -->
+            <div class="summary-column">
+                <div class="summary-card">
+                    <div class="summary-header">
+                        <ion-icon name="receipt-outline"></ion-icon>
+                        <h3>Payment & Dispatch Summary</h3>
+                    </div>
+
+                    <div class="summary-breakdown">
+                        <div class="summary-row">
+                            <span>Service Fee</span>
+                            <span class="val">₹{{ total | number }}</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Site Mobilization Charge</span>
+                            <span class="val green">FREE</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Quality Assurance & Insurance</span>
+                            <span class="val green">INCLUDED</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>GST & Applicable Taxes</span>
+                            <span class="val">Inclusive</span>
+                        </div>
+
+                        <div class="divider-line"></div>
+
+                        <div class="total-row">
+                            <div>
+                                <span class="total-label">Total Payable</span>
+                                <span class="total-sub">Guaranteed all-inclusive price</span>
+                            </div>
+                            <div class="total-amount">
+                                <span class="curr">₹</span>
+                                <span class="num">{{ total | number }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CTA: Direct to Checkout -->
+                    <button type="button" class="btn-proceed-checkout" (click)="proceedToCheckout()">
+                        <span>Proceed to Site Checkout</span>
+                        <ion-icon name="arrow-forward"></ion-icon>
+                    </button>
+
+                    <div class="trust-guarantee">
+                        <ion-icon name="shield-checkmark"></ion-icon>
+                        <span>100% Secure Procurement Guarantee</span>
+                    </div>
                 </div>
-                <div class="option-content">
-                    <h3>Cash on Delivery</h3>
-                    <p>Pay when you receive your order</p>
-                </div>
-                <ion-icon name="chevron-forward" class="arrow-icon"></ion-icon>
             </div>
         </div>
 
-        <div class="payment-note">
-            <ion-icon name="shield-checkmark"></ion-icon>
-            <span>100% Secure Payment</span>
-        </div>
     </div>
 </ion-content>

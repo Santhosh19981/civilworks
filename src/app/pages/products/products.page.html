@@ -1,16 +1,40 @@
 <ion-header class="ion-no-border modern-products-header" [translucent]="true">
     <div class="header-main-row">
         <div class="header-title-col">
-            <div class="brand-icon-box">
-                <ion-icon name="cube" class="brand-icon"></ion-icon>
+            <div class="nav-back-breadcrumbs-row">
+                <button type="button" class="page-back-btn" (click)="goBack()" title="Go back to previous page" aria-label="Go back">
+                    <ion-icon name="arrow-back"></ion-icon>
+                </button>
+                <!-- Breadcrumbs -->
+                <div class="breadcrumbs-row" *ngIf="currentMainCategory || currentCategory">
+                    <a routerLink="/tabs/home" class="crumb-link">Home</a>
+                    <span class="crumb-sep">/</span>
+                    <a (click)="navigateToCategorySelection()" class="crumb-link" *ngIf="currentMainCategory">
+                        {{ currentMainCategory.name }}
+                    </a>
+                    <span class="crumb-sep" *ngIf="currentCategory">/</span>
+                    <span class="crumb-current" *ngIf="currentCategory">{{ currentCategory.name }}</span>
+                </div>
             </div>
-            <div class="brand-text">
-                <h1 class="page-main-title">Building Materials</h1>
-                <span class="page-subtitle">Direct site dispatch at wholesale rates</span>
+
+            <div class="flex-title-wrap clickable-brand" routerLink="/sector-select" title="Switch Sector">
+                <div class="brand-icon-box">
+                    <ion-icon [name]="(filterType === 'services' || editOrderId) ? 'people' : 'cube'" class="brand-icon"></ion-icon>
+                </div>
+                <div class="brand-text">
+                    <h1 class="page-main-title">
+                        {{ editOrderId ? 'Add Services to Project' : ((filterType === 'services') ? 'Services & Trade Contractors' : (currentCategory ? currentCategory.name : (currentMainCategory ? currentMainCategory.name + ' Materials' : 'Building Materials'))) }}
+                    </h1>
+                    <span class="page-subtitle">
+                        {{ editOrderId ? ('Project #' + (editOrderNo || editOrderId) + ' — Select a service and assign a dedicated vendor') : ((filterType === 'services') ? 'Verified contractors, technicians & specialized execution teams' : (currentMainCategory ? 'Verified ' + currentMainCategory.name + ' Inventory' : 'Direct site dispatch at wholesale rates')) }}
+                    </span>
+                </div>
             </div>
         </div>
 
         <div class="header-actions">
+            <app-nav-dropdown></app-nav-dropdown>
+
             <ion-button routerLink="/cart" fill="clear" class="cart-btn" aria-label="Shopping Cart">
                 <div class="cart-icon-wrapper">
                     <ion-icon name="cart-outline"></ion-icon>
@@ -25,7 +49,7 @@
         <div class="search-box">
             <ion-icon name="search-outline" class="search-icon"></ion-icon>
             <input type="text" [(ngModel)]="searchQuery" (input)="filterProducts()"
-                placeholder="Search cement, TMT rods, trowels, safety gear..." class="search-input" />
+                [placeholder]="(filterType === 'services' || editOrderId) ? 'Search services (e.g. Electrical, Painting, Interior, Masonry)...' : 'Search products, materials, units...'" class="search-input" />
             <button *ngIf="searchQuery" (click)="clearSearch()" class="clear-search-btn" type="button" aria-label="Clear search">
                 <ion-icon name="close-circle"></ion-icon>
             </button>
@@ -50,16 +74,44 @@
     </ion-refresher>
 
     <div class="products-page-container">
-        <!-- Category Chips Ribbon -->
-        <div class="category-scroll-ribbon">
-            <button *ngFor="let category of categories"
+        <!-- Project Order Edit Notice Banner -->
+        <div class="edit-order-alert-banner" *ngIf="editOrderId">
+            <div class="banner-icon-col">
+                <ion-icon name="construct"></ion-icon>
+            </div>
+            <div class="banner-text-col">
+                <div class="banner-pill-row">
+                    <span class="banner-pill-active">PROJECT EDIT MODE</span>
+                    <span class="banner-pill-id">#{{ editOrderNo || editOrderId }}</span>
+                </div>
+                <h3 class="banner-heading">Adding Service to Project Order</h3>
+                <p class="banner-subtext">Select a service below and pick a verified vendor. Then proceed to place the order to attach the service and vendor to this active project.</p>
+            </div>
+            <button type="button" class="btn-cancel-edit" (click)="cancelEditOrder()" title="Cancel editing project">
+                <ion-icon name="close-circle-outline"></ion-icon>
+                <span>Cancel</span>
+            </button>
+        </div>
+
+        <!-- Dynamic Subcategory Tabs Ribbon -->
+        <div class="category-scroll-ribbon" *ngIf="subcategories.length > 0">
+            <!-- All Subcategories Tab -->
+            <button type="button"
+                class="category-pill-btn"
+                [class.active]="selectedSubcategoryId === null"
+                (click)="selectSubcategory(null)">
+                <span>{{ (filterType === 'services' || editOrderId) ? 'All Services' : 'All Subcategories' }}</span>
+            </button>
+
+            <!-- Dynamic Subcategory Tabs -->
+            <button *ngFor="let sub of subcategories"
                 type="button"
                 class="category-pill-btn"
-                [class.active]="selectedCategory === category"
-                (click)="selectCategory(category)">
-                <span>{{ category }}</span>
-                <span *ngIf="category === 'All' && products.length > 0" class="count-pill">
-                    {{ products.length }}
+                [class.active]="selectedSubcategoryId === sub.id"
+                (click)="selectSubcategory(sub)">
+                <span>{{ sub.name }}</span>
+                <span class="type-pill" [class.rent-pill]="sub.type === 'renting'" [class.service-pill]="sub.type === 'services'">
+                    {{ sub.type === 'renting' ? 'RENT' : (sub.type === 'services' ? 'SERVICE' : 'BUY') }}
                 </span>
             </button>
         </div>
@@ -67,19 +119,19 @@
         <!-- Active Filter Indicator & Count -->
         <div class="filter-results-bar" *ngIf="!loading">
             <span class="results-text">
-                Showing <strong>{{ filteredProducts.length }}</strong> materials
-                <span *ngIf="selectedCategory !== 'All'">in <em>{{ selectedCategory }}</em></span>
+                Showing <strong>{{ filteredProducts.length }}</strong> items
+                <span *ngIf="selectedSubcategoryId">in <em>{{ selectedSubcategoryName }}</em></span>
                 <span *ngIf="searchQuery">for "<em>{{ searchQuery }}</em>"</span>
             </span>
-            <button *ngIf="selectedCategory !== 'All' || searchQuery" (click)="resetFilters()" class="clear-filters-link" type="button">
+            <button *ngIf="selectedSubcategoryId || searchQuery" (click)="resetFilters()" class="clear-filters-link" type="button">
                 Clear Filters
             </button>
         </div>
 
         <!-- Modern Products Grid -->
         <div class="catalog-grid" *ngIf="!loading && filteredProducts.length > 0">
-            <div class="catalog-card fade-in" *ngFor="let product of filteredProducts" (click)="viewProduct(product.id)">
-                <!-- Media Container with Guaranteed Fallback Image -->
+            <div class="catalog-card fade-in" *ngFor="let product of filteredProducts" (click)="onProductCardClick(product)">
+                <!-- Media Container -->
                 <div class="card-media">
                     <img [src]="getProductImage(product)"
                         [alt]="product.name"
@@ -88,80 +140,167 @@
                         loading="lazy" />
 
                     <!-- Badges -->
-                    <span class="stock-pill">
+                    <span class="stock-pill" [class.rental-stock]="isRenting(product)" [class.contract-stock]="isContract(product)" [class.service-stock]="isService(product) && !isContract(product)">
                         <span class="pulse-dot"></span>
-                        In Stock
+                        {{ isContract(product) ? 'Firm Contract Assigned' : (isService(product) ? 'Verified Professional' : (isRenting(product) ? 'Available for Rent' : 'In Stock')) }}
                     </span>
-                    <span class="discount-pill">20% OFF</span>
 
-                    <!-- Quick Direct Add to Cart Button -->
-                    <button class="quick-add-cart-btn"
-                        (click)="addToCart(product, $event)"
-                        [class.loading]="addingToCartId === product.id"
-                        type="button"
-                        aria-label="Add to cart">
-                        <ion-icon name="cart"></ion-icon>
-                        <span>Add</span>
-                    </button>
+                    <span class="type-badge" [class.rent-type]="isRenting(product)" [class.contract-type]="isContract(product)" [class.service-type]="isService(product) && !isContract(product)">
+                        {{ isContract(product) ? 'FIRM CONTRACT' : (isRenting(product) ? 'RENTAL' : (isService(product) ? 'SERVICE' : 'SELLING')) }}
+                    </span>
                 </div>
 
                 <!-- Product Info Area -->
                 <div class="card-body">
-                    <span class="category-badge">{{ product.category || 'Construction Supply' }}</span>
-                    <h3 class="product-title" [title]="product.name">{{ product.name }}</h3>
-
-                    <!-- Ratings Strip -->
-                    <div class="rating-row">
-                        <div class="stars-wrap">
-                            <ion-icon name="star"></ion-icon>
-                            <ion-icon name="star"></ion-icon>
-                            <ion-icon name="star"></ion-icon>
-                            <ion-icon name="star"></ion-icon>
-                            <ion-icon name="star-half"></ion-icon>
-                        </div>
-                        <span class="rating-num">4.8</span>
-                        <span class="orders-hint">(120+ orders)</span>
+                    <div class="cat-hierarchy-crumb">
+                        <span class="category-badge">{{ product.category_name || 'Civil Works' }}</span>
+                        <span class="sub-badge" *ngIf="product.subcategory_name">{{ product.subcategory_name }}</span>
                     </div>
 
-                    <!-- Price & CTA Row -->
+                    <h3 class="product-title" [title]="product.name">{{ product.name }}</h3>
+
+                    <!-- Price & Dynamic Unit -->
                     <div class="price-action-row">
                         <div class="price-group">
                             <div class="active-price">
                                 <span class="currency">₹</span>
                                 <span class="price-val">{{ product.price | number:'1.0-0' }}</span>
+                                <span class="unit-text" *ngIf="product.unit_name">/ {{ product.unit_name }}</span>
                             </div>
-                            <span class="strikethrough-mrp">₹{{ (product.price * 1.25) | number:'1.0-0' }}</span>
                         </div>
-                        <span class="delivery-hint">⚡ Same-Day Dispatch</span>
+                    </div>
+
+                    <!-- Rental Duration Controls (If Renting) -->
+                    <div class="rental-duration-box" *ngIf="isRenting(product)" (click)="$event.stopPropagation()">
+                        <span class="duration-label">Rental Duration:</span>
+                        <div class="duration-stepper">
+                            <button type="button" class="step-btn" (click)="decrementDuration(product.id, $event)">-</button>
+                            <span class="duration-val">{{ getRentalDuration(product.id) }} {{ product.unit_name || 'Period' }}</span>
+                            <button type="button" class="step-btn" (click)="incrementDuration(product.id, $event)">+</button>
+                        </div>
+                    </div>
+
+                    <!-- Contract Completion Banner (If Contract) -->
+                    <div class="contract-banner-box" *ngIf="isContract(product)" (click)="$event.stopPropagation()">
+                        <span class="contract-icon">📋</span>
+                        <div class="contract-info-text">
+                            <span class="contract-tag-title">Till Contract Completion</span>
+                            <span class="contract-tag-desc">Firm one-time payment serving whole project</span>
+                        </div>
+                    </div>
+
+                    <!-- Action Button: Select Vendor (Service) OR Rent Now OR Add to Cart -->
+                    <div class="card-action-row">
+                        <!-- If Service: Customer must select vendor from popup -->
+                        <button *ngIf="isService(product)" class="action-btn service-btn"
+                            (click)="openVendorSelectionModal(product, $event)"
+                            type="button">
+                            <ion-icon name="people-outline"></ion-icon>
+                            <span>Select Vendor</span>
+                        </button>
+
+                        <!-- If Selling / Renting: Standard Add to Cart / Rent -->
+                        <button *ngIf="!isService(product)" class="action-btn"
+                            [class.rent-btn]="isRenting(product)"
+                            [class.contract-btn]="isContract(product)"
+                            (click)="addToCart(product, $event)"
+                            [class.loading]="addingToCartId === product.id"
+                            type="button">
+                            <ion-icon [name]="isContract(product) ? 'document-text-outline' : (isRenting(product) ? 'calendar-outline' : 'cart-outline')"></ion-icon>
+                            <span>{{ isContract(product) ? 'Book Contract' : (isRenting(product) ? 'Rent Now' : 'Add to Cart') }}</span>
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Skeleton Loaders -->
-        <div class="catalog-grid" *ngIf="loading">
-            <div class="skeleton-card" *ngFor="let i of [1,2,3,4,5,6,7,8]">
-                <ion-skeleton-text [animated]="true" style="width: 100%; height: 180px; border-radius: 14px;"></ion-skeleton-text>
-                <ion-skeleton-text [animated]="true" style="width: 45%; margin-top: 14px; height: 14px;"></ion-skeleton-text>
-                <ion-skeleton-text [animated]="true" style="width: 90%; margin-top: 8px; height: 20px;"></ion-skeleton-text>
-                <ion-skeleton-text [animated]="true" style="width: 60%; margin-top: 8px; height: 14px;"></ion-skeleton-text>
-                <ion-skeleton-text [animated]="true" style="width: 50%; margin-top: 12px; height: 24px;"></ion-skeleton-text>
-            </div>
-        </div>
-
         <!-- Empty State -->
-        <div class="empty-state-card fade-in" *ngIf="!loading && filteredProducts.length === 0">
-            <div class="empty-icon-box">
+        <div class="empty-state-card" *ngIf="!loading && filteredProducts.length === 0">
+            <div class="empty-icon-wrap">
                 <ion-icon name="cube-outline"></ion-icon>
             </div>
-            <h3 class="empty-title">No Materials Found</h3>
-            <p class="empty-desc">
-                No construction supplies match your current search query or category filter.
-            </p>
-            <button (click)="resetFilters()" class="reset-filter-btn" type="button">
-                <ion-icon name="refresh-outline"></ion-icon>
-                <span>Reset All Filters</span>
-            </button>
+            <h3>No Products Found</h3>
+            <p *ngIf="selectedSubcategoryId">There are no products configured for "{{ selectedSubcategoryName }}".</p>
+            <p *ngIf="!selectedSubcategoryId">There are no active products in this category yet.</p>
+            <button class="reset-btn" (click)="resetFilters()">View All Products</button>
         </div>
     </div>
 </ion-content>
+
+<!-- Vendor Selection Popup Modal for Service Type Products -->
+<div class="vendor-modal-backdrop" *ngIf="showVendorModal" (click)="closeVendorModal()">
+    <div class="vendor-selection-modal" (click)="$event.stopPropagation()">
+        <!-- Header -->
+        <div class="vmodal-header">
+            <div class="vmodal-title-wrap">
+                <span class="vmodal-pill">VERIFIED SERVICE PROVIDERS</span>
+                <h3 class="vmodal-title">Select Vendor for {{ selectedServiceProduct?.name }}</h3>
+                <p class="vmodal-subtitle">Choose a verified contractor or artisan to deliver this service</p>
+            </div>
+            <button class="vmodal-close-btn" (click)="closeVendorModal()" aria-label="Close">
+                <ion-icon name="close-outline"></ion-icon>
+            </button>
+        </div>
+
+        <!-- Service Details Strip -->
+        <div class="vmodal-service-strip" *ngIf="selectedServiceProduct">
+            <div class="vmodal-strip-info">
+                <span class="vmodal-cat-tag">{{ selectedServiceProduct.subcategory_name || selectedServiceProduct.category_name }}</span>
+                <span class="vmodal-service-name">{{ selectedServiceProduct.name }}</span>
+            </div>
+            <div class="vmodal-price-box">
+                <span class="vmodal-price-label">Service Fee</span>
+                <span class="vmodal-price">₹{{ selectedServiceProduct.price | number }}</span>
+            </div>
+        </div>
+
+        <!-- Body / Vendors List (ONLY NAME & IMAGE AS REQUIRED) -->
+        <div class="vmodal-body">
+            <!-- Loading State -->
+            <div class="vmodal-loading" *ngIf="loadingVendors">
+                <ion-spinner name="crescent"></ion-spinner>
+                <span>Loading verified service providers...</span>
+            </div>
+
+            <!-- Empty State if no vendor mapped or all already assigned -->
+            <div class="vmodal-empty" *ngIf="!loadingVendors && serviceVendors.length === 0">
+                <div class="vmodal-empty-icon" style="color: #ef4444; background: #fee2e2;">
+                    <ion-icon name="alert-circle-outline"></ion-icon>
+                </div>
+                <ng-container *ngIf="editOrderId">
+                    <h4>Vendor Already Assigned for this Service</h4>
+                    <p>All verified contractors for this service are already assigned to Project #{{ editOrderNo || editOrderId }}. You can choose another service or change assigned vendors directly in your Orders page.</p>
+                    <button class="vmodal-fallback-btn" (click)="closeVendorModal()">
+                        Choose Another Service
+                    </button>
+                </ng-container>
+                <ng-container *ngIf="!editOrderId">
+                    <h4 style="color: #991b1b;">No Vendors Available for this Service</h4>
+                    <p style="color: #475569;">There are currently no verified vendors connected to <strong>{{ selectedServiceProduct?.name || 'this service' }}</strong>. An order cannot be placed without a connected vendor.</p>
+                    <button class="vmodal-fallback-btn" (click)="closeVendorModal()" style="background: #475569; color: #fff;">
+                        Close & Browse Other Services
+                    </button>
+                </ng-container>
+            </div>
+
+            <!-- Vendors Grid: ONLY NAME AND IMAGE DISPLAYED -->
+            <div class="vmodal-vendors-grid" *ngIf="!loadingVendors && serviceVendors.length > 0">
+                <div class="vmodal-vendor-card" *ngFor="let vendor of serviceVendors" (click)="selectVendorAndProceed(vendor)">
+                    <div class="vcard-avatar-wrap">
+                        <img *ngIf="vendor.image" [src]="formatImageUrl(vendor.image)" [alt]="vendor.name" class="vcard-avatar-img">
+                        <div *ngIf="!vendor.image" class="vcard-avatar-fallback">
+                            {{ vendor.name ? vendor.name.charAt(0).toUpperCase() : 'V' }}
+                        </div>
+                    </div>
+                    <div class="vcard-meta">
+                        <h4 class="vcard-name">{{ vendor.name }}</h4>
+                    </div>
+                    <button class="vcard-select-btn" type="button">
+                        <span>Select Vendor</span>
+                        <ion-icon name="arrow-forward-outline"></ion-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

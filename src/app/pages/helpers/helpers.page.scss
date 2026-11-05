@@ -132,6 +132,7 @@ $text-soft: #94A3B8;
         }
     }
 
+    .search-and-sort-row,
     .search-and-filter-row {
         display: flex;
         gap: 16px;
@@ -140,6 +141,13 @@ $text-soft: #94A3B8;
 
         @media (max-width: 768px) {
             flex-direction: column;
+            align-items: stretch;
+            gap: 12px;
+
+            .search-box,
+            .sort-selector {
+                width: 100%;
+            }
         }
 
         .search-box {
@@ -151,6 +159,7 @@ $text-soft: #94A3B8;
             border-radius: 14px;
             padding: 0 16px;
             height: 50px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
             transition: all 0.25s ease;
 
             &:focus-within {
@@ -162,6 +171,7 @@ $text-soft: #94A3B8;
                 color: $primary-orange;
                 font-size: 20px;
                 margin-right: 12px;
+                flex-shrink: 0;
             }
 
             input {
@@ -169,7 +179,7 @@ $text-soft: #94A3B8;
                 background: transparent;
                 border: none;
                 color: $text-main;
-                font-size: 14.5px;
+                font-size: 14px;
                 font-weight: 600;
                 outline: none;
                 font-family: inherit;
@@ -197,6 +207,47 @@ $text-soft: #94A3B8;
                     background: $border-light;
                     color: $navy-dark;
                 }
+            }
+        }
+
+        .sort-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #FFFFFF;
+            border: 1.5px solid $border-light;
+            border-radius: 14px;
+            padding: 0 16px;
+            height: 50px;
+            flex-shrink: 0;
+            transition: all 0.25s ease;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+
+            &:focus-within {
+                border-color: $primary-orange;
+                box-shadow: 0 0 0 3.5px rgba(255, 107, 0, 0.16);
+            }
+
+            label {
+                font-size: 11px;
+                font-weight: 800;
+                text-transform: uppercase;
+                letter-spacing: 0.8px;
+                color: $text-muted;
+                white-space: nowrap;
+                margin: 0;
+            }
+
+            select {
+                background: transparent;
+                border: none;
+                color: $navy-dark;
+                font-size: 13.5px;
+                font-weight: 700;
+                outline: none;
+                cursor: pointer;
+                font-family: inherit;
+                padding: 4px 6px 4px 0;
             }
         }
 

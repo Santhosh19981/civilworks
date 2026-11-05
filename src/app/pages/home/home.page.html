@@ -2,7 +2,7 @@
     <div class="header-inner">
         <!-- Top Nav -->
         <div class="top-nav">
-            <div class="brand-wrapper" (click)="loadData()">
+            <div class="brand-wrapper" (click)="switchSector()" routerLink="/sector-select" title="Select Desired Sector" style="cursor: pointer;">
                 <div class="brand-icon-box">
                     <ion-icon name="hammer" class="brand-icon"></ion-icon>
                 </div>
@@ -13,6 +13,12 @@
             </div>
 
             <div class="header-actions">
+                <button class="sector-switcher-pill" (click)="switchSector()" title="Change Working Sector">
+                    <span class="sector-pulse-dot"></span>
+                    <span class="sector-text">{{ activeSectorName || 'All Sectors' }}</span>
+                    <ion-icon name="swap-horizontal-outline" class="sector-swap-icon"></ion-icon>
+                </button>
+
                 <div class="location-pill">
                     <ion-icon name="location-outline" class="location-icon"></ion-icon>
                     <div class="location-info">
@@ -21,6 +27,8 @@
                     </div>
                     <ion-icon name="chevron-down-outline" class="loc-arrow"></ion-icon>
                 </div>
+
+                <app-nav-dropdown></app-nav-dropdown>
 
                 <ion-button routerLink="/cart" fill="clear" class="cart-btn" aria-label="Shopping Cart">
                     <div class="cart-icon-wrapper">
@@ -62,33 +70,58 @@
                         <div class="slide-bg" [style.backgroundImage]="'url(' + banner.image + ')'"></div>
                         <div class="slide-gradient-scrim"></div>
                         <div class="slide-content">
-                            <span class="slide-badge">{{ banner.tag }}</span>
+                            <span class="slide-badge" *ngIf="banner.tag">{{ banner.tag }}</span>
                             <h1 class="slide-title">{{ banner.title }}</h1>
-                            <p class="slide-subtitle">{{ banner.subtitle }}</p>
+                            <p class="slide-subtitle" *ngIf="banner.subtitle">{{ banner.subtitle }}</p>
                             <div class="slide-cta-row">
-                                <button class="slide-cta-btn" [routerLink]="banner.route">
-                                    <span>{{ banner.cta }}</span>
+                                <button class="slide-cta-btn" [routerLink]="banner.cta_link || banner.route || '/tabs/products'">
+                                    <span>{{ banner.cta || 'Explore' }}</span>
                                     <ion-icon name="arrow-forward-outline"></ion-icon>
+                                </button>
+                                <span class="slide-assurance" *ngIf="banner.assurance_badge || banner.badge">
+                                    <ion-icon name="shield-checkmark"></ion-icon>
+                                    {{ banner.assurance_badge || banner.badge }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sector Fallback when 0 advertisements are configured yet -->
+                    <div class="carousel-slide" *ngIf="banners.length === 0">
+                        <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=1200&q=80')"></div>
+                        <div class="slide-gradient-scrim"></div>
+                        <div class="slide-content">
+                            <span class="slide-badge">{{ (activeSectorName || 'CivilWorks') | uppercase }} • PLUS MEMBERSHIP</span>
+                            <h1 class="slide-title">join us to use our services</h1>
+                            <p class="slide-subtitle">Subscribe to CivilWorks Plus membership to unlock verified contractors, direct booking, and end-to-end project management.</p>
+                            <div class="slide-cta-row">
+                                <button type="button" class="slide-cta-btn btn-join-membership" (click)="joinMembership()">
+                                    <ion-icon name="sparkles"></ion-icon>
+                                    <span>join membership</span>
+                                    <ion-icon name="arrow-forward-outline"></ion-icon>
+                                </button>
+                                <button type="button" class="slide-cta-btn btn-explore-catalog" [routerLink]="'/tabs/products' + (activeSectorId ? '?mainCategoryId=' + activeSectorId : '')">
+                                    <span>Explore Catalog</span>
                                 </button>
                                 <span class="slide-assurance">
                                     <ion-icon name="shield-checkmark"></ion-icon>
-                                    100% Quality Guaranteed
+                                    Verified Solutions
                                 </span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Slide Navigation Arrows -->
-                <button class="slider-arrow prev-arrow" (click)="prevSlide()" aria-label="Previous Slide">
+                <!-- Slide Navigation Arrows (only if multiple banners) -->
+                <button *ngIf="banners.length > 1" class="slider-arrow prev-arrow" (click)="prevSlide()" aria-label="Previous Slide">
                     <ion-icon name="chevron-back-outline"></ion-icon>
                 </button>
-                <button class="slider-arrow next-arrow" (click)="nextSlide()" aria-label="Next Slide">
+                <button *ngIf="banners.length > 1" class="slider-arrow next-arrow" (click)="nextSlide()" aria-label="Next Slide">
                     <ion-icon name="chevron-forward-outline"></ion-icon>
                 </button>
 
-                <!-- Indicator Dots -->
-                <div class="carousel-indicators">
+                <!-- Indicator Dots (only if multiple banners) -->
+                <div class="carousel-indicators" *ngIf="banners.length > 1">
                     <button *ngFor="let banner of banners; let i = index" class="indicator-dot"
                         [class.active]="i === currentSlide" (click)="goToSlide(i)"
                         [attr.aria-label]="'Go to slide ' + (i + 1)">
@@ -97,125 +130,59 @@
             </div>
         </section>
 
-        <!-- Redesigned 3-Core Services Hub (Replaces Clunky Blocks) -->
+        <!-- Dynamic Sector Categories Section (Replaces Static Hardcoded Cards) -->
         <section class="services-hub-section">
             <div class="section-intro">
-                <div class="intro-tag">FULL-SERVICE ECOSYSTEM</div>
-                <h2 class="hub-main-title">What would you like to do today?</h2>
-                <p class="hub-subtitle">Choose from our core construction services built for site engineers, contractors & homeowners</p>
+                <div class="intro-tag">CATEGORIES IN {{ (activeSectorName || 'CivilWorks') | uppercase }}</div>
+                <h2 class="hub-main-title">Explore {{ activeSectorName || 'CivilWorks' }} Categories</h2>
+                <p class="hub-subtitle">Choose from the specialized categories and verified supply lines configured for {{ activeSectorName || 'this sector' }}</p>
             </div>
 
-            <div class="services-grid">
-                <!-- Card 1: Buy Materials -->
-                <div class="service-card card-materials" (click)="navigateToBuy()">
+            <div class="services-grid dynamic-categories-grid" *ngIf="sectorCategories.length > 0">
+                <div *ngFor="let cat of sectorCategories; let i = index"
+                    class="service-card category-dyn-card"
+                    [ngClass]="getCategoryThemeClass(cat, i)"
+                    (click)="selectCategory(cat)">
                     <div class="card-glow-bg"></div>
                     <div class="service-header">
-                        <span class="service-chip chip-orange">WHOLESALE PRICING</span>
-                        <span class="service-speed">⚡ Fast Dispatch</span>
+                        <span class="service-chip">CATEGORY #{{ cat.id }}</span>
+                        <span class="service-speed">⚡ Verified Supplies</span>
                     </div>
                     <div class="service-body">
-                        <div class="icon-avatar avatar-orange">
-                            <ion-icon name="cube"></ion-icon>
+                        <div class="icon-avatar">
+                            <ion-icon [name]="getCategoryIcon(cat)"></ion-icon>
                         </div>
                         <div class="service-text">
-                            <h3 class="service-title">Buy Materials</h3>
-                            <p class="service-desc">Cement, TMT Steel, Sand, Bricks & 500+ site supplies delivered directly to your site.</p>
+                            <h3 class="service-title">{{ cat.name }}</h3>
+                            <p class="service-desc">{{ getCategoryDesc(cat) }}</p>
                         </div>
                     </div>
                     <div class="service-features">
-                        <span class="feat-pill"><ion-icon name="checkmark-circle"></ion-icon> Bulk Discounts</span>
-                        <span class="feat-pill"><ion-icon name="checkmark-circle"></ion-icon> ISI Certified</span>
+                        <span class="feat-pill"><ion-icon name="checkmark-circle"></ion-icon> Direct Catalog</span>
+                        <span class="feat-pill"><ion-icon name="checkmark-circle"></ion-icon> Verified Partners</span>
                     </div>
                     <div class="service-action">
-                        <span class="action-text">Shop Materials</span>
+                        <span class="action-text">Explore {{ cat.name }}</span>
                         <div class="action-arrow">
                             <ion-icon name="arrow-forward-outline"></ion-icon>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Card 2: Rent Equipment -->
-                <div class="service-card card-equipment" (click)="navigateToRental()">
-                    <div class="card-glow-bg"></div>
-                    <div class="service-header">
-                        <span class="service-chip chip-navy">VERIFIED FLEET</span>
-                        <span class="service-speed">🚜 Ready to Deploy</span>
-                    </div>
-                    <div class="service-body">
-                        <div class="icon-avatar avatar-navy">
-                            <ion-icon name="construct"></ion-icon>
-                        </div>
-                        <div class="service-text">
-                            <h3 class="service-title">Rent Equipment</h3>
-                            <p class="service-desc">Heavy machinery, JCB 3DX, cranes, concrete mixers & tools on flexible day/month hire.</p>
-                        </div>
-                    </div>
-                    <div class="service-features">
-                        <span class="feat-pill"><ion-icon name="checkmark-circle"></ion-icon> Certified Operator</span>
-                        <span class="feat-pill"><ion-icon name="checkmark-circle"></ion-icon> Zero Downtime</span>
-                    </div>
-                    <div class="service-action">
-                        <span class="action-text">Browse Machinery</span>
-                        <div class="action-arrow">
-                            <ion-icon name="arrow-forward-outline"></ion-icon>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 3: Hire Helpers -->
-                <div class="service-card card-helpers" (click)="navigateToHelpers()">
-                    <div class="card-glow-bg"></div>
-                    <div class="service-header">
-                        <span class="service-chip chip-amber">ON-DEMAND CREW</span>
-                        <span class="service-speed">🛡️ Verified IDs</span>
-                    </div>
-                    <div class="service-body">
-                        <div class="icon-avatar avatar-amber">
-                            <ion-icon name="people"></ion-icon>
-                        </div>
-                        <div class="service-text">
-                            <h3 class="service-title">Hire Helpers</h3>
-                            <p class="service-desc">Experienced masons, carpenters, electricians, plumbers & skilled site labor teams.</p>
-                        </div>
-                    </div>
-                    <div class="service-features">
-                        <span class="feat-pill"><ion-icon name="checkmark-circle"></ion-icon> Daily / Weekly</span>
-                        <span class="feat-pill"><ion-icon name="checkmark-circle"></ion-icon> Background Checked</span>
-                    </div>
-                    <div class="service-action">
-                        <span class="action-text">Book Workers</span>
-                        <div class="action-arrow">
-                            <ion-icon name="arrow-forward-outline"></ion-icon>
-                        </div>
-                    </div>
-                </div>
+            <!-- Empty State if Sector Has No Categories Yet -->
+            <div class="empty-categories-box" *ngIf="sectorCategories.length === 0 && !loading">
+                <div class="empty-icon-ring">📂</div>
+                <h3 class="empty-title">No Categories in {{ activeSectorName || 'this sector' }}</h3>
+                <p class="empty-desc">New product, equipment, and labor categories are currently being cataloged for {{ activeSectorName || 'this sector' }}.</p>
+                <button class="switch-sector-btn" (click)="switchSector()">
+                    <ion-icon name="swap-horizontal-outline"></ion-icon>
+                    <span>Switch Business Sector</span>
+                </button>
             </div>
         </section>
 
-        <!-- Quick Categories Strip -->
-        <section class="quick-categories-section">
-            <div class="section-top-row">
-                <div>
-                    <h2 class="section-heading">Browse by Category</h2>
-                    <span class="section-subheading">Select a category to quickly filter supplies and equipment</span>
-                </div>
-                <a class="view-all-link" (click)="viewAllProducts()">View All Categories →</a>
-            </div>
-
-            <div class="categories-scroll-wrapper">
-                <div class="category-chip" *ngFor="let cat of quickCategories" (click)="selectCategory(cat.name)">
-                    <div class="cat-icon-bubble" [style.background]="cat.color + '18'" [style.color]="cat.color">
-                        <ion-icon [name]="cat.icon"></ion-icon>
-                    </div>
-                    <div class="cat-meta">
-                        <span class="cat-name">{{ cat.name }}</span>
-                        <span class="cat-count">{{ cat.itemCount }}</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Featured Products Section -->
+    <!-- Featured Products Section -->
         <section class="products-showcase-section">
             <div class="section-top-row">
                 <div>
@@ -234,9 +201,9 @@
                 <div class="product-item-card" *ngFor="let product of featuredProducts" (click)="viewProduct(product.id)">
                     <div class="card-media">
                         <img [src]="getProductImage(product)" (error)="onImageError($event, product)" [alt]="product.name" class="card-img" loading="lazy">
-                        <span class="stock-badge">
+                        <span class="stock-badge" [class.rental-badge]="isRenting(product)" [class.service-badge]="isService(product)">
                             <span class="dot-live"></span>
-                            In Stock
+                            {{ isService(product) ? 'Verified Service' : (isRenting(product) ? 'Available for Rent' : 'In Stock') }}
                         </span>
                         <button class="quick-add-btn" (click)="addToCart(product, $event)" [class.loading]="addingToCartId === product.id" aria-label="Add to cart">
                             <ion-icon name="cart"></ion-icon>
@@ -271,6 +238,13 @@
                 </div>
             </div>
 
+            <!-- Empty state for featured products -->
+            <div class="empty-showcase-box" *ngIf="!loading && featuredProducts.length === 0">
+                <ion-icon name="cube-outline" class="empty-icon"></ion-icon>
+                <p class="empty-text">No featured materials listed in {{ activeSectorName || 'this sector' }} yet.</p>
+                <button class="empty-action-btn" (click)="switchSector()">Switch Sector</button>
+            </div>
+
             <!-- Loading Skeleton -->
             <div class="products-scroll-container" *ngIf="loading">
                 <div class="skeleton-item" *ngFor="let i of [1,2,3,4,5]">
@@ -282,8 +256,8 @@
             </div>
         </section>
 
-        <!-- Popular Rentals Section -->
-        <section class="rentals-showcase-section">
+        <!-- Popular Rentals Section (Removed if no product or subcategory has rentals/services in this main category) -->
+        <section class="rentals-showcase-section" *ngIf="showRentalSection">
             <div class="section-top-row">
                 <div>
                     <div class="badge-mini blue-mini">SITE MOBILIZATION</div>
@@ -297,13 +271,13 @@
             </div>
 
             <!-- Rentals List -->
-            <div class="products-scroll-container" *ngIf="!loading">
+            <div class="products-scroll-container" *ngIf="!loading && popularRentals.length > 0">
                 <div class="rental-item-card" *ngFor="let rental of popularRentals" (click)="viewRental(rental.id)">
                     <div class="card-media">
                         <img [src]="getRentalImage(rental)" (error)="onRentalImageError($event)" [alt]="rental.name" class="card-img" loading="lazy">
-                        <span class="avail-badge">
-                            <span class="dot-green"></span>
-                            Ready to Dispatch
+                        <span class="dispatch-badge">
+                            <span class="dot-live blue-dot"></span>
+                            Direct Dispatch
                         </span>
                     </div>
                     <div class="card-body">
@@ -326,6 +300,13 @@
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <!-- Empty state for rentals -->
+            <div class="empty-showcase-box" *ngIf="!loading && popularRentals.length === 0">
+                <ion-icon name="construct-outline" class="empty-icon"></ion-icon>
+                <p class="empty-text">No rental equipment listed in {{ activeSectorName || 'this sector' }} yet.</p>
+                <button class="empty-action-btn" (click)="switchSector()">Switch Sector</button>
             </div>
 
             <!-- Skeleton for Rentals -->
@@ -384,4 +365,34 @@
             </div>
         </section>
     </div>
+
+    <!-- Branded Floating Civil Engineers Cap Button for WhatsApp-Web-Style Project Groups -->
+    <div class="floating-cap-chat-btn" (click)="toggleChatPanel()" title="Open Project Communication Groups">
+        <div class="cap-btn-inner">
+            <div class="cap-icon-wrap">
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2 10l10-5 10 5-10 5z"/>
+                    <path d="M6 12v5c0 2 3 3 6 3s6-1 6-3v-5"/>
+                    <path d="M22 10v6"/>
+                </svg>
+            </div>
+            <span class="cap-label">Project Chat</span>
+            <span class="cap-unread-badge" *ngIf="unreadMessagesCount > 0">{{ unreadMessagesCount }}</span>
+        </div>
+    </div>
 </ion-content>
+
+<!-- Multi-Service Order Editing Modal -->
+<app-edit-order-modal
+    *ngIf="showEditModal"
+    [order]="editingOrder"
+    (close)="showEditModal = false"
+    (orderUpdated)="loadData()">
+</app-edit-order-modal>
+
+<!-- Slide-in WhatsApp-Web-Style Chat Drawer -->
+<app-chat-panel
+    [isOpen]="showChatPanel"
+    (close)="showChatPanel = false"
+    (editOrderRequested)="openEditOrderFromChat($event)">
+</app-chat-panel>
