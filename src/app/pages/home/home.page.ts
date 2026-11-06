@@ -11,6 +11,7 @@ import { Rental } from '../../models/rental.model';
 
 import { ChatService } from '../../services/chat.service';
 import { OrderService } from '../../services/order.service';
+import { ChatPanelComponent } from '../../components/chat-panel/chat-panel.component';
 
 export interface PromoBanner {
     id?: number;
@@ -34,6 +35,7 @@ export interface PromoBanner {
 })
 export class HomePage implements OnInit, OnDestroy {
     @ViewChild(IonContent) content!: IonContent;
+    @ViewChild('chatPanel') chatPanel?: ChatPanelComponent;
 
     banners: PromoBanner[] = [];
 
@@ -370,7 +372,10 @@ export class HomePage implements OnInit, OnDestroy {
 
     handleHeroCtaClick() {
         if (this.isPlusMember) {
-            // Direct to chat box page (slide-in WhatsApp-web style project chat drawer)
+            // Direct to chat box page (ensure conversation list is shown, not a specific chat directly)
+            if (this.chatPanel) {
+                this.chatPanel.openConversationList();
+            }
             this.showChatPanel = true;
         } else {
             this.joinMembership();

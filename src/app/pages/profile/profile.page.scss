@@ -53,11 +53,57 @@ $rose-bg: #FEF2F2;
     justify-content: space-between;
 }
 
-.header-title-col {
+.header-left-col {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 4px;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    flex: 1;
+
+    .brand-identity-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 0;
+        cursor: pointer;
+        text-decoration: none;
+        transition: transform 0.2s ease, opacity 0.2s ease;
+
+        &:hover {
+            opacity: 0.92;
+            transform: translateY(-1px);
+
+            .brand-icon-box {
+                transform: scale(1.05);
+            }
+        }
+    }
+}
+
+.page-back-btn {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.16);
+        border-color: rgba(255, 255, 255, 0.3);
+        transform: translateX(-2px);
+    }
+
+    ion-icon {
+        font-size: 19px;
+    }
 }
 
 .breadcrumbs-row {
@@ -1621,19 +1667,95 @@ $rose-bg: #FEF2F2;
 
 @media (max-width: 600px) {
     .profile-header-row {
-        padding: 10px 12px;
+        padding: 8px 10px 6px !important;
+        gap: 6px !important;
+        flex-wrap: nowrap !important;
+    }
 
-        .nav-back-breadcrumbs-row .breadcrumbs-row {
-            display: none !important;
+    .header-left-col {
+        gap: 6px !important;
+        min-width: 0 !important;
+        flex: 1 1 auto !important;
+
+        .page-back-btn {
+            width: 30px !important;
+            height: 30px !important;
+            min-width: 30px !important;
+            border-radius: 8px !important;
+
+            ion-icon {
+                font-size: 16px !important;
+            }
         }
 
-        .header-quick-logout-btn {
-            display: none !important;
+        .brand-identity-row {
+            gap: 6px !important;
+            min-width: 0 !important;
+
+            .brand-icon-box {
+                width: 30px !important;
+                height: 30px !important;
+                min-width: 30px !important;
+                border-radius: 8px !important;
+
+                .brand-icon {
+                    font-size: 17px !important;
+                }
+            }
+
+            .brand-text {
+                min-width: 0 !important;
+
+                .breadcrumbs-row,
+                .profile-subtitle {
+                    display: none !important;
+                }
+
+                .profile-main-title {
+                    font-size: 14.5px !important;
+                    font-weight: 800 !important;
+                    white-space: nowrap !important;
+                    line-height: 1.2 !important;
+                    overflow: hidden !important;
+                    text-overflow: ellipsis !important;
+                }
+            }
         }
     }
 
-    .brand-text .profile-subtitle {
-        display: none;
+    .header-actions {
+        gap: 5px !important;
+        flex-shrink: 0 !important;
+
+        .sector-badge-btn {
+            padding: 4px 8px !important;
+            font-size: 10.5px !important;
+            border-radius: 7px !important;
+            gap: 4px !important;
+
+            .sector-name {
+                max-width: 65px !important;
+                white-space: nowrap !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+            }
+
+            .swap-icon {
+                font-size: 13px !important;
+            }
+        }
+
+        .cart-btn {
+            --padding-start: 4px !important;
+            --padding-end: 4px !important;
+            height: 30px !important;
+            width: 32px !important;
+        }
+
+        .header-quick-logout-btn,
+        .header-quick-login-btn {
+            display: none !important;
+        }
     }
 
     .stats-metric-grid {

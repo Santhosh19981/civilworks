@@ -417,6 +417,6 @@
 </app-edit-order-modal>
 
 <!-- Slide-in WhatsApp-Web-Style Chat Drawer -->
-<app-chat-panel [isOpen]="showChatPanel" (close)="showChatPanel = false"
+<app-chat-panel #chatPanel [isOpen]="showChatPanel" (close)="showChatPanel = false"
     (editOrderRequested)="openEditOrderFromChat($event)">
 </app-chat-panel>

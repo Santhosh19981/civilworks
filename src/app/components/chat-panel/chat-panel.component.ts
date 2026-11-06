@@ -351,6 +351,17 @@ export class ChatPanelComponent implements OnInit, OnDestroy, OnChanges {
 
     // ── Tab & Dropdown Navigation ──
 
+    public openConversationList() {
+        this.activeConversation = null;
+        this.initialOrderId = undefined;
+        this.sopData = null;
+        this.selectedSopService = null;
+        this.selectedSubtask = null;
+        this.activeViewTab = 'chat';
+        this.closeAboutDropdown();
+        this.cdr.markForCheck();
+    }
+
     setViewTab(tab: 'chat' | 'sop') {
         if (this.activeViewTab === tab) return;
         this.activeViewTab = tab;
