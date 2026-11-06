@@ -14,7 +14,7 @@ import { AuthInterceptor } from './services/auth.interceptor';
     declarations: [AppComponent],
     imports: [
         BrowserModule,
-        IonicModule.forRoot(),
+        IonicModule.forRoot({ mode: 'md' }),
         AppRoutingModule,
         HttpClientModule,
         ServiceWorkerModule.register('ngsw-worker.js', {

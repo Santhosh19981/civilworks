@@ -1,4 +1,4 @@
-<ion-header class="ion-no-border modern-profile-header" [translucent]="true">
+<ion-header class="ion-no-border modern-profile-header" [translucent]="false">
     <div class="profile-header-row">
         <div class="header-left-col">
             <button type="button" class="page-back-btn" (click)="goBack()" title="Go back to previous page"
@@ -55,7 +55,7 @@
     </div>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="profile-content">
+<ion-content  class="profile-content">
     <div *ngIf="user" class="profile-page-wrapper">
 
         <!-- 1. Modern E-Commerce Customer Hero Banner -->

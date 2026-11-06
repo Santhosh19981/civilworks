@@ -1,4 +1,4 @@
-<ion-header class="ion-no-border modern-header" [translucent]="true">
+<ion-header class="ion-no-border modern-header" [translucent]="false">
     <div class="header-inner">
         <!-- Top Nav -->
         <div class="top-nav">
@@ -57,7 +57,7 @@
     </div>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="page-content">
+<ion-content  class="page-content">
     <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
         <ion-refresher-content></ion-refresher-content>
     </ion-refresher>

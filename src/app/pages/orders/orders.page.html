@@ -1,4 +1,4 @@
-<ion-header class="ion-no-border modern-orders-header" [translucent]="true">
+<ion-header class="ion-no-border modern-orders-header" [translucent]="false">
     <div class="orders-header-row">
         <div class="header-title-col">
             <div class="nav-back-breadcrumbs-row">
@@ -35,7 +35,7 @@
     </div>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="orders-content">
+<ion-content  class="orders-content">
     <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
         <ion-refresher-content></ion-refresher-content>
     </ion-refresher>

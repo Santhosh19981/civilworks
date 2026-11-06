@@ -1,4 +1,4 @@
-<ion-header class="ion-no-border modern-products-header" [translucent]="true">
+<ion-header class="ion-no-border modern-products-header" [translucent]="false">
     <div class="header-main-row">
         <div class="header-left-col">
             <button type="button" class="page-back-btn" (click)="goBack()" title="Go back to previous page" aria-label="Go back">
@@ -62,7 +62,7 @@
     </div>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="products-content">
+<ion-content  class="products-content">
     <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
         <ion-refresher-content></ion-refresher-content>
     </ion-refresher>

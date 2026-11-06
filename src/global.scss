@@ -798,3 +798,47 @@ ion-item::part(native) {
         }
     }
 }
+
+/* SOLID APP-WIDE HEADER ARCHITECTURE */
+/* Prevents iOS WebKit translucent blur glitches & restores full responsiveness across all mobile browsers */
+ion-header,
+ion-header.header-translucent,
+ion-header.header-translucent-ios,
+.modern-header,
+.modern-products-header,
+.modern-orders-header,
+.modern-profile-header,
+.modern-cart-header,
+.checkout-header-bar,
+.payment-header-bar,
+.membership-header,
+.helpers-header-bar,
+.rentals-header-bar,
+.product-header-bar,
+.detail-header {
+    --background: #0B192C !important;
+    background: #0B192C !important;
+    background-color: #0B192C !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+    z-index: 1000 !important;
+    contain: none !important;
+}
+
+ion-header::before,
+ion-header::after,
+ion-header.header-translucent-ios::before,
+ion-header.header-translucent-ios::after,
+ion-header .header-background {
+    display: none !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    background: transparent !important;
+}
+
+ion-header * {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+}
