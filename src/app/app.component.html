@@ -1,3 +1,26 @@
 <ion-app>
     <ion-router-outlet></ion-router-outlet>
+
+    <!-- PWA Install Prompt Banner (Mobile Responsive) -->
+    <aside class="pwa-install-banner" *ngIf="pwa.showInstallPrompt$ | async" role="dialog" aria-label="Install App">
+        <div class="pwa-banner-card">
+            <div class="pwa-banner-main">
+                <div class="pwa-icon-box">
+                    <img src="assets/icon/icon-96x96.png" alt="CivilWorks Icon" />
+                </div>
+                <div class="pwa-text-box">
+                    <span class="pwa-badge">Fast & Native Experience</span>
+                    <strong class="pwa-title">Install CivilWorks App</strong>
+                    <p class="pwa-desc">Instant access to projects, live SOP tracking, and messages without a browser bar.</p>
+                </div>
+            </div>
+            <div class="pwa-actions-box">
+                <button type="button" class="btn-pwa-dismiss" (click)="pwa.dismissInstallPrompt()">Not now</button>
+                <button type="button" class="btn-pwa-install" (click)="pwa.installApp()">
+                    <ion-icon name="cloud-download-outline"></ion-icon>
+                    <span>Install App</span>
+                </button>
+            </div>
+        </div>
+    </aside>
 </ion-app>

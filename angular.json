@@ -28,6 +28,11 @@
                                 "output": "assets"
                             },
                             {
+                                "glob": "manifest.json",
+                                "input": "src",
+                                "output": "."
+                            },
+                            {
                                 "glob": "**/*.svg",
                                 "input": "node_modules/ionicons/dist/ionicons/svg",
                                 "output": "./svg"
@@ -59,7 +64,9 @@
                                     "maximumError": "100kb"
                                 }
                             ],
-                            "outputHashing": "all"
+                            "outputHashing": "all",
+                            "serviceWorker": true,
+                            "ngswConfigPath": "ngsw-config.json"
                         },
                         "qa": {
                             "fileReplacements": [
@@ -68,7 +75,9 @@
                                     "with": "src/environments/environment.qa.ts"
                                 }
                             ],
-                            "outputHashing": "all"
+                            "outputHashing": "all",
+                            "serviceWorker": true,
+                            "ngswConfigPath": "ngsw-config.json"
                         },
                         "development": {
                             "buildOptimizer": false,

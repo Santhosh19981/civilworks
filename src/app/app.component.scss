@@ -1,1 +1,155 @@
 // App component styles
+
+.pwa-install-banner {
+    position: fixed;
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    z-index: 99999;
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+    animation: pwaSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+    .pwa-banner-card {
+        pointer-events: auto;
+        width: 100%;
+        max-width: 480px;
+        background: #ffffff;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 14px 16px;
+        box-shadow: 0 12px 32px rgba(15, 23, 42, 0.18), 0 2px 8px rgba(0, 0, 0, 0.06);
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+
+        .pwa-banner-main {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            .pwa-icon-box {
+                width: 48px;
+                height: 48px;
+                border-radius: 12px;
+                overflow: hidden;
+                flex-shrink: 0;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                background: #0B2C4D;
+
+                img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    display: block;
+                }
+            }
+
+            .pwa-text-box {
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+                min-width: 0;
+
+                .pwa-badge {
+                    font-size: 10px;
+                    font-weight: 800;
+                    text-transform: uppercase;
+                    letter-spacing: 0.05em;
+                    color: #F97316;
+                }
+
+                .pwa-title {
+                    font-size: 14.5px;
+                    font-weight: 800;
+                    color: #0F172A;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+
+                .pwa-desc {
+                    margin: 0;
+                    font-size: 11.5px;
+                    color: #64748B;
+                    line-height: 1.35;
+                }
+            }
+        }
+
+        .pwa-actions-box {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+
+            .btn-pwa-dismiss {
+                background: transparent;
+                border: none;
+                color: #64748B;
+                font-size: 12.5px;
+                font-weight: 600;
+                padding: 6px 12px;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: background 0.15s ease;
+
+                &:hover {
+                    background: #F1F5F9;
+                    color: #0F172A;
+                }
+            }
+
+            .btn-pwa-install {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                background: linear-gradient(135deg, #0B2C4D 0%, #1E3A8A 100%);
+                color: #ffffff;
+                border: none;
+                border-radius: 10px;
+                padding: 7px 16px;
+                font-size: 12.5px;
+                font-weight: 700;
+                cursor: pointer;
+                box-shadow: 0 2px 8px rgba(11, 44, 77, 0.25);
+                transition: all 0.2s ease;
+
+                ion-icon {
+                    font-size: 16px;
+                    color: #F97316;
+                }
+
+                &:hover {
+                    transform: translateY(-1px);
+                    box-shadow: 0 4px 12px rgba(11, 44, 77, 0.35);
+                }
+
+                &:active {
+                    transform: translateY(0);
+                }
+            }
+        }
+    }
+}
+
+@keyframes pwaSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(24px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+// Adjust positioning when Ionic bottom tabs are active
+@media (max-width: 768px) {
+    .pwa-install-banner {
+        bottom: calc(56px + env(safe-area-inset-bottom, 0px) + 10px);
+        left: 12px;
+        right: 12px;
+    }
+}
