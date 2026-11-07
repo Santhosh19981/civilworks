@@ -181,7 +181,7 @@ export class SOPPage implements OnInit, OnDestroy {
                 console.error('Failed to load SOP details for order:', err);
                 this.loading = false;
                 const toast = await this.toastCtrl.create({
-                    message: err?.error?.message || 'Failed to load order SOP sequence.',
+                    message: err?.error?.message || 'Failed to load the Site Workflow.',
                     duration: 3000,
                     color: 'danger',
                     position: 'top'
@@ -440,7 +440,24 @@ export class SOPPage implements OnInit, OnDestroy {
         this.showAddSubtaskModal = false;
         this.targetServiceForSubtask = null;
         this.newSubtask = { title: '', description: '', start_date: '', end_date: '', next_order_service_id: null };
+    }
+
+    /** Message when the sub task's end date is before its start date. */
+
+    get subtaskDateError(): string {
+
+        const { start_date, end_date } = this.newSubtask;
+
+        if (start_date && end_date && new Date(start_date).getTime() > new Date(end_date).getTime()) {
+
+            return 'End date cannot be before the start date.';
+
+        }
+
+        return '';
+
     }
+
 
     async saveSubtask() {
         if (this.isOrderClosed) return;
@@ -451,6 +468,12 @@ export class SOPPage implements OnInit, OnDestroy {
                 color: 'warning',
                 position: 'top'
             });
+            toast.present();
+            return;
+        }
+
+        if (this.subtaskDateError) {
+            const toast = await this.toastCtrl.create({ message: this.subtaskDateError, duration: 2500, color: 'warning', position: 'top' });
             toast.present();
             return;
         }
@@ -832,12 +855,14 @@ export class SOPPage implements OnInit, OnDestroy {
 
     getSubtaskDotClass(status: string): string {
         if (status === 'completed') return 'dot-completed';
+        if (status === 'approval_pending') return 'dot-approval';
         if (status === 'in_progress') return 'dot-in-progress';
         return 'dot-pending';
     }
 
     getSubtaskBadgeClass(status: string): string {
         if (status === 'completed') return 'badge-completed';
+        if (status === 'approval_pending') return 'badge-approval';
         if (status === 'in_progress') return 'badge-in-progress';
         return 'badge-pending';
     }
@@ -845,7 +870,63 @@ export class SOPPage implements OnInit, OnDestroy {
     getStatusText(status: string): string {
         if (status === 'completed') return 'Completed';
         if (status === 'in_progress') return 'In Process';
+        if (status === 'approval_pending') return 'Approval Pending';
         return 'Pending';
+    }
+
+    isOrderClosedForReview(): boolean {
+        const status = (this.sopData?.order_status || '').toLowerCase();
+        return ['delivered', 'completed', 'cancelled'].includes(status);
+    }
+
+    /** Customer reviews a subtask the vendor finished: approve, or send back with a comment. */
+    async reviewSubtask(st: SOPSubtask, service: SOPServiceItem | null, event?: Event) {
+        if (event) event.stopPropagation();
+        const vendorNote = [...(st.comments || [])].reverse().find(c => c.kind === 'approval_requested')?.comment;
+        const alert = await this.alertCtrl.create({
+            header: 'Review Work',
+            subHeader: st.title,
+            message: `${service?.vendor_name || 'The vendor'} marked this as finished.${vendorNote ? ' Vendor note: "' + vendorNote + '"' : ''} Approve it, or request changes with a comment.`,
+            inputs: [{ name: 'comment', type: 'textarea', placeholder: 'Comments (required if you request changes)' }],
+            buttons: [
+                { text: 'Cancel', role: 'cancel' },
+                {
+                    text: 'Request Changes',
+                    handler: (data) => {
+                        const comment = (data?.comment || '').trim();
+                        if (!comment) {
+                            this.showReviewToast('Add a comment so the vendor knows what to change.', 'warning');
+                            return false;
+                        }
+                        this.submitSubtaskReview(st, 'request_changes', comment);
+                        return true;
+                    }
+                },
+                {
+                    text: 'Approve',
+                    handler: (data) => {
+                        this.submitSubtaskReview(st, 'approve', (data?.comment || '').trim());
+                        return true;
+                    }
+                }
+            ]
+        });
+        await alert.present();
+    }
+
+    private submitSubtaskReview(st: SOPSubtask, action: 'approve' | 'request_changes', comment: string) {
+        this.sopService.reviewSubtask(st.id, action, comment).subscribe({
+            next: () => {
+                this.showReviewToast(action === 'approve' ? `Approved "${st.title}".` : `Changes requested on "${st.title}". The vendor has been notified.`, 'success');
+                if (this.selectedOrderId) this.loadSOPDetails(this.selectedOrderId);
+            },
+            error: (err) => this.showReviewToast(err?.error?.message || 'Could not submit your review.', 'danger')
+        });
+    }
+
+    private async showReviewToast(message: string, color: string) {
+        const toast = await this.toastCtrl.create({ message, duration: 3000, color, position: 'top' });
+        toast.present();
     }
 
     listenToSocketUpdates() {

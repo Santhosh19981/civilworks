@@ -5229,3 +5229,580 @@
         }
     }
 }
+
+// ════════════════════════════════════════════════════════════════════
+// Site Workflow: approval status, review, comments, edit, mobile modals
+// ════════════════════════════════════════════════════════════════════
+
+// Tab labels are proper names now ("Project Discussions", "Site Workflow")
+.header-chat-sop-segmented .tab-pill-btn {
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+    white-space: nowrap;
+}
+
+// Approval Pending: violet, distinct from In Progress (orange) and Completed (green)
+.subtask-status-chip.approval_pending,
+.service-status-chip.approval_pending,
+.status-pill-badge.approval_pending,
+.st-card-status-badge.badge-approval {
+    background: #f3e8ff !important;
+    color: #6d28d9 !important;
+    border-color: #ddd6fe !important;
+
+    .chip-dot,
+    .badge-dot {
+        background: #7c3aed !important;
+    }
+}
+
+.spine-small-dot.approval_pending,
+.st-status-circle-dot.dot-approval {
+    background: #7c3aed !important;
+    border-color: #7c3aed !important;
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.18) !important;
+}
+
+.spine-line-segment.approval_pending {
+    background: #c4b5fd !important;
+}
+
+// Subtask action buttons
+.btn-st-action-review {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    border: 1px solid #7c3aed;
+    background: #7c3aed;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    white-space: nowrap;
+
+    &:hover {
+        background: #6d28d9;
+    }
+
+    &.compact {
+        padding: 3px 9px;
+    }
+
+    ion-icon {
+        font-size: 13px;
+    }
+}
+
+.btn-st-icon {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    padding: 0;
+    border: 1px solid #e2e8f0;
+    border-radius: 7px;
+    background: #ffffff;
+    color: #475569;
+    cursor: pointer;
+
+    ion-icon {
+        font-size: 15px;
+    }
+
+    &:hover {
+        border-color: #94a3b8;
+        color: #0f172a;
+    }
+
+    &.has-comments {
+        color: #2563eb;
+        border-color: #bfdbfe;
+        background: #eff6ff;
+    }
+
+    .st-icon-count {
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        min-width: 16px;
+        height: 16px;
+        padding: 0 4px;
+        border-radius: 999px;
+        background: #2563eb;
+        color: #ffffff;
+        font-size: 10px;
+        font-weight: 800;
+        line-height: 16px;
+        text-align: center;
+    }
+}
+
+.st-card-actions-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+// Side panel: edit button + approval banner
+.details-status-badge-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.btn-details-edit {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    border: 1px solid #e2e8f0;
+    background: #ffffff;
+    color: #334155;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 5px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+
+    &:hover {
+        border-color: #94a3b8;
+    }
+
+    ion-icon {
+        font-size: 14px;
+    }
+}
+
+.approval-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 12px 0;
+    padding: 12px 14px;
+    background: #f5f3ff;
+    border: 1px solid #ddd6fe;
+    border-radius: 12px;
+
+    .approval-banner-text {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        min-width: 0;
+        font-size: 12.5px;
+        color: #4c1d95;
+
+        strong {
+            font-size: 13.5px;
+        }
+
+        .approval-note {
+            font-style: italic;
+            color: #5b21b6;
+        }
+    }
+
+    .btn-approval-review {
+        flex-shrink: 0;
+        border: 0;
+        background: #7c3aed;
+        color: #ffffff;
+        font-size: 13px;
+        font-weight: 700;
+        padding: 8px 14px;
+        border-radius: 9px;
+        cursor: pointer;
+
+        &:hover {
+            background: #6d28d9;
+        }
+    }
+}
+
+// Modals: light inputs everywhere, even on phones set to dark mode
+.sop-modal-backdrop .sop-modal-card {
+    color-scheme: light;
+    max-height: calc(100vh - 40px);
+
+    .modal-card-body .form-field-group {
+        min-width: 0;
+
+        .form-text-input,
+        .form-textarea-input,
+        .form-select-input {
+            width: 100%;
+            min-width: 0;
+            box-sizing: border-box;
+            background: #ffffff;
+            color: #0f172a;
+            font-family: inherit;
+        }
+
+        .form-text-input,
+        .form-select-input {
+            min-height: 42px;
+        }
+
+        .form-select-input {
+            padding: 0 10px;
+            font-size: 13.5px;
+        }
+
+        .field-error {
+            font-size: 12px;
+            color: #dc2626;
+        }
+    }
+
+    .modal-card-header .modal-card-title {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .modal-card-footer.wrap-footer {
+        flex-wrap: wrap;
+    }
+
+    .btn-footer-secondary,
+    .btn-footer-changes,
+    .btn-footer-approve {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        border-radius: 9px;
+        padding: 8px 14px;
+        font-size: 12.5px;
+        font-weight: 700;
+        cursor: pointer;
+
+        ion-icon {
+            font-size: 15px;
+        }
+
+        ion-spinner {
+            width: 16px;
+            height: 16px;
+        }
+
+        &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+    }
+
+    .btn-footer-secondary {
+        border: 1px solid #cbd5e1;
+        background: #ffffff;
+        color: #334155;
+    }
+
+    .btn-footer-changes {
+        border: 1px solid #fdba74;
+        background: #fff7ed;
+        color: #c2410c;
+
+        &:hover:not(:disabled) {
+            background: #ffedd5;
+        }
+    }
+
+    .btn-footer-approve {
+        border: 1px solid #059669;
+        background: #059669;
+        color: #ffffff;
+
+        &:hover:not(:disabled) {
+            background: #047857;
+        }
+    }
+
+    // Review summary
+    .review-summary {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding: 12px 14px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+
+        .review-kicker {
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #7c3aed;
+        }
+
+        .review-title {
+            font-size: 15px;
+            color: #0f172a;
+        }
+
+        .review-sub {
+            font-size: 13px;
+            color: #475569;
+        }
+
+        .review-note {
+            font-size: 13px;
+            font-style: italic;
+            color: #334155;
+        }
+    }
+
+    .review-hint {
+        margin: 0;
+        font-size: 12px;
+        color: #64748b;
+    }
+
+    // Comment thread
+    .comment-thread {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        .comment-item {
+            padding: 10px 12px;
+            border-radius: 10px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+
+            &.kind-changes_requested {
+                background: #fff7ed;
+                border-color: #fed7aa;
+            }
+
+            &.kind-approved {
+                background: #ecfdf5;
+                border-color: #a7f3d0;
+            }
+
+            &.kind-approval_requested {
+                background: #f5f3ff;
+                border-color: #ddd6fe;
+            }
+        }
+
+        .comment-meta {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: #475569;
+
+            strong {
+                color: #0f172a;
+            }
+
+            .comment-kind {
+                padding: 1px 7px;
+                border-radius: 999px;
+                background: #ffffff;
+                border: 1px solid #e2e8f0;
+                font-weight: 700;
+                font-size: 11px;
+            }
+
+            .comment-time {
+                margin-left: auto;
+                color: #94a3b8;
+            }
+        }
+
+        .comment-text {
+            margin: 6px 0 0;
+            font-size: 13.5px;
+            line-height: 1.45;
+            color: #1e293b;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .comment-empty {
+            margin: 0;
+            font-size: 13px;
+            color: #64748b;
+        }
+    }
+}
+
+// ── Phones ──
+@media (max-width: 600px) {
+    .sop-modal-backdrop {
+        padding: 12px;
+
+        .sop-modal-card {
+            max-width: 100%;
+            max-height: calc(100vh - 24px);
+
+            .modal-card-header {
+                padding: 14px 16px;
+            }
+
+            .modal-card-body {
+                padding: 16px;
+                max-height: none;
+                flex: 1;
+                min-height: 0;
+
+                .modal-form-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                // 16px stops iOS zooming into the field
+                .form-field-group .form-text-input,
+                .form-field-group .form-textarea-input,
+                .form-field-group .form-select-input {
+                    font-size: 16px;
+                }
+            }
+
+            .modal-card-footer {
+                padding: 12px 16px;
+
+                > button {
+                    flex: 1 1 auto;
+                }
+            }
+        }
+    }
+
+    .header-chat-sop-segmented .tab-pill-btn {
+        padding: 6px 10px !important;
+        font-size: 12px !important;
+    }
+
+    .approval-banner {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+// Subtask cards: let the controls wrap instead of overflowing the timeline
+// (desktop and tablet only: on phones the card stacks vertically)
+@media (min-width: 601px) {
+    .subtask-stepper-row .subtask-node-card {
+        flex-wrap: wrap !important;
+        row-gap: 8px !important;
+
+        .st-card-info-wrap {
+            flex: 1 1 180px !important;
+            min-width: 160px !important;
+        }
+
+        .st-card-controls-wrap {
+            flex: 0 1 auto !important;
+            flex-wrap: wrap !important;
+            justify-content: flex-end;
+            margin-left: auto;
+        }
+    }
+}
+
+// Phones: the longer tab names get their own full-width row under the title
+@media (max-width: 600px) {
+    .right-header-bar .header-main-row {
+        flex-wrap: wrap !important;
+        row-gap: 8px !important;
+
+        .header-right-actions {
+            display: contents !important;
+        }
+
+        .right-close-btn {
+            order: 2;
+        }
+
+        .header-chat-sop-segmented {
+            order: 3;
+            flex: 1 1 100% !important;
+            display: flex !important;
+
+            .tab-pill-btn {
+                flex: 1 1 50%;
+                text-align: center;
+            }
+        }
+    }
+
+    .subtask-stepper-row .subtask-node-card .st-card-controls-wrap {
+        justify-content: flex-start;
+        margin-left: 0;
+    }
+}
+
+// Review popup: vendor proof photos
+.review-proof {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 14px 0;
+}
+
+.review-proof-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+    gap: 8px;
+}
+
+.review-proof-thumb {
+    padding: 0;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+    background: #f8fafc;
+    cursor: zoom-in;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+}
+
+// Enlarged photo opens above the popups
+.lightbox-modal {
+    z-index: 10000001 !important;
+}
+
+// Sub task form: highlight an end date before the start date
+.sop-modal-card .form-text-input.input-invalid {
+    border-color: #dc2626 !important;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.12);
+}
+
+.sop-modal-card .field-error {
+    display: block;
+    margin-top: 4px;
+    font-size: 12px;
+    color: #dc2626;
+}
+
+// Service card Review button: same size as the Sub Task button next to it
+.btn-st-action-review.btn-service-review {
+    padding: 6px 12px;
+    font-size: 12px;
+    border-radius: 8px;
+}
+
+.review-proof .form-label {
+    font-size: 11px;
+    font-weight: 800;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}

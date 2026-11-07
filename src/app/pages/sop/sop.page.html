@@ -17,7 +17,7 @@
                 </div>
                 <div class="header-divider"></div>
                 <div class="heading-text-group">
-                    <h1 class="page-main-heading">SOP (Sequence of Operations)</h1>
+                    <h1 class="page-main-heading">Site Workflow</h1>
                     <p class="page-sub-heading">View and track the sequence of services and their sub tasks for your order.</p>
                 </div>
             </div>
@@ -27,11 +27,11 @@
                 <div class="segmented-pill-wrap">
                     <button type="button" class="pill-btn" [class.active]="activeTab === 'chat'" (click)="setTab('chat')" title="Open Project Chat">
                         <ion-icon name="chatbubble-outline"></ion-icon>
-                        <span>Chat</span>
+                        <span>Project Discussions</span>
                     </button>
                     <button type="button" class="pill-btn" [class.active]="activeTab === 'sop'" (click)="setTab('sop')" title="View Sequence of Operations">
                         <ion-icon name="list-outline"></ion-icon>
-                        <span>SOP</span>
+                        <span>Site Workflow</span>
                     </button>
                 </div>
             </div>
@@ -103,7 +103,7 @@
             <!-- EMPTY STATE -->
             <div class="sop-empty-state" *ngIf="!loading && (!sopData || !sopData.services || sopData.services.length === 0)">
                 <ion-icon name="clipboard-outline"></ion-icon>
-                <h3>No SOP Configured Yet</h3>
+                <h3>No Site Workflow Configured Yet</h3>
                 <p>Services and sequence of operations have not been assigned to this order yet.</p>
                 <button type="button" class="btn-refresh" (click)="loadInitialData()">Refresh</button>
             </div>
@@ -147,7 +147,7 @@
                 <section class="service-sequence-col">
                     <div class="sequence-panel-header">
                         <div class="panel-heading-wrap">
-                            <h2 class="panel-section-title">Sequence of Operations (SOP)</h2>
+                            <h2 class="panel-section-title">Site Workflow</h2>
                             <span class="panel-order-chip">#{{ sopData.order_no }}</span>
                         </div>
                         
@@ -276,6 +276,7 @@
                                      [class.st-is-completed]="st.status === 'completed'"
                                      [class.st-is-in-progress]="st.status === 'in_progress'"
                                      [class.st-is-pending]="st.status === 'pending'"
+                                     [class.st-is-approval]="st.status === 'approval_pending'"
                                      [draggable]="!isOrderClosed"
                                      (dragstart)="!isOrderClosed && onSubtaskDragStart(s.id, j, $event)"
                                      (dragover)="!isOrderClosed && onSubtaskDragOver($event)"
@@ -340,6 +341,10 @@
                                                 {{ getStatusText(st.status) }}
                                             </span>
 
+                                            <button *ngIf="st.status === 'approval_pending' && !isOrderClosedForReview()" type="button" class="btn-st-review" (click)="reviewSubtask(st, s, $event)" title="Approve or request changes">
+                                                <ion-icon name="shield-checkmark-outline"></ion-icon>
+                                                <span>Review</span>
+                                            </button>
                                             <!-- View Details / Proof Button -->
                                             <button type="button" class="btn-st-action-view" (click)="openSubtaskDetails(st, s, $event)" title="View subtask details & completion proof">
                                                 <ion-icon name="eye-outline"></ion-icon>
@@ -471,6 +476,10 @@
                                             </div>
                                         </div>
                                         <div class="st-card-btn-group">
+                                            <button *ngIf="st.status === 'approval_pending' && !isOrderClosedForReview()" type="button" class="btn-st-review" (click)="reviewSubtask(st, selectedService, $event)" title="Approve or request changes">
+                                                <ion-icon name="shield-checkmark-outline"></ion-icon>
+                                                <span>Review</span>
+                                            </button>
                                             <button type="button" class="btn-st-view-action" (click)="openSubtaskDetails(st, selectedService, $event)">
                                                 <ion-icon name="eye-outline"></ion-icon>
                                                 <span>View</span>
@@ -551,7 +560,7 @@
                     <div class="form-field-group">
                         <label class="form-label">Start Date *</label>
                         <div class="input-with-icon">
-                            <input type="date" [(ngModel)]="newSubtask.start_date" class="form-text-input date-input" />
+                            <input type="date" [(ngModel)]="newSubtask.start_date" [max]="newSubtask.end_date || null" class="form-text-input date-input" />
                         </div>
                     </div>
 
@@ -565,7 +574,8 @@
                     <div class="form-field-group">
                         <label class="form-label">End Date *</label>
                         <div class="input-with-icon">
-                            <input type="date" [(ngModel)]="newSubtask.end_date" class="form-text-input date-input" />
+                            <input type="date" [(ngModel)]="newSubtask.end_date" [min]="newSubtask.start_date || null" class="form-text-input date-input" />
+                            <span class="field-error" *ngIf="subtaskDateError" style="display:block;margin-top:4px;font-size:12px;color:#dc2626;">{{ subtaskDateError }}</span>
                         </div>
                     </div>
 
@@ -586,7 +596,7 @@
                 <button type="button" class="btn-footer-cancel" (click)="closeAddSubtaskModal()">
                     Cancel
                 </button>
-                <button type="button" class="btn-footer-save" [disabled]="!newSubtask.title.trim() || isSavingSubtask" (click)="saveSubtask()">
+                <button type="button" class="btn-footer-save" [disabled]="!newSubtask.title.trim() || !!subtaskDateError || isSavingSubtask" (click)="saveSubtask()">
                     <ion-spinner *ngIf="isSavingSubtask" name="crescent"></ion-spinner>
                     <span *ngIf="!isSavingSubtask">Save</span>
                 </button>

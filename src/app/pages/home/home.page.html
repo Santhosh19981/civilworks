@@ -103,7 +103,7 @@
                             <h1 class="slide-title" *ngIf="isPlusMember">Track & Manage Your Projects</h1>
                             <p class="slide-subtitle" *ngIf="!isPlusMember">Subscribe to InfraMart Plus membership to
                                 unlock verified contractors, direct booking, and end-to-end project management.</p>
-                            <p class="slide-subtitle" *ngIf="isPlusMember">Access your live site updates, contractor chats, and SOP milestones directly from your project dashboard.</p>
+                            <p class="slide-subtitle" *ngIf="isPlusMember">Access your live site updates, Project Discussions, and Site Workflow milestones directly from your project dashboard.</p>
                             <div class="slide-cta-row">
                                 <button type="button" class="slide-cta-btn"
                                     [ngClass]="isPlusMember ? 'btn-my-projects' : 'btn-join-membership'"
@@ -405,7 +405,7 @@
                     <path d="M22 10v6" />
                 </svg>
             </div>
-            <span class="cap-label">Project Chat</span>
+            <span class="cap-label">Project Discussions</span>
             <span class="cap-unread-badge" *ngIf="unreadMessagesCount > 0">{{ unreadMessagesCount }}</span>
         </div>
     </div>

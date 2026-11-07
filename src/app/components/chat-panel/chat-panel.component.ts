@@ -61,6 +61,26 @@ export class ChatPanelComponent implements OnInit, OnDestroy, OnChanges {
     targetServiceForSubtask: SOPServiceItem | null = null;
     newSubtask: { title: string; description: string; start_date: string; end_date: string; next_order_service_id: number | null } = { title: '', description: '', start_date: '', end_date: '', next_order_service_id: null };
     isSavingSubtask = false;
+    editingSubtask: SOPSubtask | null = null;
+
+    // Review (approve / request changes)
+    showReviewModal = false;
+    reviewTarget: { kind: 'subtask' | 'service'; id: number; title: string; vendorName?: string; note?: string; images?: string[] } | null = null;
+    reviewComment = '';
+    reviewRequiresComment = false;
+    isSubmittingReview = false;
+
+    // Sub task comments
+    showCommentsModal = false;
+    commentsSubtask: SOPSubtask | null = null;
+    newComment = '';
+    isPostingComment = false;
+
+    // Edit service
+    showEditServiceModal = false;
+    editServiceTarget: SOPServiceItem | null = null;
+    editServiceForm = { start_date: '', end_date: '', description: '' };
+    isSavingService = false;
 
     showSubtaskDetailsModal = false;
     selectedSubtask: SOPSubtask | null = null;
@@ -1362,8 +1382,18 @@ export class ChatPanelComponent implements OnInit, OnDestroy, OnChanges {
 
     closeAddSubtaskModal() {
         this.showAddSubtaskModal = false;
+        this.editingSubtask = null;
         this.targetServiceForSubtask = null;
         this.newSubtask = { title: '', description: '', start_date: '', end_date: '', next_order_service_id: null };
+    }
+
+    /** Message when the sub task's end date is before its start date. */
+    get subtaskDateError(): string {
+        const { start_date, end_date } = this.newSubtask;
+        if (start_date && end_date && new Date(start_date).getTime() > new Date(end_date).getTime()) {
+            return 'End date cannot be before the start date.';
+        }
+        return '';
     }
 
     saveSubtask() {
@@ -1371,7 +1401,16 @@ export class ChatPanelComponent implements OnInit, OnDestroy, OnChanges {
             this.showToast('Please enter a subtask title.', 'warning');
             return;
         }
+        if (this.subtaskDateError) {
+            this.showToast(this.subtaskDateError, 'warning');
+            return;
+        }
         if (!this.targetServiceForSubtask) return;
+
+        if (this.editingSubtask) {
+            this.saveEditedSubtask(this.editingSubtask);
+            return;
+        }
 
         this.isSavingSubtask = true;
         this.sopService.createSubtask(this.targetServiceForSubtask.id, {
@@ -1390,6 +1429,251 @@ export class ChatPanelComponent implements OnInit, OnDestroy, OnChanges {
             error: (err) => {
                 this.isSavingSubtask = false;
                 this.showToast(err.error?.message || 'Failed to create subtask.', 'danger');
+            }
+        });
+    }
+
+    // ── Edit sub task ──
+
+    canEditSubtask(st?: SOPSubtask | null): boolean {
+        return !!st && !this.isOrderClosed && st.status !== 'completed';
+    }
+
+    openEditSubtask(st: SOPSubtask | null, service: SOPServiceItem | null, event?: Event) {
+        if (event) event.stopPropagation();
+        if (!st) return;
+        const svc = service || this.sopData?.services?.find((s: SOPServiceItem) => s.id === st.order_service_id) || null;
+        if (!svc) return;
+        this.closeSubtaskDetailsModal();
+        this.targetServiceForSubtask = svc;
+        this.editingSubtask = st;
+        this.newSubtask = {
+            title: st.title || '',
+            description: st.description || '',
+            start_date: st.start_date ? this.formatDateForInput(st.start_date) : '',
+            end_date: st.end_date ? this.formatDateForInput(st.end_date) : '',
+            next_order_service_id: (st as any).next_order_service_id || null
+        };
+        this.showAddSubtaskModal = true;
+    }
+
+    private saveEditedSubtask(st: SOPSubtask) {
+        if (this.newSubtask.start_date && this.newSubtask.end_date && this.newSubtask.start_date > this.newSubtask.end_date) {
+            this.showToast('Start date cannot be after the end date.', 'warning');
+            return;
+        }
+        this.isSavingSubtask = true;
+        this.sopService.updateSubtask(st.id, {
+            title: this.newSubtask.title.trim(),
+            description: this.newSubtask.description.trim(),
+            start_date: this.newSubtask.start_date || null,
+            end_date: this.newSubtask.end_date || null,
+            next_order_service_id: this.newSubtask.next_order_service_id || null
+        }).subscribe({
+            next: () => {
+                this.isSavingSubtask = false;
+                this.closeAddSubtaskModal();
+                this.showToast('Sub task updated.', 'success');
+                this.loadSopForActiveConversation(false);
+            },
+            error: (err) => {
+                this.isSavingSubtask = false;
+                this.showToast(err.error?.message || 'Failed to update sub task.', 'danger');
+            }
+        });
+    }
+
+    // ── Edit service ──
+
+    openEditService(service: SOPServiceItem | null) {
+        if (!service) return;
+        this.editServiceTarget = service;
+        this.editServiceForm = {
+            start_date: service.start_date ? this.formatDateForInput(service.start_date) : '',
+            end_date: service.end_date ? this.formatDateForInput(service.end_date) : '',
+            description: service.description || ''
+        };
+        this.showEditServiceModal = true;
+    }
+
+    closeEditService() {
+        this.showEditServiceModal = false;
+        this.editServiceTarget = null;
+    }
+
+    saveService() {
+        const target = this.editServiceTarget;
+        if (!target) return;
+        const f = this.editServiceForm;
+        if (f.start_date && f.end_date && f.start_date > f.end_date) {
+            this.showToast('Start date cannot be after the end date.', 'warning');
+            return;
+        }
+        this.isSavingService = true;
+        this.sopService.updateService(target.id, {
+            start_date: f.start_date || undefined,
+            end_date: f.end_date || undefined,
+            description: f.description.trim()
+        }).subscribe({
+            next: () => {
+                this.isSavingService = false;
+                target.description = f.description.trim();
+                if (f.start_date) target.start_date = f.start_date;
+                if (f.end_date) target.end_date = f.end_date;
+                this.closeEditService();
+                this.showToast('Service details updated.', 'success');
+                this.loadSopForActiveConversation(false);
+            },
+            error: (err) => {
+                this.isSavingService = false;
+                this.showToast(err.error?.message || 'Failed to update service.', 'danger');
+            }
+        });
+    }
+
+    // ── Approval review ──
+
+    getServiceStatusKey(s?: SOPServiceItem | null): string {
+        if (!s) return 'pending';
+        if (s.service_status !== 'completed' && s.completion_request?.status === 'pending') return 'approval_pending';
+        return s.service_status;
+    }
+
+    canReviewSubtask(st?: SOPSubtask | null): boolean {
+        return !!st && this.isCustomerUser && !this.isOrderClosed && st.status === 'approval_pending';
+    }
+
+    canReviewService(s?: SOPServiceItem | null): boolean {
+        return !!s && this.isCustomerUser && !this.isOrderClosed && this.getServiceStatusKey(s) === 'approval_pending';
+    }
+
+    openReviewSubtask(st: SOPSubtask | null, service: SOPServiceItem | null, event?: Event) {
+        if (event) event.stopPropagation();
+        if (!st) return;
+        const request = [...(st.comments || [])].reverse().find(c => c.kind === 'approval_requested');
+        this.closeSubtaskDetailsModal();
+        this.reviewTarget = {
+            kind: 'subtask',
+            id: st.id,
+            title: st.title,
+            vendorName: service?.vendor_name,
+            note: request?.comment || undefined,
+            images: this.collectProofImages([st])
+        };
+        this.reviewComment = '';
+        this.reviewRequiresComment = false;
+        this.showReviewModal = true;
+    }
+
+    openReviewService(service: SOPServiceItem | null) {
+        if (!service?.completion_request) return;
+        this.reviewTarget = {
+            kind: 'service',
+            id: service.completion_request.id,
+            title: service.service_name || service.subcategory_name || 'Service',
+            vendorName: service.vendor_name,
+            note: service.completion_request.request_note || undefined,
+            images: this.collectProofImages(service.subtasks || [])
+        };
+        this.reviewComment = '';
+        this.reviewRequiresComment = false;
+        this.showReviewModal = true;
+    }
+
+    /** Proof photos the vendor uploaded, newest first. */
+    private collectProofImages(subtasks: SOPSubtask[]): string[] {
+        const urls: string[] = [];
+        for (const st of subtasks) {
+            const list = (st?.proof_images || []).map(p => p.image_url).filter(Boolean);
+            if (list.length === 0 && st?.proof_image_url) list.push(st.proof_image_url);
+            urls.push(...list);
+        }
+        return [...new Set(urls)].reverse();
+    }
+
+    closeReviewModal() {
+        this.showReviewModal = false;
+        this.reviewTarget = null;
+        this.reviewComment = '';
+        this.reviewRequiresComment = false;
+    }
+
+    submitReview(action: 'approve' | 'request_changes') {
+        const target = this.reviewTarget;
+        if (!target || this.isSubmittingReview) return;
+        const comment = this.reviewComment.trim();
+        if (action === 'request_changes' && !comment) {
+            this.reviewRequiresComment = true;
+            return;
+        }
+
+        this.isSubmittingReview = true;
+        const call = target.kind === 'subtask'
+            ? this.sopService.reviewSubtask(target.id, action, comment)
+            : this.sopService.respondCompletionRequest(target.id, action === 'approve' ? 'approve' : 'reject', comment || undefined);
+
+        call.subscribe({
+            next: () => {
+                this.isSubmittingReview = false;
+                this.closeReviewModal();
+                this.showToast(action === 'approve'
+                    ? `Approved "${target.title}".`
+                    : `Changes requested on "${target.title}". The vendor has been notified.`, 'success');
+                this.loadSopForActiveConversation(false);
+            },
+            error: (err) => {
+                this.isSubmittingReview = false;
+                this.showToast(err.error?.message || 'Could not submit your review.', 'danger');
+            }
+        });
+    }
+
+    // ── Sub task comments ──
+
+    getCommentCount(st?: SOPSubtask | null): number {
+        if (!st) return 0;
+        return (st.comments || []).filter(c => !!c.comment).length;
+    }
+
+    getCommentKindLabel(kind: string): string {
+        switch (kind) {
+            case 'approval_requested': return 'Asked for approval';
+            case 'approved': return 'Approved';
+            case 'changes_requested': return 'Changes requested';
+            default: return '';
+        }
+    }
+
+    openSubtaskComments(st: SOPSubtask | null, service: SOPServiceItem | null, event?: Event) {
+        if (event) event.stopPropagation();
+        if (!st) return;
+        this.closeSubtaskDetailsModal();
+        this.commentsSubtask = st;
+        this.newComment = '';
+        this.showCommentsModal = true;
+    }
+
+    closeCommentsModal() {
+        this.showCommentsModal = false;
+        this.commentsSubtask = null;
+        this.newComment = '';
+    }
+
+    postSubtaskComment() {
+        const st = this.commentsSubtask;
+        const text = this.newComment.trim();
+        if (!st || !text || this.isPostingComment) return;
+        this.isPostingComment = true;
+        this.sopService.addSubtaskComment(st.id, text).subscribe({
+            next: (saved) => {
+                this.isPostingComment = false;
+                st.comments = [...(st.comments || []), saved];
+                this.newComment = '';
+                this.showToast('Comment posted. The vendor has been notified.', 'success');
+            },
+            error: (err) => {
+                this.isPostingComment = false;
+                this.showToast(err.error?.message || 'Failed to post comment.', 'danger');
             }
         });
     }
@@ -1513,12 +1797,14 @@ export class ChatPanelComponent implements OnInit, OnDestroy, OnChanges {
 
     getSubtaskDotClass(status?: string): string {
         if (status === 'completed') return 'dot-completed';
+        if (status === 'approval_pending') return 'dot-approval';
         if (status === 'in_progress') return 'dot-in-progress';
         return 'dot-pending';
     }
 
     getSubtaskBadgeClass(status?: string): string {
         if (status === 'completed') return 'badge-completed';
+        if (status === 'approval_pending') return 'badge-approval';
         if (status === 'in_progress') return 'badge-in-progress';
         return 'badge-pending';
     }
@@ -1526,6 +1812,7 @@ export class ChatPanelComponent implements OnInit, OnDestroy, OnChanges {
     getStatusText(status?: string): string {
         if (!status) return 'Pending';
         if (status === 'in_progress') return 'In Progress';
+        if (status === 'approval_pending') return 'Approval Pending';
         if (status === 'completed') return 'Completed';
         return status.charAt(0).toUpperCase() + status.slice(1);
     }
