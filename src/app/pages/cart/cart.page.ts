@@ -169,7 +169,7 @@ export class CartPage implements OnInit {
                         <polyline points="2 12 12 17 22 12"/>
                     </g>
                     <text x="50%" y="300" dominant-baseline="middle" text-anchor="middle" fill="#94a3b8" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="600">
-                        CivilWorks
+                        InfraMart
                     </text>
                 </svg>
             `);

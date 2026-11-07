@@ -477,13 +477,13 @@ export class ChatPanelComponent implements OnInit, OnDestroy, OnChanges {
         if (!this.activeConversation) return;
         this.closeAboutDropdown();
         const alert = await this.alertCtrl.create({
-            header: 'Confirm Project Completion',
+            header: 'Mark Project as Completed?',
             subHeader: `Project Order #${this.activeConversation.order_no}`,
-            message: 'Are you sure you want to mark this project as completed? Once confirmed, all services will be marked as completed and messaging in this group will be closed for everyone (including client and vendors). Past chat history and files will remain accessible.',
+            message: 'Are you sure you want to mark this project as completed? This cannot be undone. All services will be marked as completed and messaging in this group will be closed for everyone, including you and the vendors. Past chat history and files will remain accessible.',
             buttons: [
                 { text: 'Cancel', role: 'cancel' },
                 {
-                    text: 'Confirm & Mark Completed',
+                    text: 'Yes, Mark Completed',
                     role: 'destructive',
                     cssClass: 'alert-btn-confirm-complete',
                     handler: () => {
@@ -884,11 +884,11 @@ export class ChatPanelComponent implements OnInit, OnDestroy, OnChanges {
 
         const alert = await this.alertCtrl.create({
             header: 'Mark Vendor Work Completed',
-            message: `Mark ${vendorName}'s work for "${serviceName}" as Completed? Once marked completed, this vendor will no longer be able to send new chat messages.`,
+            message: `Are you sure you want to mark ${vendorName}'s work for "${serviceName}" as completed? This cannot be undone. This vendor will no longer be able to send new chat messages.`,
             buttons: [
                 { text: 'Cancel', role: 'cancel' },
                 {
-                    text: 'Mark Completed',
+                    text: 'Yes, Mark Completed',
                     handler: () => {
                         this.chatService.completeWork(this.activeConversation!.id, service.id, service.vendor_id).subscribe({
                             next: () => {
@@ -931,6 +931,24 @@ export class ChatPanelComponent implements OnInit, OnDestroy, OnChanges {
         const targetVendorId = targetService?.vendor_id || meta.vendor_id;
         const targetServiceName = targetService?.subcategory_name || targetService?.service_name || meta.service_name || 'Service';
 
+        const alert = await this.alertCtrl.create({
+            header: 'Mark Work as Completed?',
+            message: `Are you sure you want to accept and mark the work for "${targetServiceName}" as completed? This cannot be undone.`,
+            buttons: [
+                { text: 'Cancel', role: 'cancel' },
+                {
+                    text: 'Yes, Mark Completed',
+                    role: 'destructive',
+                    handler: () => {
+                        this.executeAcceptCompletionRequest(targetServiceId, targetVendorId, targetServiceName);
+                    }
+                }
+            ]
+        });
+        await alert.present();
+    }
+
+    private executeAcceptCompletionRequest(targetServiceId: number, targetVendorId: number, targetServiceName: string) {
         this.isSubmittingAction = true;
         this.chatService.completeWork(this.activeConversation!.id, targetServiceId, targetVendorId).subscribe({
             next: () => {

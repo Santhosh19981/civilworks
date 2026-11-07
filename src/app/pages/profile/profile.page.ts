@@ -260,7 +260,7 @@ export class ProfilePage implements OnInit {
         const alert = await this.alertController.create({
             header: 'Confirm Sign Out',
             subHeader: 'Customer Account',
-            message: 'Are you sure you want to sign out of your CivilWorks account?',
+            message: 'Are you sure you want to sign out of your InfraMart account?',
             cssClass: 'custom-logout-alert',
             buttons: [
                 {

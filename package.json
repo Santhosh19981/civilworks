@@ -1,8 +1,8 @@
 {
   "name": "civilworks",
   "version": "1.0.0",
-  "author": "CivilWorks Team",
-  "homepage": "https://civilworks.app/",
+  "author": "InfraMart Team",
+  "homepage": "https://inframart.app/",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

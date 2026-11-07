@@ -1,5 +1,5 @@
 ---
-description: How to generate an Android APK for the CivilWorks project
+description: How to generate an Android APK for the InfraMart project
 ---
 
 Follow these steps to generate a debug APK for your Ionic/Capacitor project.

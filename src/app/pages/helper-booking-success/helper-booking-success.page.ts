@@ -100,7 +100,7 @@ export class HelperBookingSuccessPage implements OnInit {
 
   openWhatsApp() {
     const id = this.booking?.bookingId || 'HELP1023';
-    const msg = encodeURIComponent(`Hi CivilWorks Labor Desk, I have a query regarding workforce deployment #${id} (${this.serviceName}).`);
+    const msg = encodeURIComponent(`Hi InfraMart Labor Desk, I have a query regarding workforce deployment #${id} (${this.serviceName}).`);
     window.open(`https://wa.me/919876543210?text=${msg}`, '_blank');
   }
 }

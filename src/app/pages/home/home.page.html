@@ -8,7 +8,7 @@
                     <ion-icon name="hammer" class="brand-icon"></ion-icon>
                 </div>
                 <div class="brand-text-col">
-                    <span class="brand-name">CivilWorks<span class="brand-dot">.</span></span>
+                    <span class="brand-name">InfraMart<span class="brand-dot">.</span></span>
                     <span class="brand-tagline">Building Materials & Machinery</span>
                 </div>
             </div>
@@ -90,18 +90,18 @@
 
                     <!-- Sector Fallback when 0 advertisements are configured yet -->
                     <div class="carousel-slide" *ngIf="banners.length === 0">
-                        <div class="slide-bg"
-                            style="background-image: url('https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=1200&q=80')">
+                        <div class="slide-bg slide-bg-scene"
+                            [style.backgroundImage]="'url(assets/images/hero/' + heroScene + '.svg)'">
                         </div>
-                        <div class="slide-gradient-scrim"></div>
+                        <div class="slide-scene-scrim"></div>
                         <div class="slide-content">
-                            <span class="slide-badge" *ngIf="!isPlusMember">{{ (activeSectorName || 'CivilWorks') |
+                            <span class="slide-badge" *ngIf="!isPlusMember">{{ (activeSectorName || 'InfraMart') |
                                 uppercase }} • PLUS MEMBERSHIP</span>
                             <span class="slide-badge badge-plus-active" *ngIf="isPlusMember">{{ (activeSectorName ||
-                                'CivilWorks') | uppercase }} • ⭐ PLUS ACTIVE</span>
+                                'InfraMart') | uppercase }} • ⭐ PLUS ACTIVE</span>
                             <h1 class="slide-title" *ngIf="!isPlusMember">join us to use our services</h1>
                             <h1 class="slide-title" *ngIf="isPlusMember">Track & Manage Your Projects</h1>
-                            <p class="slide-subtitle" *ngIf="!isPlusMember">Subscribe to CivilWorks Plus membership to
+                            <p class="slide-subtitle" *ngIf="!isPlusMember">Subscribe to InfraMart Plus membership to
                                 unlock verified contractors, direct booking, and end-to-end project management.</p>
                             <p class="slide-subtitle" *ngIf="isPlusMember">Access your live site updates, contractor chats, and SOP milestones directly from your project dashboard.</p>
                             <div class="slide-cta-row">
@@ -146,8 +146,8 @@
         <!-- Dynamic Sector Categories Section (Replaces Static Hardcoded Cards) -->
         <section class="services-hub-section">
             <div class="section-intro">
-                <div class="intro-tag">CATEGORIES IN {{ (activeSectorName || 'CivilWorks') | uppercase }}</div>
-                <h2 class="hub-main-title">Explore {{ activeSectorName || 'CivilWorks' }} Categories</h2>
+                <div class="intro-tag">CATEGORIES IN {{ (activeSectorName || 'InfraMart') | uppercase }}</div>
+                <h2 class="hub-main-title">Explore {{ activeSectorName || 'InfraMart' }} Categories</h2>
                 <p class="hub-subtitle">Choose from the specialized categories and verified supply lines configured for
                     {{ activeSectorName || 'this sector' }}</p>
             </div>

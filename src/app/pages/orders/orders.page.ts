@@ -195,7 +195,7 @@ export class OrdersPage implements OnInit, OnDestroy {
         const localProductOrders = JSON.parse(localStorage.getItem('civilworks_product_orders') || '[]')
             .filter((p: any) => currentUserId ? (p.user_id && p.user_id == currentUserId) : false)
             .map((p: any) => {
-            const itemName = p.serviceName || p.items?.[0]?.product?.name || p.items?.[0]?.name || 'CivilWorks Product';
+            const itemName = p.serviceName || p.items?.[0]?.product?.name || p.items?.[0]?.name || 'InfraMart Product';
             const resolved = this.resolveSector(itemName, p.main_category_name);
             return {
                 id: p.order_no || p.id || ('ORD-' + Math.floor(1000 + Math.random() * 9000)),

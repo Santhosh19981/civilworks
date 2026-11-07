@@ -2,7 +2,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
     appId: 'com.civilworks.app',
-    appName: 'CivilWorks',
+    appName: 'InfraMart',
     webDir: 'www',
     server: {
         androidScheme: 'https'

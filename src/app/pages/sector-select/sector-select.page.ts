@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { ProductService } from '../../services/product.service';
-import { MainCategory, SubCategory } from '../../models/product.model';
+import { MainCategory } from '../../models/product.model';
 
 @Component({
     selector: 'app-sector-select',
@@ -11,8 +11,8 @@ import { MainCategory, SubCategory } from '../../models/product.model';
 })
 export class SectorSelectPage implements OnInit {
     mainCategories: MainCategory[] = [];
-    sectorSubcategories: { [key: number]: SubCategory[] } = {};
     loading = true;
+    loadFailed = false;
     selectedSectorId: number | null = null;
 
     constructor(
@@ -31,55 +31,22 @@ export class SectorSelectPage implements OnInit {
 
     loadMainCategories() {
         this.loading = true;
+        this.loadFailed = false;
         this.productService.getMainCategories().subscribe({
             next: (data) => {
                 this.mainCategories = (data || []).filter(m => m.status === 'active' || !m.status);
-                this.loadSectorSubcategories();
                 this.loading = false;
             },
             error: (err) => {
                 console.error('Failed to load main categories', err);
+                this.loadFailed = true;
                 this.loading = false;
             }
         });
     }
 
-    loadSectorSubcategories() {
-        for (const m of this.mainCategories) {
-            this.productService.getSubcategories({ main_category_id: m.id, limit: 100 }).subscribe({
-                next: (subs) => {
-                    const seen = new Set<string>();
-                    const unique: SubCategory[] = [];
-                    for (const s of (subs || [])) {
-                        const key = (s.name || '').trim().toLowerCase();
-                        if (key && !seen.has(key)) {
-                            seen.add(key);
-                            unique.push(s);
-                        }
-                    }
-                    this.sectorSubcategories[m.id] = unique;
-                },
-                error: (err) => {
-                    console.error(`Failed to load subcategories for sector ${m.id}`, err);
-                    this.sectorSubcategories[m.id] = [];
-                }
-            });
-        }
-    }
-
-    getSubcategoriesForSector(mainCategoryId: number): SubCategory[] {
-        return this.sectorSubcategories[mainCategoryId] || [];
-    }
-
-    selectSectorWithSubcategory(sector: MainCategory, sub: SubCategory, event: Event) {
-        event.stopPropagation();
-        this.selectedSectorId = sector.id;
-        localStorage.setItem('selectedSectorId', String(sector.id));
-        localStorage.setItem('selectedSectorName', sector.name);
-
-        this.router.navigate(['/tabs/products'], {
-            queryParams: { mainCategoryId: sector.id, subcategoryId: sub.id }
-        });
+    trackBySectorId(_index: number, sector: MainCategory): number {
+        return sector.id;
     }
 
     selectSector(sector: MainCategory) {

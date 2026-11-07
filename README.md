@@ -1,4 +1,4 @@
-# CivilWorks - Construction Materials & Equipment Rental App
+# InfraMart - Construction Materials & Equipment Rental App
 
 A premium, offline-first Ionic Angular mobile application for buying construction materials and renting heavy equipment.
 

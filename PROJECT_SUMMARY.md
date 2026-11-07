@@ -1,4 +1,4 @@
-# CivilWorks - Construction Materials & Equipment Rental App
+# InfraMart - Construction Materials & Equipment Rental App
 
 ## ✅ Project Status: COMPLETE
 

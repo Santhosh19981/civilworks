@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="400" viewBox="0 0 1400 400">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#09192C"/>
+      <stop offset=".6" stop-color="#0F2744"/>
+      <stop offset="1" stop-color="#17365A"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="1010" cy="400" r="520" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FF6B00" stop-opacity=".62"/>
+      <stop offset=".45" stop-color="#FF6B00" stop-opacity=".2"/>
+      <stop offset="1" stop-color="#FF6B00" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="44" height="44" patternUnits="userSpaceOnUse">
+      <path d="M44 0H0v44" fill="none" stroke="#FFFFFF" stroke-opacity=".05"/>
+    </pattern>
+    <pattern id="winA" width="20" height="26" patternUnits="userSpaceOnUse">
+      <rect x="5" y="6" width="9" height="13" fill="#FFC56B" fill-opacity=".5"/>
+    </pattern>
+    <pattern id="winB" width="24" height="24" patternUnits="userSpaceOnUse">
+      <rect x="6" y="6" width="11" height="10" fill="#9CC4EA" fill-opacity=".28"/>
+    </pattern>
+    <linearGradient id="fade" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#fff" stop-opacity="0"/>
+      <stop offset=".42" stop-color="#fff" stop-opacity="1"/>
+    </linearGradient>
+    <mask id="fadeMask"><rect width="1400" height="400" fill="url(#fade)"/></mask>
+  </defs>
+
+  <rect width="1400" height="400" fill="url(#sky)"/>
+  <rect width="1400" height="400" fill="url(#sun)"/>
+  <rect width="1400" height="400" fill="url(#grid)"/>
+
+  <g mask="url(#fadeMask)">
+    <!-- Far skyline -->
+    <g fill="#1B3D61">
+      <rect x="560" y="250" width="70" height="150"/>
+      <rect x="640" y="205" width="58" height="195"/>
+      <rect x="708" y="265" width="84" height="135"/>
+      <rect x="1090" y="215" width="62" height="185"/>
+      <rect x="1162" y="170" width="74" height="230"/>
+      <rect x="1246" y="240" width="66" height="160"/>
+      <rect x="1322" y="200" width="78" height="200"/>
+    </g>
+
+    <!-- Near towers -->
+    <g>
+      <rect x="790" y="150" width="96" height="250" fill="#0D2440"/>
+      <rect x="790" y="150" width="96" height="250" fill="url(#winB)"/>
+      <rect x="1180" y="120" width="104" height="280" fill="#0D2440"/>
+      <rect x="1180" y="120" width="104" height="280" fill="url(#winA)"/>
+      <rect x="1296" y="235" width="104" height="165" fill="#0B1F38"/>
+      <rect x="1296" y="235" width="104" height="165" fill="url(#winB)"/>
+    </g>
+
+    <!-- Building under construction -->
+    <g fill="none" stroke="#FF8A2B" stroke-width="3">
+      <path d="M906 400V214h176v186"/>
+      <path d="M906 260h176M906 306h176M906 352h176M950 214v186M994 214v186M1038 214v186" stroke-opacity=".78"/>
+      <path d="M906 214v-34m44 34v-34m44 34v-34m44 34v-34m44 34v-34" stroke-opacity=".5"/>
+      <path d="M906 306l44-46m0 46l44-46m44 92l44-46m-176 46l44-46" stroke-width="2" stroke-opacity=".42"/>
+    </g>
+    <g fill="#FFC56B" fill-opacity=".85">
+      <rect x="951" y="307" width="42" height="44"/>
+      <rect x="1039" y="261" width="42" height="44"/>
+    </g>
+
+    <!-- Tower crane -->
+    <g fill="none" stroke="#FFC107" stroke-width="3" stroke-linejoin="round">
+      <path d="M1108 400V70m26 330V70"/>
+      <path d="M1108 96l26 26-26 26 26 26-26 26 26 26-26 26 26 26-26 26 26 26-26 26 26 26" stroke-width="2"/>
+      <path d="M830 70h440M1134 70h-26"/>
+      <path d="M830 92h278M830 92L830 70m278 22V70" stroke-width="2.5"/>
+      <path d="M850 92l22-22 22 22 22-22 22 22 22-22 22 22 22-22 22 22 22-22 22 22 22-22 22 22" stroke-width="2"/>
+      <path d="M1121 18L1108 70m13-52l13 52m-13-52L900 70m221-52l149 52" stroke-width="2"/>
+      <rect x="1236" y="70" width="38" height="28" fill="#FFC107" fill-opacity=".9"/>
+      <rect x="1092" y="96" width="16" height="22" fill="#FFC107" fill-opacity=".9"/>
+    </g>
+    <path d="M944 92v86" stroke="#FFE7A6" stroke-width="2"/>
+    <path d="M916 178h56v9h-56z" fill="#FF8A2B"/>
+
+    <path d="M480 399h920" stroke="#FF8A2B" stroke-width="2" stroke-opacity=".7"/>
+  </g>
+</svg>

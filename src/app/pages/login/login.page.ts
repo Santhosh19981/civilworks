@@ -141,7 +141,7 @@ export class LoginPage implements OnInit, OnDestroy {
         this.authService.verifyOtp(this.phone, this.otp).subscribe({
             next: async (res) => {
                 this.loading = false;
-                await this.showToast('Login verified! Welcome to CivilWorks.', 'success', 2000, 'checkmark-circle');
+                await this.showToast('Login verified! Welcome to InfraMart.', 'success', 2000, 'checkmark-circle');
                 this.router.navigateByUrl(this.returnUrl, { replaceUrl: true });
             },
             error: async (err) => {
@@ -151,7 +151,7 @@ export class LoginPage implements OnInit, OnDestroy {
                     this.authService.login(this.phone, this.otp).subscribe({
                         next: async () => {
                             this.loading = false;
-                            await this.showToast('Login verified! Welcome to CivilWorks.', 'success', 2000, 'checkmark-circle');
+                            await this.showToast('Login verified! Welcome to InfraMart.', 'success', 2000, 'checkmark-circle');
                             this.router.navigateByUrl(this.returnUrl, { replaceUrl: true });
                         },
                         error: async (innerErr) => {

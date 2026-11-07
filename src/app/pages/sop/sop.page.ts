@@ -554,6 +554,26 @@ export class SOPPage implements OnInit, OnDestroy {
 
     async approveCompletion() {
         if (!this.activeCompletionRequest) return;
+
+        const alert = await this.alertCtrl.create({
+            header: 'Complete This Service?',
+            message: 'Are you sure you want to accept the work and mark this service as completed? This cannot be undone.',
+            buttons: [
+                { text: 'Cancel', role: 'cancel' },
+                {
+                    text: 'Yes, Mark Completed',
+                    role: 'destructive',
+                    handler: () => {
+                        this.executeApproveCompletion();
+                    }
+                }
+            ]
+        });
+        await alert.present();
+    }
+
+    private executeApproveCompletion() {
+        if (!this.activeCompletionRequest) return;
         this.isSubmittingReview = true;
 
         this.sopService.respondCompletionRequest(this.activeCompletionRequest.id, 'approve').subscribe({

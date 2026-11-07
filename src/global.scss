@@ -756,6 +756,55 @@ ion-item::part(native) {
     }
 }
 
+/* Back button for light surfaces, where the default white icon would be invisible */
+.page-back-btn.light-btn {
+    background: #F1F5F9;
+    border-color: #E2E8F0;
+    color: #0F172A;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.05);
+
+    ion-icon {
+        color: #0F172A;
+    }
+
+    &:hover {
+        background: #FFF7ED;
+        border-color: #FF6B00;
+
+        ion-icon {
+            color: #FF6B00;
+        }
+    }
+}
+
+/*
+ * Keep inputs looking the same after browser autofill. Browsers force their own background and
+ * text colour with !important, so those styles can't be overridden directly; delaying the
+ * transition indefinitely stops them from ever being applied.
+ */
+@mixin keep-input-colours {
+    transition: background-color 0s 99999s, color 0s 99999s !important;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+    @include keep-input-colours;
+}
+
+input:autofill,
+textarea:autofill,
+select:autofill {
+    @include keep-input-colours;
+}
+
 /* Global Mobile Responsiveness Enhancements */
 @media (max-width: 768px) {
     html, body {

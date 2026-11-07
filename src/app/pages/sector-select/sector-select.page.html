@@ -1,136 +1,144 @@
 <ion-content [fullscreen]="true" class="sector-select-content">
-    <!-- Architectural Light Theme Background Canvas -->
-    <div class="light-canvas">
-        <div class="canvas-ambient ambient-top-left"></div>
-        <div class="canvas-ambient ambient-bottom-right"></div>
-        <div class="canvas-blueprint-grid"></div>
-    </div>
-
     <!-- Top App Navigation Bar -->
     <div class="top-nav-bar">
         <div class="nav-container">
-            <div class="nav-left" style="display: flex; align-items: center; gap: 14px;">
-                <button type="button" class="page-back-btn light-btn" (click)="goBack()" title="Go back to previous page" aria-label="Go back">
+            <div class="nav-left">
+                <button type="button" class="page-back-btn" (click)="goBack()" title="Go back to previous page" aria-label="Go back">
                     <ion-icon name="arrow-back"></ion-icon>
                 </button>
                 <div class="brand-logo">
                     <div class="logo-box">
-                        <ion-icon name="business"></ion-icon>
+                        <ion-icon name="hammer"></ion-icon>
                     </div>
                     <div class="logo-text">
-                        <span class="brand-name">BUILD<span class="highlight">PRO</span></span>
-                        <span class="brand-sub">CIVILWORKS ECOSYSTEM</span>
+                        <span class="brand-name">InfraMart<span class="brand-dot">.</span></span>
+                        <span class="brand-sub">Building Materials &amp; Machinery</span>
                     </div>
                 </div>
             </div>
 
-            <div class="nav-actions">
-                <button class="nav-ghost-btn" (click)="browseAll()" title="Skip selection and browse everything">
-                    <span>Browse All Verticals</span>
-                    <ion-icon name="arrow-forward-outline"></ion-icon>
-                </button>
-            </div>
+            <button type="button" class="nav-ghost-btn" (click)="browseAll()" title="Skip selection and browse everything">
+                <span>Browse all</span>
+                <ion-icon name="arrow-forward-outline"></ion-icon>
+            </button>
         </div>
     </div>
 
-    <div class="sector-page-wrapper">
-        <!-- Hero Header -->
-        <header class="sector-hero-header">
-            <div class="brand-pill">
-                <span class="pulsing-badge"></span>
-                <span>ENTERPRISE HUB SECTOR SELECTOR</span>
-            </div>
-            <h1 class="hero-title">
-                Select your desired <span class="gradient-text">sector</span>
-            </h1>
+    <!-- Hero Header -->
+    <header class="sector-hero">
+        <div class="hero-inner">
+            <span class="hero-eyebrow">Choose your workspace</span>
+            <h1 class="hero-title">What are you <em>building</em> today?</h1>
             <p class="hero-subtitle">
-                Choose an industry vertical to personalize your material catalog, rental equipment fleet, and verified trade crew.
+                Pick a sector and we'll tailor your materials, rental equipment and verified trade crews to it.
             </p>
-        </header>
+        </div>
+    </header>
 
+    <div class="sector-page-wrapper">
         <!-- Loading State -->
-        <div class="loading-state" *ngIf="loading">
-            <div class="spinner-core"></div>
-            <p>Loading Active Business Sectors...</p>
+        <div class="sectors-grid" *ngIf="loading" aria-busy="true" aria-label="Loading sectors">
+            <div class="sector-card sector-card-skeleton" *ngFor="let placeholder of [1, 2]">
+                <div class="visual-text">
+                    <span class="skeleton skeleton-icon"></span>
+                    <span class="skeleton skeleton-title"></span>
+                    <span class="skeleton skeleton-line"></span>
+                </div>
+                <span class="skeleton skeleton-cta"></span>
+            </div>
         </div>
 
         <!-- Sectors Cards Grid -->
         <div class="sectors-grid" *ngIf="!loading && mainCategories.length > 0">
-            <div class="sector-card" *ngFor="let m of mainCategories" 
+            <div class="sector-card" *ngFor="let m of mainCategories; let i = index; trackBy: trackBySectorId"
                 [ngClass]="getSectorTheme(m.name)"
                 [class.selected]="selectedSectorId === m.id"
+                [style.--i]="i"
                 (click)="selectSector(m)">
 
-                <div class="card-ambient-aura"></div>
+                    <!-- Blueprint line art for each sector type -->
+                    <ng-container [ngSwitch]="getSectorTheme(m.name)">
+                        <svg *ngSwitchCase="'theme-construction'" class="sector-art" viewBox="0 0 300 148" preserveAspectRatio="xMaxYMax meet" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M196 147V34m16 113V34m-16 0h16m-16 14 16 14m0-14-16 14m0 0 16 14m0-14-16 14m0 0 16 14m0-14-16 14m0 0 16 14m0-14-16 14" opacity=".7" />
+                            <path d="M150 34h146m-146 0 54-20 14 20m-14-20 88 20" />
+                            <path d="M170 34v8h22v-8" />
+                            <path d="M274 34v44m-9 0h18v13h-18z" />
+                            <path d="M84 147V78h78v69M84 101h78m-78 23h78m-52-46v69m26-69v69" opacity=".85" />
+                            <path d="M84 78V62m26 16V62m26 16V62m26 16V62" opacity=".45" />
+                        </svg>
 
-                <div class="card-header">
-                    <div class="icon-avatar">
-                        <ion-icon [name]="getSectorIcon(m.name)"></ion-icon>
+                        <svg *ngSwitchCase="'theme-interiors'" class="sector-art" viewBox="0 0 300 148" preserveAspectRatio="xMaxYMax meet" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M178 16h76v62h-76zM216 16v62m-38-31h76" opacity=".6" />
+                            <path d="M126 0v30m-20 22 7-22h26l7 22z" />
+                            <path d="M112 147v-9m100 9v-9" />
+                            <path d="M92 138v-30c0-6 4-10 10-10s10 4 10 10v9h100v-9c0-6 4-10 10-10s10 4 10 10v30z" />
+                            <path d="M112 117V96c0-7 5-12 12-12h76c7 0 12 5 12 12v21m-50-33v33" />
+                            <path d="M262 147v-24h22v24m-11-24v-20m0 8c-8 0-12-5-12-13 8 0 12 5 12 13zm0-6c0-8 4-13 12-13 0 8-4 13-12 13z" opacity=".85" />
+                        </svg>
+
+                        <svg *ngSwitchCase="'theme-realestate'" class="sector-art" viewBox="0 0 300 148" preserveAspectRatio="xMaxYMax meet" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M96 147V76h46v71M108 90h22m-22 16h22m-22 16h22" opacity=".7" />
+                            <path d="M142 147V38h56v109M154 54h32m-32 16h32m-32 16h32m-32 16h32m-32 16h32" />
+                            <path d="M198 147V88h62v59M212 104h34m-34 16h34" opacity=".7" />
+                            <path d="M276 22c-9 0-16 7-16 16 0 12 16 26 16 26s16-14 16-26c0-9-7-16-16-16z" />
+                            <circle cx="276" cy="38" r="5" />
+                        </svg>
+
+                        <svg *ngSwitchDefault class="sector-art" viewBox="0 0 300 148" preserveAspectRatio="xMaxYMax meet" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M120 147v-44h56v44zM176 147v-44h56v44zM148 103V59h56v44zM120 125h56m0 0h56M148 81h56" />
+                            <path d="M232 147v-30h40v30zM232 132h40" opacity=".65" />
+                        </svg>
+                    </ng-container>
+
+                    <div class="sector-badge" *ngIf="selectedSectorId === m.id">
+                        <ion-icon name="checkmark-circle"></ion-icon>
+                        <span>Current sector</span>
                     </div>
-                    <div class="sector-badge" [class.badge-selected]="selectedSectorId === m.id">
-                        <span *ngIf="selectedSectorId === m.id" class="badge-icon">✓</span>
-                        <span>{{ selectedSectorId === m.id ? 'ACTIVE SECTOR' : 'MAIN SECTOR' }}</span>
-                    </div>
-                </div>
 
-                <div class="card-body">
-                    <h2 class="sector-title">{{ m.name | titlecase }}</h2>
-                    <p class="sector-description">
-                        {{ getSectorDescription(m) }}
-                    </p>
-
-                    <!-- Dynamic Subcategories Tagged to this Main Category -->
-                    <div class="sector-tags-row" *ngIf="getSubcategoriesForSector(m.id).length > 0">
-                        <span class="tag-pill" *ngFor="let sub of (getSubcategoriesForSector(m.id) | slice:0:6)"
-                            (click)="selectSectorWithSubcategory(m, sub, $event)"
-                            [title]="'Browse ' + sub.name + ' in ' + (m.name | titlecase)">
-                            <ion-icon name="checkmark-circle"></ion-icon>
-                            {{ sub.name }}
-                        </span>
-                        <span class="tag-pill tag-more" *ngIf="getSubcategoriesForSector(m.id).length > 6"
-                            (click)="selectSector(m)"
-                            [title]="'View all ' + getSubcategoriesForSector(m.id).length + ' subcategories in ' + (m.name | titlecase)">
-                            +{{ getSubcategoriesForSector(m.id).length - 6 }} more
-                        </span>
-                    </div>
-
-                    <!-- Subtle fallback when a sector has no subcategories yet -->
-                    <div class="sector-tags-row" *ngIf="getSubcategoriesForSector(m.id).length === 0">
-                        <span class="tag-pill tag-neutral">
-                            <ion-icon name="checkmark-circle"></ion-icon>
-                            Verified Catalog
-                        </span>
-                        <span class="tag-pill tag-neutral">
-                            <ion-icon name="checkmark-circle"></ion-icon>
-                            Direct Dispatch
-                        </span>
-                    </div>
-                </div>
-
-                <div class="card-footer">
-                    <div class="action-btn">
-                        <span class="action-text">Enter {{ m.name | titlecase }} Workspace</span>
-                        <div class="arrow-circle">
-                            <ion-icon name="arrow-forward"></ion-icon>
+                    <div class="visual-text">
+                        <div class="icon-avatar">
+                            <ion-icon [name]="getSectorIcon(m.name)"></ion-icon>
                         </div>
+                        <h2 class="sector-title">{{ m.name | titlecase }}</h2>
+                        <p class="sector-description">{{ getSectorDescription(m) }}</p>
                     </div>
-                </div>
+
+                    <!-- Bubbles to the card's click handler, which also makes the card keyboard-reachable -->
+                    <button type="button" class="sector-cta">
+                        <span>Enter {{ m.name | titlecase }}</span>
+                        <span class="cta-arrow"><ion-icon name="arrow-forward"></ion-icon></span>
+                    </button>
             </div>
         </div>
 
+        <!-- Could not reach the API -->
+        <div class="empty-state" *ngIf="!loading && loadFailed">
+            <ion-icon name="cloud-offline-outline"></ion-icon>
+            <h3>We couldn't load the sectors</h3>
+            <p>Check your connection and try again, or continue to the full catalog.</p>
+            <button type="button" class="general-btn" (click)="loadMainCategories()">
+                <ion-icon name="refresh-outline"></ion-icon>
+                <span>Try again</span>
+            </button>
+        </div>
+
         <!-- Empty State Fallback -->
-        <div class="empty-state" *ngIf="!loading && mainCategories.length === 0">
+        <div class="empty-state" *ngIf="!loading && !loadFailed && mainCategories.length === 0">
             <ion-icon name="alert-circle-outline"></ion-icon>
             <h3>No Sectors Configured</h3>
             <p>Please check back later or proceed to the general catalog.</p>
-            <button class="general-btn" (click)="browseAll()">Continue to Catalog</button>
+            <button type="button" class="general-btn" (click)="browseAll()">Continue to Catalog</button>
         </div>
 
         <!-- Global Option Bottom Bar -->
-        <div class="footer-navigation" *ngIf="!loading && mainCategories.length > 0">
-            <button class="browse-all-btn" (click)="browseAll()">
-                <span>Looking for multi-sector supplies? Browse all verticals simultaneously</span>
-                <ion-icon name="chevron-forward-outline"></ion-icon>
+        <div class="browse-panel" *ngIf="!loading && mainCategories.length > 0">
+            <div>
+                <h3>Need supplies across sectors?</h3>
+                <p>See the full catalog without choosing a sector.</p>
+            </div>
+            <button type="button" class="browse-all-btn" (click)="browseAll()">
+                <span>Browse everything</span>
+                <ion-icon name="arrow-forward"></ion-icon>
             </button>
         </div>
     </div>

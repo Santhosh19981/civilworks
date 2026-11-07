@@ -48,7 +48,7 @@ export class PwaService {
         window.addEventListener('appinstalled', () => {
             this.deferredPrompt = null;
             this.showInstallPrompt$.next(false);
-            console.log('CivilWorks PWA successfully installed!');
+            console.log('InfraMart PWA successfully installed!');
         });
 
         // 5. Automatic updates handling with SwUpdate
@@ -56,7 +56,7 @@ export class PwaService {
             this.swUpdate.versionUpdates
                 .pipe(filter((evt): evt is VersionReadyEvent => evt.type === 'VERSION_READY'))
                 .subscribe(() => {
-                    console.log('New CivilWorks update available, reloading to apply latest version...');
+                    console.log('New InfraMart update available, reloading to apply latest version...');
                     this.swUpdate.activateUpdate().then(() => document.location.reload());
                 });
 

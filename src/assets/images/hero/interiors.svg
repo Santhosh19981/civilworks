@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="400" viewBox="0 0 1400 400">
+  <defs>
+    <linearGradient id="wall" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#09192C"/>
+      <stop offset=".6" stop-color="#0F2744"/>
+      <stop offset="1" stop-color="#17365A"/>
+    </linearGradient>
+    <linearGradient id="dusk" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#17365A"/>
+      <stop offset=".62" stop-color="#7A4A3A"/>
+      <stop offset="1" stop-color="#FF8A2B"/>
+    </linearGradient>
+    <radialGradient id="lampL" cx="760" cy="150" r="240" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFC56B" stop-opacity=".42"/>
+      <stop offset="1" stop-color="#FFC56B" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="fade" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#fff" stop-opacity="0"/>
+      <stop offset=".42" stop-color="#fff" stop-opacity="1"/>
+    </linearGradient>
+    <mask id="fadeMask"><rect width="1400" height="400" fill="url(#fade)"/></mask>
+    <clipPath id="glass"><rect x="880" y="42" width="430" height="282"/></clipPath>
+  </defs>
+
+  <rect width="1400" height="400" fill="url(#wall)"/>
+
+  <g mask="url(#fadeMask)">
+    <rect width="1400" height="400" fill="url(#lampL)"/>
+
+    <!-- Wall panelling -->
+    <g stroke="#FFFFFF" stroke-opacity=".06" stroke-width="2">
+      <path d="M560 0v346M640 0v346M720 0v346M800 0v346"/>
+    </g>
+
+    <!-- Floor-to-ceiling window with dusk skyline -->
+    <rect x="880" y="42" width="430" height="282" fill="url(#dusk)"/>
+    <g clip-path="url(#glass)" fill="#0D2440">
+      <rect x="880" y="236" width="56" height="88"/>
+      <rect x="944" y="194" width="48" height="130"/>
+      <rect x="1000" y="250" width="66" height="74"/>
+      <rect x="1074" y="168" width="52" height="156"/>
+      <rect x="1134" y="222" width="60" height="102"/>
+      <rect x="1202" y="190" width="46" height="134"/>
+      <rect x="1256" y="244" width="60" height="80"/>
+    </g>
+    <g fill="#FFC56B" fill-opacity=".8">
+      <rect x="954" y="208" width="8" height="10"/><rect x="972" y="228" width="8" height="10"/>
+      <rect x="1086" y="184" width="8" height="10"/><rect x="1104" y="206" width="8" height="10"/>
+      <rect x="1086" y="232" width="8" height="10"/><rect x="1214" y="206" width="8" height="10"/>
+      <rect x="1230" y="238" width="8" height="10"/>
+    </g>
+    <g fill="none" stroke="#DCE6F0" stroke-width="5">
+      <rect x="880" y="42" width="430" height="282"/>
+      <path d="M1023 42v282M1167 42v282" stroke-width="4"/>
+    </g>
+
+    <!-- Curtain -->
+    <path d="M1310 28h52v318h-52c10-52 8-104 0-158 8-54 10-106 0-160z" fill="#FF8A2B" fill-opacity=".85"/>
+    <path d="M1330 28c8 54 8 106 0 160 8 54 8 106 0 158m16-318c6 54 6 106 0 160 6 54 6 106 0 158" fill="none" stroke="#0F2744" stroke-opacity=".35" stroke-width="2"/>
+    <path d="M866 28h510" stroke="#DCE6F0" stroke-width="4"/>
+
+    <!-- Furniture group, kept clear of the banner text on the left -->
+    <g transform="translate(110 0)">
+    <!-- Pendant lamps -->
+    <g stroke="#DCE6F0" stroke-width="2">
+      <path d="M700 0v72M780 0v112M860 0v52"/>
+    </g>
+    <g fill="#FF8A2B">
+      <path d="M676 110l10-38h28l10 38z"/>
+      <path d="M756 150l10-38h28l10 38z"/>
+      <path d="M836 90l10-38h28l10 38z"/>
+    </g>
+    <g fill="#FFE7A6">
+      <rect x="682" y="110" width="36" height="5"/>
+      <rect x="762" y="150" width="36" height="5"/>
+      <rect x="842" y="90" width="36" height="5"/>
+    </g>
+
+    <!-- Sofa -->
+    <g>
+      <path d="M660 346v-14h16v14zm270 0v-14h16v14z" fill="#DCE6F0"/>
+      <path d="M676 262c0-14 10-24 24-24h206c14 0 24 10 24 24v40H676z" fill="#24507E"/>
+      <path d="M640 274c0-12 9-20 20-20s20 8 20 20v26h246v-26c0-12 9-20 20-20s20 8 20 20v58H640z" fill="#2F6496"/>
+      <rect x="682" y="300" width="242" height="14" rx="4" fill="#3B77AF"/>
+      <path d="M803 240v60" stroke="#17365A" stroke-width="3"/>
+      <rect x="704" y="256" width="46" height="44" rx="8" fill="#FF8A2B" transform="rotate(-9 727 278)"/>
+      <rect x="852" y="258" width="44" height="42" rx="8" fill="#FFC56B" transform="rotate(8 874 279)"/>
+    </g>
+
+    <!-- Side table and plant -->
+    <g>
+      <path d="M1000 346v-58h44v58" fill="none" stroke="#DCE6F0" stroke-width="3"/>
+      <path d="M990 288h64" stroke="#DCE6F0" stroke-width="5"/>
+      <path d="M1008 288l-4-30h36l-4 30z" fill="#FF8A2B"/>
+      <g fill="none" stroke="#6EE7B7" stroke-width="4" stroke-linecap="round">
+        <path d="M1022 258c0-30 0-46-2-70M1022 258c-4-22-14-36-28-48M1022 258c4-20 14-34 30-44"/>
+      </g>
+    </g>
+
+    </g>
+
+    <!-- Floor -->
+    <rect x="480" y="346" width="920" height="54" fill="#0B1F38"/>
+    <path d="M480 346h920" stroke="#FF8A2B" stroke-width="2" stroke-opacity=".7"/>
+    <path d="M620 400l50-54M780 400l24-54M960 400l-14-54M1130 400l-44-54M1290 400l-74-54" stroke="#FFFFFF" stroke-opacity=".05" stroke-width="2"/>
+  </g>
+</svg>

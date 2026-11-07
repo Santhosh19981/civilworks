@@ -148,7 +148,7 @@ export class OrderSuccessPage implements OnInit {
     }
 
     openWhatsApp() {
-        const msg = encodeURIComponent(`Hi CivilWorks Team, I have a query regarding my project order #${this.orderId}.`);
+        const msg = encodeURIComponent(`Hi InfraMart Team, I have a query regarding my project order #${this.orderId}.`);
         window.open(`https://wa.me/919876543210?text=${msg}`, '_blank');
     }
 

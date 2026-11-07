@@ -370,6 +370,11 @@ export class HomePage implements OnInit, OnDestroy {
         return this.authService.isAuthenticated() && this.authService.isPlusMember();
     }
 
+    // Artwork for the default hero slide, matched to the active sector.
+    get heroScene(): string {
+        return (this.activeSectorName || '').toLowerCase().includes('interior') ? 'interiors' : 'construction';
+    }
+
     handleHeroCtaClick() {
         if (this.isPlusMember) {
             // Direct to chat box page (ensure conversation list is shown, not a specific chat directly)
@@ -647,7 +652,7 @@ export class HomePage implements OnInit, OnDestroy {
                         <polyline points="2 12 12 17 22 12"/>
                     </g>
                     <text x="50%" y="300" dominant-baseline="middle" text-anchor="middle" fill="#94a3b8" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="600">
-                        CivilWorks Genuine Material
+                        InfraMart Genuine Material
                     </text>
                 </svg>
             `);
@@ -663,7 +668,7 @@ export class HomePage implements OnInit, OnDestroy {
                     <circle cx="200" cy="180" r="50" fill="none" stroke="#0ea5e9" stroke-width="6"/>
                     <path d="M175 180 L225 180 M200 155 L200 205" stroke="#0ea5e9" stroke-width="6" stroke-linecap="round"/>
                     <text x="50%" y="280" dominant-baseline="middle" text-anchor="middle" fill="#94a3b8" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="600">
-                        CivilWorks Fleet Equipment
+                        InfraMart Fleet Equipment
                     </text>
                 </svg>
             `);

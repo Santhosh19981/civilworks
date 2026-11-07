@@ -142,7 +142,7 @@ export class RentalBookingSuccessPage implements OnInit {
 
     openWhatsAppSupport() {
         const id = this.booking?.bookingId || this.booking?.id || 'RENT8556';
-        const msg = encodeURIComponent(`Hi CivilWorks Logistics, I need an update on my machinery rental #${id} (${this.equipmentName}).`);
+        const msg = encodeURIComponent(`Hi InfraMart Logistics, I need an update on my machinery rental #${id} (${this.equipmentName}).`);
         window.open(`https://wa.me/919876543210?text=${msg}`, '_blank');
     }
 }

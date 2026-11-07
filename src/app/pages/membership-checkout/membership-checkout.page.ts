@@ -114,7 +114,7 @@ export class MembershipCheckoutPage implements OnInit {
 
                 const alert = await this.alertCtrl.create({
                     header: '🎉 Welcome to Plus!',
-                    subHeader: 'CivilWorks Plus Membership Activated',
+                    subHeader: 'InfraMart Plus Membership Activated',
                     message: 'Your payment was successful. You now have full access to select vendors and book all services directly.',
                     buttons: [
                         {
