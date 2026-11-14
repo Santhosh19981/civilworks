@@ -139,6 +139,12 @@
                             </div>
                         </div>
 
+                        <!-- Google Maps: search the site, use current location, or drag the pin -->
+                        <app-site-location-picker
+                            [latitude]="checkoutForm.get('latitude')?.value"
+                            [longitude]="checkoutForm.get('longitude')?.value"
+                            (locationPicked)="onSiteLocationPicked($event)"></app-site-location-picker>
+
                         <!-- Address 1: Flat No / Villa No -->
                         <div class="form-field-group" [class.has-error]="isFieldInvalid('addressLine1')">
                             <label class="field-label" for="field-addressLine1">

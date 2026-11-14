@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { PickedLocation } from '../../services/maps.service';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { AlertController, ToastController } from '@ionic/angular';
@@ -38,6 +39,9 @@ export class ProfilePage implements OnInit {
         area_locality: '',
         delivery_address: ''
     };
+    /** Location pinned on Google Maps in the edit form (saved with the profile address). */
+    editLocation: { latitude: number | null; longitude: number | null; city: string; state: string; pincode: string } =
+        { latitude: null, longitude: null, city: '', state: '', pincode: '' };
 
     constructor(
         private authService: AuthService,
@@ -161,7 +165,29 @@ export class ProfilePage implements OnInit {
             area_locality: area_locality,
             delivery_address: combinedAddress
         };
+        this.editLocation = {
+            latitude: userPrefs.latitude ?? null,
+            longitude: userPrefs.longitude ?? null,
+            city: userPrefs.city || '',
+            state: userPrefs.state || '',
+            pincode: userPrefs.pincode || ''
+        };
         this.isEditModalOpen = true;
+    }
+
+    /** Address picked on Google Maps: fill Area / Locality and remember the exact location. */
+    onSiteLocationPicked(loc: PickedLocation) {
+        const statePin = [loc.state, loc.pincode].filter(Boolean).join(' ');
+        const area = [loc.area, statePin].filter(Boolean).join(', ');
+        if (area) this.editForm.area_locality = area.slice(0, 120);
+        if (loc.landmark && !this.editForm.landmark) this.editForm.landmark = loc.landmark;
+        this.editLocation = {
+            latitude: loc.latitude,
+            longitude: loc.longitude,
+            city: loc.city || this.editLocation.city,
+            state: loc.state || this.editLocation.state,
+            pincode: loc.pincode || this.editLocation.pincode
+        };
     }
 
     closeEditModal() {
@@ -180,7 +206,12 @@ export class ProfilePage implements OnInit {
             ...this.preferences,
             flat_no: flatNo,
             landmark: landmark,
-            area_locality: areaLocality
+            area_locality: areaLocality,
+            ...(this.editLocation.latitude != null && this.editLocation.longitude != null
+                ? { latitude: this.editLocation.latitude, longitude: this.editLocation.longitude } : {}),
+            ...(this.editLocation.city ? { city: this.editLocation.city } : {}),
+            ...(this.editLocation.state ? { state: this.editLocation.state } : {}),
+            ...(this.editLocation.pincode ? { pincode: this.editLocation.pincode } : {})
         };
 
         const updatedData: any = {

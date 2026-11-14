@@ -262,7 +262,7 @@
                             </div>
 
                             <!-- Demo Auto-Fill Pill -->
-                            <div class="demo-otp-pill" (click)="fillDemoOTP()">
+                            <div class="demo-otp-pill" *ngIf="demoMode" (click)="fillDemoOTP()">
                                 <ion-icon name="sparkles" class="sparkle-icon"></ion-icon>
                                 <span>Demo Fast-Track: Tap here to fill <strong>1234</strong></span>
                             </div>

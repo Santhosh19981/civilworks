@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { CheckoutPage } from './checkout.page';
+import { SiteLocationPickerComponent } from '../../components/site-location-picker/site-location-picker.component';
 import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
@@ -18,7 +19,8 @@ const routes: Routes = [
         FormsModule,
         ReactiveFormsModule,
         IonicModule,
-        RouterModule.forChild(routes)
+        RouterModule.forChild(routes),
+        SiteLocationPickerComponent
     ],
     declarations: [CheckoutPage]
 })

@@ -174,6 +174,14 @@ export class AuthService {
             );
     }
 
+    /** Merge fresh user details from the server into the stored session (e.g. after a membership payment). */
+    applyUserUpdate(updatedUser: any) {
+        if (!updatedUser) return;
+        const merged = { ...(this.getUser() || {}), ...updatedUser };
+        localStorage.setItem(this.AUTH_STORAGE_KEY, JSON.stringify(merged));
+        this.userSubject.next(merged);
+    }
+
     checkAuth(): Observable<any> {
         if (!this.isAuthenticated()) {
             return of(null);

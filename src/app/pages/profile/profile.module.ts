@@ -5,6 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { ProfilePage } from './profile.page';
 import { RouterModule, Routes } from '@angular/router';
 import { NavDropdownComponent } from '../../components/nav-dropdown/nav-dropdown.component';
+import { SiteLocationPickerComponent } from '../../components/site-location-picker/site-location-picker.component';
 
 const routes: Routes = [
     {
@@ -19,7 +20,8 @@ const routes: Routes = [
         FormsModule,
         IonicModule,
         RouterModule.forChild(routes),
-        NavDropdownComponent
+        NavDropdownComponent,
+        SiteLocationPickerComponent
     ],
     declarations: [ProfilePage]
 })

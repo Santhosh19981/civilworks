@@ -14,6 +14,8 @@ export class LoginPage implements OnInit, OnDestroy {
     step: 'phone' | 'otp' = 'phone';
     phone = '';
     otp = '';
+    /** True while the API runs with demo OTPs (1234); false once real SMS OTPs are on. */
+    demoMode = true;
     isOtpFocused = false;
     loading = false;
     returnUrl = '/sector-select';
@@ -70,8 +72,9 @@ export class LoginPage implements OnInit, OnDestroy {
                 this.step = 'otp';
                 this.otp = '';
                 this.startResendTimer();
-                const demoCode = res?.data?.otp || '1234';
-                await this.showToast(`Verification code sent! Demo OTP: ${demoCode}`, 'success', 3500);
+                const demoCode = res?.data?.otp;
+                this.demoMode = !!demoCode;
+                await this.showToast(demoCode ? `Verification code sent! Demo OTP: ${demoCode}` : `Verification code sent to +91 ${cleaned}`, 'success', 3500);
 
                 setTimeout(() => {
                     this.focusOtpInput();
@@ -79,6 +82,11 @@ export class LoginPage implements OnInit, OnDestroy {
             },
             error: async (err) => {
                 this.loading = false;
+                // The server refused (e.g. too many requests): show why and stay on this step
+                if (err?.status && err?.error?.message) {
+                    await this.showToast(err.error.message, 'danger', 3500, 'alert-circle');
+                    return;
+                }
                 // Fallback to local OTP entry if backend network hiccups
                 this.step = 'otp';
                 this.otp = '';
@@ -200,10 +208,15 @@ export class LoginPage implements OnInit, OnDestroy {
         this.focusOtpInput();
         this.authService.sendOtp(this.phone).subscribe({
             next: async (res) => {
-                const demoCode = res?.data?.otp || '1234';
-                await this.showToast(`New verification code sent! Demo OTP: ${demoCode}`, 'success', 3000);
+                const demoCode = res?.data?.otp;
+                this.demoMode = !!demoCode;
+                await this.showToast(demoCode ? `New verification code sent! Demo OTP: ${demoCode}` : 'New verification code sent.', 'success', 3000);
             },
-            error: async () => {
+            error: async (err) => {
+                if (err?.status && err?.error?.message) {
+                    await this.showToast(err.error.message, 'danger', 3500, 'alert-circle');
+                    return;
+                }
                 await this.showToast('New verification code sent! Use OTP: 1234', 'success', 3000);
             }
         });

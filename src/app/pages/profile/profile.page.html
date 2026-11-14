@@ -525,6 +525,12 @@
                 </div>
             </div>
 
+            <app-site-location-picker *ngIf="isEditModalOpen"
+                title="Pin your site on the map"
+                [latitude]="editLocation.latitude"
+                [longitude]="editLocation.longitude"
+                (locationPicked)="onSiteLocationPicked($event)"></app-site-location-picker>
+
             <div class="form-group">
                 <label class="form-label" for="editFlatNo">Flat No / Villa No</label>
                 <div class="input-wrap">

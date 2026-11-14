@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ToastController, AlertController, LoadingController } from '@ionic/angular';
 import { AuthService } from '../../services/auth.service';
+import { RazorpayService } from '../../services/razorpay.service';
 
 @Component({
     selector: 'app-membership-checkout',
@@ -37,7 +38,8 @@ export class MembershipCheckoutPage implements OnInit {
         private route: ActivatedRoute,
         private toastCtrl: ToastController,
         private alertCtrl: AlertController,
-        private loadingCtrl: LoadingController
+        private loadingCtrl: LoadingController,
+        private razorpay: RazorpayService
     ) { }
 
     ngOnInit() {
@@ -88,8 +90,44 @@ export class MembershipCheckoutPage implements OnInit {
             return;
         }
 
-        // Open Razorpay Demo modal
+        // Real Razorpay checkout when keys are configured on the API
+        if (await this.razorpay.isEnabled()) {
+            await this.payMembershipOnline();
+            return;
+        }
+
+        // Demo mode (no Razorpay keys yet): open the demo payment modal
         this.showRazorpayModal = true;
+    }
+
+    private async payMembershipOnline() {
+        if (this.isProcessing) return;
+        this.isProcessing = true;
+        try {
+            const outcome = await this.razorpay.pay({ purpose: 'membership' });
+            if (outcome.status === 'paid') {
+                this.authService.applyUserUpdate(outcome.data?.user);
+                await this.showActivatedAlert();
+            } else {
+                const toast = await this.toastCtrl.create({ message: 'Payment cancelled. You can try again anytime.', duration: 2500, color: 'medium', position: 'top' });
+                toast.present();
+            }
+        } catch (err: any) {
+            const toast = await this.toastCtrl.create({ message: err?.message || 'Payment failed. Please try again.', duration: 4000, color: 'danger', position: 'top' });
+            toast.present();
+        } finally {
+            this.isProcessing = false;
+        }
+    }
+
+    private async showActivatedAlert() {
+        const alert = await this.alertCtrl.create({
+            header: '🎉 Welcome to Plus!',
+            subHeader: 'InfraMart Plus Membership Activated',
+            message: 'Your payment was successful. You now have full access to select vendors and book all services directly.',
+            buttons: [{ text: 'Start Booking Now', handler: () => { this.router.navigateByUrl(this.returnUrl); } }]
+        });
+        await alert.present();
     }
 
     async completeDemoPayment() {

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { PickedLocation } from '../../services/maps.service';
+import { RazorpayService } from '../../services/razorpay.service';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -49,7 +51,8 @@ export class CheckoutPage implements OnInit {
         private router: Router,
         private location: Location,
         private alertCtrl: AlertController,
-        private toastCtrl: ToastController
+        private toastCtrl: ToastController,
+        private razorpay: RazorpayService
     ) { }
 
     ngOnInit() {
@@ -108,7 +111,24 @@ export class CheckoutPage implements OnInit {
                 Validators.minLength(6),
                 Validators.maxLength(6)
             ]],
-            siteNotes: ['']
+            siteNotes: [''],
+            // Exact site location pinned on Google Maps (optional)
+            latitude: [null],
+            longitude: [null]
+        });
+    }
+
+    /** Address picked from Google Maps search, current location or the dragged pin. */
+    onSiteLocationPicked(loc: PickedLocation) {
+        const patch: any = { latitude: loc.latitude, longitude: loc.longitude };
+        if (loc.area) patch.addressLine2 = loc.area;
+        if (loc.city) patch.city = loc.city;
+        if (loc.state) patch.state = loc.state;
+        if (loc.pincode) patch.pincode = loc.pincode;
+        if (loc.landmark && !this.checkoutForm.get('landmark')?.value) patch.landmark = loc.landmark;
+        this.checkoutForm.patchValue(patch);
+        ['addressLine2', 'city', 'state', 'pincode', 'landmark'].forEach(k => {
+            if (patch[k] !== undefined) this.checkoutForm.get(k)?.markAsTouched();
         });
     }
 
@@ -252,6 +272,16 @@ export class CheckoutPage implements OnInit {
             let flatNo = prefs.flat_no || prefs.address?.flat_no || '';
             let landmark = prefs.landmark || prefs.address?.landmark || '';
             let areaLocality = prefs.area_locality || prefs.address?.area_locality || '';
+            // Saved from the profile's map pin, when available
+            const savedLocation: any = {};
+            if (prefs.city && !this.checkoutForm.get('city')?.value) savedLocation.city = prefs.city;
+            if (prefs.state && !this.checkoutForm.get('state')?.value) savedLocation.state = prefs.state;
+            if (prefs.pincode && !this.checkoutForm.get('pincode')?.value) savedLocation.pincode = prefs.pincode;
+            if (prefs.latitude != null && prefs.longitude != null && this.checkoutForm.get('latitude')?.value == null) {
+                savedLocation.latitude = prefs.latitude;
+                savedLocation.longitude = prefs.longitude;
+            }
+            if (Object.keys(savedLocation).length) this.checkoutForm.patchValue(savedLocation);
 
             // If not found in preferences, parse components from site_location
             if (!flatNo && !landmark && !areaLocality && user.site_location) {
@@ -739,6 +769,33 @@ export class CheckoutPage implements OnInit {
         }
     }
 
+    /** Pay a just-placed order with Razorpay. The order stays saved (payment pending) if the customer cancels. */
+    private async collectOnlinePayment(dbOrderId: number, orderNo: string) {
+        if (!(await this.razorpay.isEnabled())) {
+            this.router.navigate(['/order-success'], { state: { orderId: orderNo } });
+            return;
+        }
+        try {
+            const outcome = await this.razorpay.pay({ purpose: 'order', order_id: dbOrderId });
+            this.isSubmitting = false;
+            if (outcome.status === 'paid') {
+                this.router.navigate(['/order-success'], { state: { orderId: orderNo, paymentStatus: 'paid' } });
+            } else {
+                await this.showPaymentToast('Payment not completed. Your order is saved; you can pay on site or contact support to pay online.', 'warning');
+                this.router.navigate(['/order-success'], { state: { orderId: orderNo, paymentStatus: 'pending' } });
+            }
+        } catch (err: any) {
+            this.isSubmitting = false;
+            await this.showPaymentToast(err?.message || 'Payment failed. Your order is saved with payment pending.', 'danger');
+            this.router.navigate(['/order-success'], { state: { orderId: orderNo, paymentStatus: 'pending' } });
+        }
+    }
+
+    private async showPaymentToast(message: string, color: string) {
+        const toast = await this.toastCtrl.create({ message, duration: 4500, color, position: 'top' });
+        await toast.present();
+    }
+
     private finalizeCartOrder(address: Address) {
         const firstProduct = this.cartItems?.[0]?.product || this.cartItems?.[0];
         const productName = (firstProduct?.name || '').toLowerCase();
@@ -799,6 +856,13 @@ export class CheckoutPage implements OnInit {
                     const existing = JSON.parse(localStorage.getItem('civilworks_product_orders') || '[]');
                     existing.unshift(localOrder);
                     localStorage.setItem('civilworks_product_orders', JSON.stringify(existing));
+
+                    // UPI / card: collect the payment through Razorpay (when configured), then show success
+                    const dbOrderId = res?.data?.order?.id;
+                    if (['upi', 'card'].includes(this.selectedPaymentMethod) && dbOrderId) {
+                        this.collectOnlinePayment(dbOrderId, orderId);
+                        return;
+                    }
 
                     this.router.navigate(['/order-success'], {
                         state: { orderId: orderId }
